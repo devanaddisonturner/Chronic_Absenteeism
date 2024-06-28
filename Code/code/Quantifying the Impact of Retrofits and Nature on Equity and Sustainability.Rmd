@@ -1,0 +1,636 @@
+---
+title: "Quantifying the Impact of Retrofits and Nature on Equity and Sustainability"
+author: "Devan Cantrell Addison-Turner, Rishee Kumar Jain, Gretchen Cara Daily, Yingjie Li, and Anthony Dylan  Kinslow II"
+date: "2024-06-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data
+
+## Input data
+
+### Raw data 
+
+```{r - raw}
+install.packages(readr)
+install.packages("tidyverse")
+install.packages("dplyr")
+library(readr)
+library(dplyr)
+library(tidyverse)
+
+#California K-12 Schools Raw Dataset to study 3 interventions effects on
+#on Chronic Absenteeism 
+
+CA_Schools_PM_Data <- read_csv("CA_Schools_PM_Data.csv")
+
+#changing variables to numeric in dataset
+CA_Schools_PM_Data_2 <- CA_Schools_PM_Data %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Student_Staff_Ratio = as.numeric(Student_Staff_Ratio), 
+    ndvi_median = as.numeric(ndvi_median),
+    Land_Surface_Temp_median = as.numeric(Land_Surface_Temp_median),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG_2021 = as.numeric(Median_income_BG_2021),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Student_Staff_Ratio = as.numeric(Student_Staff_Ratio),
+    Students_with_Disabilities_mean = as.numeric(Students_with_Disabilities_mean),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    Covid19_rate_of_infection_1000_people = as.numeric(Covid19_rate_of_infection_1000_people),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Abs_Avg_Rate = as.numeric(Chronic_Abs_Avg_Rate),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+   as.data.frame() %>%
+  #We moved the school ID as column as row name to keep all the data in numeric
+   column_to_rownames(var = 'School_ID')
+```
+
+
+## Impute Dataset
+```{r}
+install.packages("mice")
+install.packages("lattice")
+install.packages("VIM")
+library(mice)
+library(lattice)
+library(VIM)
+
+# Show the missing data pattern 
+md.pattern(CA_Schools_PM_Data_2)
+
+# Visualize Proportion of missing data
+
+aggr(CA_Schools_PM_Data_2)
+
+#Number of rows that would not be removed due to missing data
+
+nrow(na.omit(CA_Schools_PM_Data_2))
+
+# Multivariate Imputation by Chained-Equations (MICE)
+#fill missing values in dataset by prediction through multiple iterations using
+#the MICE algorithm
+
+CA_Schools_PM_Data_imp <- mice(CA_Schools_PM_Data_2)
+
+# Complete dataset after imputation and store as a new dataframe
+
+CA_Schools_PM_Data_complete <- complete(CA_Schools_PM_Data_imp)
+
+# Show the missing data pattern 
+md.pattern(CA_Schools_PM_Data_complete)
+
+#Visualize Proportion of missing data
+
+aggr(CA_Schools_PM_Data_complete)
+
+#Number of rows that would not be removed due to missing data
+
+nrow(na.omit(CA_Schools_PM_Data_complete))
+```
+
+## Data Normalization
+```{r - data normalization}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+maxmin_scalar <- function(x){
+  (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
+  }
+scaling_maxmin <- as.data.frame(lapply(CA_Schools_PM_Data_2, maxmin_scalar))
+
+scaling_maxmin$School_ID <- rownames(CA_Schools_PM_Data_2)
+
+scaling_maxmin_dropna <- scaling_maxmin %>%
+  tidyr::drop_na()
+
+#rownames(scaling_maxmin_dropna)
+
+######### Imputed Dataset
+
+maxmin_scalar <- function(x){
+  (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
+  }
+scaling_maxmin_complete <- as.data.frame(lapply(CA_Schools_PM_Data_complete, maxmin_scalar))
+
+scaling_maxmin_complete$School_ID <- rownames(CA_Schools_PM_Data_complete)
+
+#rownames(scaling_maxmin_complete)
+```
+
+
+## Pair-Matching Algorithm 
+```{r - matching}
+install.packages("MatchIt")
+##Note: MatchIt package may not install or load on MacOS. Instead use Windows OS.
+
+library(tidyverse)
+library(MatchIt)
+
+
+#Scenario 1: Energy Efficiency (EE) Retrofits in K-12 Schools
+
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1 <- matchit(retrofit ~ ndvi_median + Year_built + 
+                    Median_income_BG_2021 + Percent_FRPM +
+                    Pollution_Burden + Percent_Water + Percent_Developed + 
+                    Percent_Forest + Percent_Pasture + 
+                    Student_Staff_Ratio + Students_with_Disabilities_mean + Asthma_Rates + 
+                    Covid19_rate_of_infection_1000_people + Land_Surface_Temp_median,
+                  data = scaling_maxmin_dropna,
+                  method = "optimal") 
+summary(m.out1)
+
+
+#Scenario 2: Nature Exposure in K-12 Schools
+m.out2 <- matchit(ndvi_median_binary ~  Year_built + retrofit +
+                    Median_income_BG_2021 + Percent_FRPM +
+                    Pollution_Burden + Percent_Water + Percent_Developed + 
+                    Percent_Forest + Percent_Pasture + 
+                    Student_Staff_Ratio + Students_with_Disabilities_mean + Asthma_Rates + 
+                    Covid19_rate_of_infection_1000_people + Land_Surface_Temp_median,
+                   data = scaling_maxmin_dropna,
+                   method = "optimal")
+summary(m.out2)
+
+
+#Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
+m.out3 <- matchit(retrofit_and_ndvi ~  Year_built + 
+                    Median_income_BG_2021 + Percent_FRPM +
+                    Pollution_Burden + Percent_Water + Percent_Developed + 
+                    Percent_Forest + Percent_Pasture + 
+                    Student_Staff_Ratio + Students_with_Disabilities_mean + Asthma_Rates + 
+                    Covid19_rate_of_infection_1000_people + Land_Surface_Temp_median,
+                   data = scaling_maxmin_dropna_2,
+                   method = "optimal")
+summary(m.out3)
+
+#Store matched data in a dataframe 
+
+#Scenario 1: Energy Efficiency Retrofits in K-12 Schools
+
+m.out1
+summary(m.out1, un = FALSE)
+
+m_data <- match.data(m.out1)
+
+mm <- na.omit(m.out1$match.matrix)
+
+m_data <- m_data[rownames(m_data) %in% rownames(mm) |
+                   rownames(m_data) %in% mm,]
+
+#print(m_data)
+
+## Scenario 2 - Nature Exposure in K-12 Schools
+
+m.out2
+summary(m.out2, un = FALSE)
+
+m_data2 <- match.data(m.out2)
+
+mm2 <- na.omit(m.out2$match.matrix)
+
+m_data2 <- m_data2[rownames(m_data2) %in% rownames(mm2) |
+                   rownames(m_data2) %in% mm2,]
+
+## Scenario 3 - Energy Efficiency Retrofits and Nature Exposure in K-Schools
+
+m.out3
+summary(m.out3, un = FALSE)
+
+m_data3 <- match.data(m.out3)
+
+mm3 <- na.omit(m.out3$match.matrix)
+
+m_data3 <- m_data3[rownames(m_data3) %in% rownames(mm3) |
+                   rownames(m_data3) %in% mm3,]
+
+####################### Imputed Data
+
+#1:1 optimal PS matching with optimal matching on School covariates
+
+#Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Dataset
+m.out1_complete <- matchit(retrofit ~ ndvi_median + Year_built + 
+                    Median_income_BG_2021 + Percent_FRPM +
+                    Pollution_Burden + Percent_Water + Percent_Developed + 
+                    Percent_Forest + Percent_Pasture + 
+                    Student_Staff_Ratio + Students_with_Disabilities_mean + Asthma_Rates + 
+                    Covid19_rate_of_infection_1000_people + Land_Surface_Temp_median,
+                  data = scaling_maxmin_complete,
+                  method = "optimal") 
+ summary(m.out1_complete)
+
+#Scenario 2: Nature in K-12 Schools with Imputed Dataset
+m.out2_complete <- matchit(ndvi_median_binary ~  Year_built + retrofit +
+                    Median_income_BG_2021 + Percent_FRPM +
+                    Pollution_Burden + Percent_Water + Percent_Developed + 
+                    Percent_Forest + Percent_Pasture + 
+                    Student_Staff_Ratio + Students_with_Disabilities_mean + Asthma_Rates + 
+                    Covid19_rate_of_infection_1000_people + Land_Surface_Temp_median,
+                   data = scaling_maxmin_complete,
+                   method = "optimal")
+ summary(m.out2_complete)
+
+
+#Scenario 3: Energy Efficiency Retrofits and Nature in K-12 Schools with Imputed Dataset
+m.out3_complete <- matchit(retrofit_and_ndvi ~  Year_built +
+                    Median_income_BG_2021 + Percent_FRPM +
+                    Pollution_Burden + Percent_Water + Percent_Developed +
+                    Percent_Forest + Percent_Pasture +
+                    Student_Staff_Ratio + Students_with_Disabilities_mean + Asthma_Rates +
+                    Covid19_rate_of_infection_1000_people + Land_Surface_Temp_median,
+                  data = scaling_maxmin_complete,
+                  method = "optimal")
+summary(m.out3_complete)
+
+
+#Store matched data in a dataframe 
+#Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Dataset
+
+m.out1_complete
+summary(m.out1_complete, un = FALSE)
+
+m_data_complete <- match.data(m.out1_complete)
+
+## Scenario 2 - Nature Exposure in K-12 Schools with Imputed Data
+
+m.out2_complete
+summary(m.out2_complete, un = FALSE)
+
+m.out2_complete <- match.data(m.out2_complete)
+
+
+## Scenario 3 - Energy Efficiency and Nature Exposure in K-12 Schools with Imputed Data
+m.out3_complete
+summary(m.out3_complete, un = FALSE)
+
+m.out3_complete <- match.data(m.out3_complete)
+```
+
+
+### Control and T subsets
+```{r - long to wide}
+
+
+### Scenario 1 - Energy Efficiency Retrofits in K-12 Schools
+
+
+#Control Group 
+m_data_c <- m_data %>%
+  dplyr::filter(retrofit == 0 )
+
+#Treatment Group
+m_data_t <- m_data %>%
+  dplyr::filter(retrofit == 1)
+
+
+## left join raw outcome data
+raw <- CA_Schools_PM_Data_2 %>%
+  dplyr::select(Chronic_Abs_Avg_Rate) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Abs_Avg_Rate_raw' = 'Chronic_Abs_Avg_Rate')
+
+
+m_data_c_withRaw <- m_data_c %>%
+  left_join(., raw, by = 'School_ID')
+
+
+m_data_t_withRaw <- m_data_t %>%
+  left_join(., raw, by = 'School_ID')
+
+m_data_wide <- merge(
+  x = m_data_c, 
+  y = m_data_t,
+  by = 'subclass'
+)
+
+m_data_wide_2 <- merge(
+  x = m_data_c_withRaw, 
+  y = m_data_t_withRaw,
+  by = 'subclass'
+)
+
+### Scenario 2 - Nature Exposure in K-12 Schools
+
+#Control Group 
+m_data_c_2 <- m_data2 %>%
+  dplyr::filter(ndvi_median_binary == 0 )
+
+#Treatment Group
+m_data_t_2 <- m_data2 %>%
+  dplyr::filter(ndvi_median_binary == 1)
+
+
+## left join raw outcome data
+raw_2 <- CA_Schools_PM_Data_2 %>%
+  dplyr::select(Chronic_Abs_Avg_Rate) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Abs_Avg_Rate_raw' = 'Chronic_Abs_Avg_Rate')
+
+
+m_data_c_withRaw_2 <- m_data_c_2 %>%
+  left_join(., raw_2, by = 'School_ID')
+
+
+m_data_t_withRaw_2 <- m_data_t_2 %>%
+  left_join(., raw_2, by = 'School_ID')
+
+m_data_wide_3 <- merge(
+  x = m_data_c_2, 
+  y = m_data_t_2,
+  by = 'subclass'
+)
+
+m_data_wide_4 <- merge(
+  x = m_data_c_withRaw_2, 
+  y = m_data_t_withRaw_2,
+  by = 'subclass'
+)
+
+
+### Scenario 3 - Energy Efficiency and Nature Exposure in K-12 Schools
+
+#Control Group 
+m_data_c_3 <- m_data3 %>%
+  dplyr::filter(retrofit_and_ndvi == 0 )
+
+#Treatment Group
+m_data_t_3 <- m_data3 %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3 <- CA_Schools_PM_Data_2 %>%
+  dplyr::select(Chronic_Abs_Avg_Rate) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Abs_Avg_Rate_raw' = 'Chronic_Abs_Avg_Rate')
+
+
+m_data_c_withRaw_3 <- m_data_c_3 %>%
+  left_join(., raw_3, by = 'School_ID')
+
+
+m_data_t_withRaw_3 <- m_data_t_3 %>%
+  left_join(., raw_3, by = 'School_ID')
+
+m_data_wide_5 <- merge(
+  x = m_data_c_3, 
+  y = m_data_t_3,
+  by = 'subclass'
+)
+
+m_data_wide_6 <- merge(
+  x = m_data_c_withRaw_3, 
+  y = m_data_t_withRaw_3,
+  by = 'subclass'
+)
+
+
+####################### Imputed Data
+
+### Scenario 1 - Energy Efficiency Retrofits in K-12 Schools with Imputed Data
+
+#Control Group 
+m_data_c_complete <- m_data_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete <- m_data_complete %>%
+  dplyr::filter(retrofit == 1)
+
+
+## left join raw outcome data
+raw_complete <- CA_Schools_PM_Data_complete %>%
+  dplyr::select(Chronic_Abs_Avg_Rate) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Abs_Avg_Rate_raw' = 'Chronic_Abs_Avg_Rate')
+
+
+m_data_c_withRaw_complete <- m_data_c_complete %>%
+  left_join(., raw_complete, by = 'School_ID')
+
+
+m_data_t_withRaw_complete <- m_data_t_complete %>%
+  left_join(., raw_complete, by = 'School_ID')
+
+m_data_wide_complete <- merge(
+  x = m_data_c_complete, 
+  y = m_data_t_complete,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete <- merge(
+  x = m_data_c_withRaw_complete, 
+  y = m_data_t_withRaw_complete,
+  by = 'subclass'
+)
+
+### Scenario 2 - Nature Exposure in K-12 Schools with Imputed Data
+
+#Control Group 
+m_data_c_2_complete <- m.out2_complete %>%
+  dplyr::filter(ndvi_median_binary == 0 )
+
+#Treatment Group
+m_data_t_2_complete <- m.out2_complete %>%
+  dplyr::filter(ndvi_median_binary == 1)
+
+
+## left join raw outcome data
+raw_2_complete <- CA_Schools_PM_Data_complete %>%
+  dplyr::select(Chronic_Abs_Avg_Rate) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Abs_Avg_Rate_raw' = 'Chronic_Abs_Avg_Rate')
+
+
+m_data_c_withRaw_2_complete <- m_data_c_2_complete %>%
+  left_join(., raw_2_complete, by = 'School_ID')
+
+
+m_data_t_withRaw_2_complete <- m_data_t_2_complete %>%
+  left_join(., raw_2_complete, by = 'School_ID')
+
+m_data_wide_3_complete <- merge(
+  x = m_data_c_2_complete, 
+  y = m_data_t_2_complete,
+  by = 'subclass'
+)
+
+m_data_wide_4_complete <- merge(
+  x = m_data_c_withRaw_2_complete, 
+  y = m_data_t_withRaw_2_complete,
+  by = 'subclass'
+)
+
+
+## Scenario 3: EE Retrofits and Nature Exposure in K-12 Schools with Imputed Data
+
+#Control Group 
+m_data_c_3_complete <- m.out3_complete %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data_t_3_complete <- m.out3_complete %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete <- CA_Schools_PM_Data_complete %>%
+  dplyr::select(Chronic_Abs_Avg_Rate) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Abs_Avg_Rate_raw' = 'Chronic_Abs_Avg_Rate')
+
+
+m_data_c_withRaw_3_complete <- m_data_c_3_complete %>%
+  left_join(., raw_3_complete, by = 'School_ID')
+
+
+m_data_t_withRaw_3_complete <- m_data_t_3_complete %>%
+  left_join(., raw_3_complete, by = 'School_ID')
+
+m_data_wide_5_complete <- merge(
+  x = m_data_c_3_complete, 
+  y = m_data_t_3_complete,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete <- merge(
+  x = m_data_c_withRaw_3_complete, 
+  y = m_data_t_withRaw_3_complete,
+  by = 'subclass'
+)
+```
+
+
+## Statistical Analysis 
+
+### Compute T-Test
+```{r}
+## Scenario 1: EE Retrofits in K-12 Schools 
+
+T_Test_S1 <- t.test(m_data_wide_2$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_2$Chronic_Abs_Avg_Rate_raw.y, paired = TRUE, conf.level = 0.95)
+print(T_Test_S1)
+
+
+## Scenario 2 - Nature Exposure in Schools
+T_Test_S2 <- t.test(m_data_wide_4$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_4$Chronic_Abs_Avg_Rate_raw.y, paired = TRUE, conf.level = 0.95)
+print(T_Test_S2)
+
+
+## Scenario 3 - EE Retrofits in K-12 Schools and Nature Exposure in K-12 Schools
+T_Test_S3 <- t.test(m_data_wide_6$Chronic_Abs_Avg_Rate.x,m_data_wide_6$Chronic_Abs_Avg_Rate.y, paired = TRUE, conf.level = 0.95)
+
+#Can't complete t-test for scenario 3 due to low number of observations 
+
+####################### Imputed Data
+
+## Scenario 1: EE Retrofits in K-12 Schools 
+
+T_Test_S1_complete <- t.test(m_data_wide_2_complete$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_2_complete$Chronic_Abs_Avg_Rate_raw.y, paired = TRUE, conf.level = 0.95)
+print(T_Test_S1_complete)
+
+## Scenario 2 - Nature Exposure in K-12 Schools with Imputed Data
+
+T_Test_S2_complete <- t.test(m_data_wide_4_complete$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_4_complete$Chronic_Abs_Avg_Rate_raw.y, paired = TRUE, conf.level = 0.95)
+print(T_Test_S2_complete)
+
+
+## Scenario 3 - EE Retrofits and Nature Exposure in K-12 Schools with Imputed Data
+
+T_Test_S3_complete <- t.test(m_data_wide_6_complete$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_6_complete$Chronic_Abs_Avg_Rate_raw.y, paired = TRUE, conf.level = 0.95)
+print(T_Test_S3_complete)
+```
+
+### Compute Cohen's D
+```{r}
+install.packages("devtools")
+install.packages("effsize")
+#compute Effect Size using Cohen's D
+library(effsize)
+
+## Scenario 1: EE Retrofits in K-12 Schools 
+cohen.d(m_data_wide_2$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_2$Chronic_Abs_Avg_Rate_raw.y)
+
+## Scenario 2: Nature Exposure in K-12 Schools 
+cohen.d(m_data_wide_4$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_4$Chronic_Abs_Avg_Rate_raw.y)
+
+## Scenario 3: EE Retrofits and Nature Exposure in K-12 Schools 
+cohen.d(m_data_wide_6$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_6$Chronic_Abs_Avg_Rate_raw.y)
+
+###################### Imputed Dataset
+
+## Scenario 1: EE Retrofits in K-12 Schools with Imputed Dataset
+cohen.d(m_data_wide_2_complete$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_2_complete$Chronic_Abs_Avg_Rate_raw.y)
+
+## Scenario 2: Nature Exposure in K-12 Schools with Imputed Dataset
+cohen.d(m_data_wide_4_complete$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_4_complete$Chronic_Abs_Avg_Rate_raw.y)
+
+## Scenario 3: EE Retrofits and Nature Exposure in K-12 Schools  with Imputed Dataset
+cohen.d(m_data_wide_6_complete$Chronic_Abs_Avg_Rate_raw.x, m_data_wide_6_complete$Chronic_Abs_Avg_Rate_raw.y)
+```
+
+
+### Graph Effect Size
+```{r}
+install.packages("ggplot2")
+library(ggplot2)
+library(tidyverse)
+
+#Effect Sizes
+# Standardized Mean Difference (Cohen's d)
+
+ES <- 0.52
+
+# get mean2 depending on value of ES from d = (u1 - u2)/sd
+mean1 <- ES*1 + 1
+
+x <- seq(1 - 3*1, mean1 + 3*1, 0.01)
+
+# generate normal dist #1 
+
+y1 <- dnorm(x, 1, 1) 
+
+# put in data frame
+
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+
+y2 <- dnorm(x, mean1, 1) 
+
+#put in data frame
+
+df2<- data.frame("x" = x, "y" = y2)
+
+y.poly <- pmin(y1,y2)
+
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(size=1) + 
+  geom_line(data=df2, aes(color="treatment"),size=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show_guide = F) +
+  geom_vline(xintercept = 1, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted") +  
+  ggtitle(paste("Impact of Energy Efficiency Retrofits and Nature Exposure on Chronic Absenteeism (Cohen's d = ",  ES,')',
+                '-- Medium Effect')) +
+  # # change colors and legend annotation
+   scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) +
+  # # remove axis labels
+   ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85))
+```
