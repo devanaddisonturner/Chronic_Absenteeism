@@ -16,9 +16,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Raw data 
 
 ```{r - raw}
-install.packages(readr)
-install.packages("tidyverse")
-install.packages("dplyr")
+# install.packages(readr)
+# install.packages("tidyverse")
+# install.packages("dplyr")
+
 library(readr)
 library(dplyr)
 library(tidyverse)
@@ -26,7 +27,7 @@ library(tidyverse)
 #California K-12 Schools Raw Dataset to study 3 interventions effects on
 #on Chronic Absenteeism 
 
-CA_Schools_PM_Data <- read_csv("CA_Schools_PM_Data.csv")
+CA_Schools_PM_Data <- read_csv("./data/CA_Schools_PM_Data.csv", show_col_types = F)
 
 #changing variables to numeric in dataset
 CA_Schools_PM_Data_2 <- CA_Schools_PM_Data %>%
@@ -59,9 +60,10 @@ CA_Schools_PM_Data_2 <- CA_Schools_PM_Data %>%
 
 ## Impute Dataset
 ```{r}
-install.packages("mice")
-install.packages("lattice")
-install.packages("VIM")
+# install.packages("mice")
+# install.packages("lattice")
+# install.packages("VIM")
+
 library(mice)
 library(lattice)
 library(VIM)
@@ -130,7 +132,7 @@ scaling_maxmin_complete$School_ID <- rownames(CA_Schools_PM_Data_complete)
 
 ## Pair-Matching Algorithm 
 ```{r - matching}
-install.packages("MatchIt")
+# install.packages("MatchIt")
 ##Note: MatchIt package may not install or load on MacOS. Instead use Windows OS.
 
 library(tidyverse)
