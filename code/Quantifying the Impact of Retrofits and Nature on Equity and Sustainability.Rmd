@@ -610,37 +610,30 @@ cohen.d(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete
 ## Graph Effect Size
 ```{r}
 
-# Effect Sizes
+library(ggplot2)
+
 # Standardized Mean Difference (Cohen's d)
-## SO here you only took data from scenario 3?
-
 ES <- 1.85
-
 # get mean2 depending on value of ES from d = (u1 - u2)/sd
-#' so d = ES = 1.85 = (mean1 - mean2)/sd,
-#' how did you get sd = 1, and mean2 = 2?
-mean1 <- ES*1 + 1
+mean2 = 0.30
 
-x <- seq(1 - 3*1, mean1 + 3*1, 0.01)
+mean1 <- ES*1 + mean2
+# create x sequence
+x <- seq(mean2 - 3*1, mean1 + 3*1, .01)
 
-# generate normal dist #1 
-
-y1 <- dnorm(x, 1, 1) 
-
+# generate normal dist #1
+y1 <- dnorm(x, mean2, 1)
 # put in data frame
-
 df1 <- data.frame("x" = x, "y" = y1)
 
 # generate normal dist #2
+y2 <- dnorm(x, mean1, 1)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
 
-y2 <- dnorm(x, mean1, 1) 
-
-#put in data frame
-
-df2<- data.frame("x" = x, "y" = y2)
-
+# get y values under overlap
 y.poly <- pmin(y1,y2)
-
+# put in data frame
 poly <- data.frame("x" = x, "y" = y.poly)
 
 #plot with ggplot2
