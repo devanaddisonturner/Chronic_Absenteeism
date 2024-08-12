@@ -613,16 +613,25 @@ cohen.d(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete
 library(ggplot2)
 
 # Standardized Mean Difference (Cohen's d)
-ES <- 1.85
-# get mean2 depending on value of ES from d = (u1 - u2)/sd
-mean2 = 0.30
+ES <- 1.85 
+##' could you use script/variable to get `ES`, instead of manually assign a value? 
+##'   I cannot find which data can be used to het 1.85
 
-mean1 <- ES*1 + mean2
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean2 = 0.30 
+##' could you use script/variable to get `mean2`, instead of manually assign a value? 
+##'   e.g., Mean2 for Control Group = Chronic_Absenteeism.x
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
 # create x sequence
-x <- seq(mean2 - 3*1, mean1 + 3*1, .01)
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
 
 # generate normal dist #1
-y1 <- dnorm(x, mean2, 1)
+y1 <- dnorm(x, mean2, sd)
 # put in data frame
 df1 <- data.frame("x" = x, "y" = y1)
 
@@ -658,5 +667,5 @@ ggplot(df1, aes(x,y, color="control")) +
         text = element_text(size = 11),
         plot.title = element_text(size=11))
 
-ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
+ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 6.5, height = 4, units = "in", dpi = 300)
 ```
