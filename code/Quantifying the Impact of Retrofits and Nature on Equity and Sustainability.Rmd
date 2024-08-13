@@ -650,9 +650,12 @@ d_data %>%
             hjust = -0.5) + # Center the text horizontally relative to the point
   theme_bw() +  # Use a minimal theme
   labs(x = "",
-       y = "Cohen's d") +
+       y = "Cohen's d",
+       title = "Comparison of 3 Scenarios' Effect Sizes on Chronic Absenteeism in K-12 Schools Across California,USA during the COVID-19 Pandemic") + 
+  theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title) +
+  theme(plot.title = element_text(size = 10)) +
   theme(legend.position = c(0.90, 0.1),
-        legend.title=element_blank())
+        legend.title=element_blank()) 
 
 ggsave(filename = './figures/effect_size_by_scenarios.png', plot = last_plot(), width = 6.5, height = 4, units = "in", dpi = 300)
 ```
