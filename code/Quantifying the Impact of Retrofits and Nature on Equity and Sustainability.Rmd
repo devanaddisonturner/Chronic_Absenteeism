@@ -585,7 +585,15 @@ cohen.d(m_data_wide_4$Chronic_Absenteeism_raw.x, m_data_wide_4$Chronic_Absenteei
 
 ## Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
 print('Scenario 3')
-cohen.d(m_data_wide_6$Chronic_Absenteeism_raw.x, m_data_wide_6$Chronic_Absenteeism.y)
+d3 <- cohen.d(m_data_wide_6$Chronic_Absenteeism_raw.x, m_data_wide_6$Chronic_Absenteeism.y)
+d3
+
+es3 <- d3$estimate
+es3
+
+
+mean_c <- mean(m_data_wide_6$Chronic_Absenteeism.x, na.rm = T)
+mean_c
 ```
 
 
@@ -612,17 +620,17 @@ cohen.d(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete
 
 library(ggplot2)
 
-# Standardized Mean Difference (Cohen's d)
-ES <- 1.85 
-##' could you use script/variable to get `ES`, instead of manually assign a value? 
-##'   I cannot find which data can be used to het 1.85
+#' Standardized Mean Difference (Cohen's d)
+#' here we use the effect size in scenario 3, a combine effect of 
+#'  Energy Efficiency Retrofits and Nature Exposure
+ES <- es3 
+
 
 #' get mean2 depending on value of ES from 
 #'  d = (u1 - u2)/sd
 #'  es = (mean1 - mean2)/sd
-mean2 = 0.30 
-##' could you use script/variable to get `mean2`, instead of manually assign a value? 
-##'   e.g., Mean2 for Control Group = Chronic_Absenteeism.x
+mean2 = mean_c 
+
 
 sd <- 1
 mean1 <- ES*sd + mean2
