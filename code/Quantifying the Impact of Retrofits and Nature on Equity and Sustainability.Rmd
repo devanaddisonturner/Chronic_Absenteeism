@@ -115,13 +115,10 @@ CASchools_PM_Dataimp <- mice(CASchools_PM_Data2)
 CASchools_PM_Datacomplete <- complete(CASchools_PM_Dataimp)
 
 #Visualize Proportion of missing data in Imputed Dataset
-aggr(CASchools_PM_Datacomplete)
+aggr(CASchools_PM_Datacomplete, cex.axis=.425)
 
 #Number of rows that would not be removed due to missing data
 nrow(na.omit(CASchools_PM_Datacomplete))
-
-aggr(CASchools_PM_Data2, cex.axis=.425)
-aggr(CASchools_PM_Datacomplete, cex.axis=.425)
 ```
 
 ### Data Normalization
