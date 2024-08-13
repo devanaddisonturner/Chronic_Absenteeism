@@ -1,6 +1,6 @@
 ---
 title: "Quantifying the Impact of Retrofits and Nature on Equity and Sustainability"
-author: "Devan Cantrell Addison-Turner, Rishee Kumar Jain, Gretchen Cara Daily, Yingjie Li, and Anthony Dylan Kinslow II"
+author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Gretchen Cara Daily, and Rishee Kumar Jain"
 date: "2024-06-27"
 output: html_document
 ---
@@ -33,7 +33,7 @@ library(VIM) ## aggr()
 
 ### ---- Matching ----
 #install.packages("MatchIt")
-##Note: MatchIt package may not install or load on MacOS. Instead use Windows OS.
+##Note: MatchIt package may not install or load on MacOS. Instead, use Windows OS.
 
 library(MatchIt)
 
@@ -51,8 +51,8 @@ library(ggplot2)
 
 ```{r}
 
-#California K-12 Schools Raw Dataset to study 3 interventions effects on
-#on Chronic Absenteeism 
+#California, USA K-12 Schools Raw Dataset to study 3 interventions effects on
+#on Chronic Absenteeism during the COVID-19 Pandemic
 
 CASchools_PM_Data <- read_csv("./data/ChronicAbsenteeism_AllSchools_PMData_2.csv")
 
@@ -79,7 +79,7 @@ CASchools_PM_Data2 <- CASchools_PM_Data %>%
     retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
     )  %>%
     dplyr::select(
-      #removed variables we don't need
+      #removed variables we do not need
                 -Percent_LandCoverTotal,
                 -Diversity_Index,
                 -Average_NDVI_median,
@@ -115,13 +115,10 @@ CASchools_PM_Dataimp <- mice(CASchools_PM_Data2)
 CASchools_PM_Datacomplete <- complete(CASchools_PM_Dataimp)
 
 #Visualize Proportion of missing data in Imputed Dataset
-aggr(CASchools_PM_Datacomplete)
+aggr(CASchools_PM_Datacomplete, cex.axis=.425)
 
 #Number of rows that would not be removed due to missing data
 nrow(na.omit(CASchools_PM_Datacomplete))
-
-aggr(CASchools_PM_Data2, cex.axis=.425)
-aggr(CASchools_PM_Datacomplete, cex.axis=.425)
 ```
 
 ### Data Normalization
@@ -199,7 +196,7 @@ m.out2 <- matchit(ndvi_median_binary ~
                    method = "optimal")
 summary(m.out2)
 
-## Scenario 2: Nature Exposure in K-12 Schools
+### Scenario 2: Nature Exposure in K-12 Schools
 m.out2
 summary(m.out2, un = FALSE)
 m_data2 <- match.data(m.out2)
@@ -210,7 +207,7 @@ m_data2 <- m_data2[rownames(m_data2) %in% rownames(mm2) |
 
 
 
-###Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
+### Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
 ```{r}
 m.out3 <- matchit(retrofit_and_ndvi ~ 
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
@@ -234,7 +231,7 @@ m_data3 <- m_data3[rownames(m_data3) %in% rownames(mm3) |
 
 ## Using Imputed Data
 
-#### Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Dataset
+### Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Dataset
 
 ```{r}
 #1:1 optimal PS matching with optimal matching on School covariates
@@ -254,7 +251,7 @@ m_data_complete <- match.data(m.out1_complete)
 ```
 
 
-#### Scenario 2: Nature in K-12 Schools with Imputed Dataset
+### Scenario 2: Nature in K-12 Schools with Imputed Dataset
 
 ```{r}
 m.out2_complete <- matchit(ndvi_median_binary ~ retrofit +	Percent_Water	+
@@ -378,7 +375,7 @@ m_data_wide_4 <- merge(
 
 ### Scenario 3
 ```{r}
-## Scenario 3 - Energy Efficiency and Nature Exposure in K-12 Schools
+## Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools
 
 #Control Group 
 m_data3_c <- m_data3 %>%
@@ -414,11 +411,12 @@ m_data_wide_6 <- merge(
   y = m_data3_t_withRaw,
   by = 'subclass'
 )
+```
 
 ####################### Imputed Data
 
-## Scenario 1 - Energy Efficiency Retrofits in K-12 Schools with Imputed Data
-
+```{r}
+### Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Data
 #Control Group 
 m_data_c_complete <- m_data_complete %>%
   dplyr::filter(retrofit == 0)
@@ -450,8 +448,10 @@ m_data_wide_2_complete <- merge(
   y = m_data_t_withRaw_complete,
   by = 'subclass'
 )
+```
 
-## Scenario 2 - Nature Exposure in K-12 Schools with Imputed Data
+```{r}
+### Scenario 2: Nature Exposure in K-12 Schools with Imputed Data
 
 #Control Group 
 m_data2_c_complete <- m_data2_complete %>%
@@ -485,8 +485,10 @@ m_data_wide_4_complete <- merge(
   y = m_data2_t_withRaw_complete,
   by = 'subclass'
 )
+```
 
-## Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools with Imputed Data
+```{r}
+### Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools with Imputed Data
 
 #Control Group 
 m_data3_c_complete <- m_data3_complete %>%
@@ -563,7 +565,6 @@ print(TTestS3_complete)
 ```
 
 
-
 ## Cohen's D
 
 ### Using Raw data
@@ -597,7 +598,7 @@ mean_c
 ```
 
 
-### Uisng Imputed Dataset
+### Using Imputed Dataset
 
 ```{r}
 
@@ -621,7 +622,7 @@ cohen.d(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete
 library(ggplot2)
 
 #' Standardized Mean Difference (Cohen's d)
-#' here we use the effect size in scenario 3, a combine effect of 
+#' Here we use the effect size in scenario 3, a combined effect of 
 #'  Energy Efficiency Retrofits and Nature Exposure
 ES <- round(es3, digits = 2) 
 
