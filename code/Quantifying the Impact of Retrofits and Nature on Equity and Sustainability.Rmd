@@ -623,7 +623,7 @@ library(ggplot2)
 #' Standardized Mean Difference (Cohen's d)
 #' here we use the effect size in scenario 3, a combine effect of 
 #'  Energy Efficiency Retrofits and Nature Exposure
-ES <- es3 
+ES <- round(es3, digits = 2) 
 
 
 #' get mean2 depending on value of ES from 
@@ -659,7 +659,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_line(data=df2, aes(color="treatment"),linewidth=1) +
   geom_vline(xintercept = mean1, linetype="dotted") + 
   geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
-               show_guide = F) +
+               show.legend = F) +
   geom_vline(xintercept = 1, linetype="dotted") +
   geom_vline(xintercept = mean1, linetype="dotted") +  
   ggtitle(paste0(
