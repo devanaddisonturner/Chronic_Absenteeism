@@ -414,11 +414,12 @@ m_data_wide_6 <- merge(
   y = m_data3_t_withRaw,
   by = 'subclass'
 )
+```
 
 ####################### Imputed Data
 
+```{r}
 ### Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Data
-
 #Control Group 
 m_data_c_complete <- m_data_complete %>%
   dplyr::filter(retrofit == 0)
@@ -450,7 +451,9 @@ m_data_wide_2_complete <- merge(
   y = m_data_t_withRaw_complete,
   by = 'subclass'
 )
+```
 
+```{r}
 ### Scenario 2: Nature Exposure in K-12 Schools with Imputed Data
 
 #Control Group 
@@ -485,7 +488,9 @@ m_data_wide_4_complete <- merge(
   y = m_data2_t_withRaw_complete,
   by = 'subclass'
 )
+```
 
+```{r}
 ### Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools with Imputed Data
 
 #Control Group 
@@ -561,7 +566,6 @@ print(TTestS2_complete)
 TTestS3_complete <- t.test(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS3_complete)
 ```
-
 
 
 ## Cohen's D
