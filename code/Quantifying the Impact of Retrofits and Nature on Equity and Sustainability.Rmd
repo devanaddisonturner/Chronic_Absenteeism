@@ -567,6 +567,20 @@ print(TTestS3_complete)
 
 ## Cohen's D
 
+```{r}
+function_get_d_data <- function(df, scenario = NA, group = NA) {
+  data <- data.frame(scenario = scenario,
+                     group = group,
+                     d = df$estimate,
+                     lower = df$conf.int[1],
+                     upper = df$conf.int[2],
+                     magnitude = df$magnitude)
+  return(data)
+}
+
+```
+
+
 ### Using Raw data
 ```{r}
 #install.packages("devtools")
@@ -576,43 +590,71 @@ library(effsize)
 
 ## Scenario 1: Energy Efficiency Retrofits in K-12 Schools 
 print('Scenario 1')
-cohen.d(m_data_wide_2$Chronic_Absenteeism_raw.x, m_data_wide_2$Chronic_Absenteeism_raw.y)
+d1_raw <- cohen.d(m_data_wide_2$Chronic_Absenteeism_raw.x, m_data_wide_2$Chronic_Absenteeism_raw.y)
 
 
 ## Scenario 2: Nature Exposure in K-12 Schools 
 print('Scenario 2')
-cohen.d(m_data_wide_4$Chronic_Absenteeism_raw.x, m_data_wide_4$Chronic_Absenteeism_raw.y)
+d2_raw <- cohen.d(m_data_wide_4$Chronic_Absenteeism_raw.x, m_data_wide_4$Chronic_Absenteeism_raw.y)
 
 
 ## Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
 print('Scenario 3')
-d3 <- cohen.d(m_data_wide_6$Chronic_Absenteeism_raw.x, m_data_wide_6$Chronic_Absenteeism.y)
-d3
+d3_raw <- cohen.d(m_data_wide_6$Chronic_Absenteeism_raw.x, m_data_wide_6$Chronic_Absenteeism.y)
+d3_raw
+es3_raw <- d3_raw$estimate
 
-es3 <- d3$estimate
-es3
-
-
-mean_c <- mean(m_data_wide_6$Chronic_Absenteeism.x, na.rm = T)
-mean_c
 ```
 
 
 ### Using Imputed Dataset
 
 ```{r}
-
 ## Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Dataset
 cat('\n Scenario 1 ------ \n')
-cohen.d(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y)
+d1_imp <- cohen.d(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y)
+d1_imp
 
 ## Scenario 2: Nature Exposure in K-12 Schools with Imputed Dataset
 cat('\n Scenario 2 ------ \n')
-cohen.d(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_4_complete$Chronic_Absenteeism_raw.y)
+d2_imp <- cohen.d(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_4_complete$Chronic_Absenteeism_raw.y)
 
 ## Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools  with Imputed Dataset
 cat('\n Scenario 3 ------ \n')
-cohen.d(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete$Chronic_Absenteeism_raw.y)
+d3_imp <- cohen.d(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete$Chronic_Absenteeism_raw.y)
+```
+
+
+### Plot Cohen's d
+```{r}
+d_data <- rbind(
+  function_get_d_data(d1_raw, scenario = 'Scenario 1', group = 'Raw'),
+  function_get_d_data(d2_raw, scenario = 'Scenario 2', group = 'Raw'),
+  function_get_d_data(d3_raw, scenario = 'Scenario 3', group = 'Raw'),
+  function_get_d_data(d1_imp, scenario = 'Scenario 1', group = 'Imputed'),
+  function_get_d_data(d2_imp, scenario = 'Scenario 2', group = 'Imputed'),
+  function_get_d_data(d3_imp, scenario = 'Scenario 3', group = 'Imputed')
+)
+
+
+## plot
+d_data %>%
+  ggplot(., aes(x = scenario, y = d, color = group, group = group)) +
+  geom_point(size = 3, 
+             position = position_dodge(width = 0.3)) +  
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2, 
+                position = position_dodge(width = 0.3)) +  
+  geom_text(aes(label = round(d, digits = 2)), 
+            position = position_dodge(width = 0.3), show.legend = F,
+            vjust = 0.5, # Vertical adjustment to avoid overlap
+            hjust = -0.5) + # Center the text horizontally relative to the point
+  theme_bw() +  # Use a minimal theme
+  labs(x = "",
+       y = "Cohen's d") +
+  theme(legend.position = c(0.90, 0.1),
+        legend.title=element_blank())
+
+ggsave(filename = './figures/effect_size_by_scenarios.png', plot = last_plot(), width = 6.5, height = 4, units = "in", dpi = 300)
 ```
 
 
@@ -624,12 +666,13 @@ library(ggplot2)
 #' Standardized Mean Difference (Cohen's d)
 #' Here we use the effect size in scenario 3, a combined effect of 
 #'  Energy Efficiency Retrofits and Nature Exposure
-ES <- round(es3, digits = 2) 
+ES <- round(es3_raw, digits = 2) 
 
 
 #' get mean2 depending on value of ES from 
 #'  d = (u1 - u2)/sd
 #'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6$Chronic_Absenteeism.x, na.rm = T)
 mean2 = mean_c 
 
 
