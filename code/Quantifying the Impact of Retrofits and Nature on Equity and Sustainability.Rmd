@@ -710,7 +710,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = 1, linetype="dotted") +
   geom_vline(xintercept = mean1, linetype="dotted") +  
   ggtitle(paste0(
-    "Impact of Energy Efficiency Retrofits and Nature Exposure on Chronic Absenteeism",
+    "Scenario 3: Impact of Energy Efficiency Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
     "\nCohen's d = ",  ES, ' (Large Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
@@ -720,7 +720,7 @@ ggplot(df1, aes(x,y, color="control")) +
   theme_bw()+
   theme(legend.position = c(0.90, 0.85), 
         text = element_text(size = 11),
-        plot.title = element_text(size=11))
+        plot.title = element_text(size=9))
 
-ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 6.5, height = 4, units = "in", dpi = 300)
+ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 9, height = 5, units = "in", dpi = 300)
 ```
