@@ -1,3 +1,9 @@
+title: "Quantifying the Impact of Retrofits and Nature on Equity and Sustainability"
+author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Gretchen Cara Daily, and Rishee Kumar Jain"
+
+// Code to calculate the Normalized Difference Vegetation Density (NDVI) and Land Surface Temperature (LST) near K-12 Schools 
+// across California, USA from satellite imagery using Google Earth Engine (GEE) during the COVID-19 Pandemic.
+
 var dir_output = "Devan_gee_data"
 var version = 'v3_2'
 
