@@ -112,7 +112,7 @@ nrow(na.omit(CASchools_PM_Data2))
 # Multivariate Imputation by Chained-Equations (MICE)
 #fill missing values in dataset by prediction through multiple iterations using
 #the MICE algorithm
-CASchools_PM_Dataimp <- mice(CASchools_PM_Data2)
+CASchools_PM_Dataimp <- mice(CASchools_PM_Data2, seed = 123)
 
 # Complete dataset after imputation and store as a new dataframe
 CASchools_PM_Datacomplete <- complete(CASchools_PM_Dataimp)
