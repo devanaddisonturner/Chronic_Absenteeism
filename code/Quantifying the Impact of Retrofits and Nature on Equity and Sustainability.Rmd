@@ -700,7 +700,7 @@ y1 <- dnorm(x, mean2, sd)
 df1 <- data.frame("x" = x, "y" = y1)
 
 # generate normal dist #2
-y2 <- dnorm(x, mean1, 1)
+y2 <- dnorm(x, mean1, sd)
 # put in data frame
 df2 <- data.frame("x" = x, "y" = y2)
 
