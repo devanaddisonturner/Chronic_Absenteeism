@@ -666,7 +666,7 @@ d_data %>%
   theme(legend.position = c(0.90, 0.1),
         legend.title=element_blank()) 
 
-ggsave(filename = './figures/effect_size_by_scenarios.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
+ggsave(filename = './figures/effect_size_by_scenarios.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
 
 
