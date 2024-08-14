@@ -731,5 +731,5 @@ ggplot(df1, aes(x,y, color="control")) +
         text = element_text(size = 11),
         plot.title = element_text(size=9))
 
-ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
+ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
