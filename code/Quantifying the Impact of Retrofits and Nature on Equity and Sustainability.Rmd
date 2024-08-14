@@ -103,7 +103,7 @@ CASchools_PM_Data2 <- CASchools_PM_Data %>%
 f <- paste0('./figures/', 'data_missing.png'); print(f)
 png(filename = f, width = 7, height = 5, units = "in", res = 300)
 cex.axis.size = 0.425
-VIM::aggr(CASchools_PM_Data2, cex.axis=cex.axis.size, cex.lab = cex.axis.size*1.5)
+VIM::aggr(CASchools_PM_Data2, cex.axis=cex.axis.size)
 dev.off()
 
 #Number of rows that would not be removed due to missing data
@@ -123,7 +123,7 @@ CASchools_PM_Datacomplete <- complete(CASchools_PM_Dataimp)
 #Visualize Proportion of missing data in Imputed Dataset
 f <- paste0('./figures/', 'data_missing_Imputed.png'); print(f)
 png(filename = f, width = 7, height = 5, units = "in", res = 300)
-aggr(CASchools_PM_Datacomplete, cex.axis=cex.axis.size, cex.lab = cex.axis.size*1.5)
+aggr(CASchools_PM_Datacomplete, cex.axis=cex.axis.size)
 dev.off()
 
 #Number of rows that would not be removed due to missing data
