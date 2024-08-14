@@ -69,7 +69,7 @@ CASchools_PM_Data2 <- CASchools_PM_Data %>%
     Year_built = as.numeric(Year_built),
     Median_income_BG = as.numeric(Median_income_BG),
     Percent_FRPM = as.numeric(Percent_FRPM),
-    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Students_Disabilities = as.numeric(Students_Disabilities),
     Asthma_Rates = as.numeric(Asthma_Rates),
     COVID_infections = as.numeric(COVID_infections),
     Pollution_Burden = as.numeric(Pollution_Burden),
@@ -112,6 +112,7 @@ nrow(na.omit(CASchools_PM_Data2))
 # Multivariate Imputation by Chained-Equations (MICE)
 #fill missing values in dataset by prediction through multiple iterations using
 #the MICE algorithm
+set.seed(123)
 CASchools_PM_Dataimp <- mice(CASchools_PM_Data2, seed = 123)
 
 # Complete dataset after imputation and store as a new dataframe
@@ -172,7 +173,7 @@ m.out1 <- matchit(retrofit ~
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
                     Percent_Pasture + Land_Surface_Temp + Year_built +
                     Median_income_BG +	Percent_FRPM + Staff +
-                    Students_with_Disabilities +	Asthma_Rates +	
+                    Students_Disabilities +	Asthma_Rates +	
                     COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_dropna,
                   method = "optimal") 
@@ -199,7 +200,7 @@ m.out2 <- matchit(ndvi_median_binary ~
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
                     Percent_Pasture + Land_Surface_Temp + Year_built +
                     Median_income_BG +	Percent_FRPM + Staff +	
-                    Students_with_Disabilities +	Asthma_Rates +	
+                    Students_Disabilities +	Asthma_Rates +	
                     COVID_infections +	Pollution_Burden,
                    data = scaling_maxmin_dropna,
                    method = "optimal")
@@ -222,7 +223,7 @@ m.out3 <- matchit(retrofit_and_ndvi ~
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
                     Percent_Pasture + Land_Surface_Temp	+ Year_built +
                     Median_income_BG +	Percent_FRPM + Staff +
-                    Students_with_Disabilities +	Asthma_Rates +	
+                    Students_Disabilities +	Asthma_Rates +	
                     COVID_infections +	Pollution_Burden,
                    data = scaling_maxmin_dropna,
                    method = "optimal")
@@ -248,7 +249,7 @@ m.out1_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
+                           Students_Disabilities +	Asthma_Rates +	
                            COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_complete,
                   method = "optimal") 
@@ -267,7 +268,7 @@ m.out2_complete <- matchit(ndvi_median_binary ~ retrofit +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +	
-                           Students_with_Disabilities +	Asthma_Rates +	
+                           Students_Disabilities +	Asthma_Rates +	
                            COVID_infections +	Pollution_Burden,
                    data = scaling_maxmin_complete,
                    method = "optimal")
@@ -285,7 +286,7 @@ m.out3_complete <- matchit(retrofit_and_ndvi ~ Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
+                           Students_Disabilities +	Asthma_Rates +	
                            COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_complete,
                   method = "optimal")
