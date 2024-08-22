@@ -229,7 +229,7 @@ m.out3 <- matchit(retrofit_and_ndvi ~
                    method = "optimal")
 summary(m.out3)
 
-
+### Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
 m.out3
 summary(m.out3, un = FALSE)
 m_data3 <- match.data(m.out3)
