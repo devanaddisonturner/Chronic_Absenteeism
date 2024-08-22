@@ -180,7 +180,7 @@ m.out1 <- matchit(retrofit ~
 summary(m.out1)
 
 
-#Scenario 1: Energy Efficiency Retrofits in K-12 Schools
+### Scenario 1: Energy Efficiency Retrofits in K-12 Schools
 m.out1
 summary(m.out1, un = FALSE)
 
