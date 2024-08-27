@@ -737,7 +737,6 @@ ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, he
 
 ## Time-Series 
 ### Graph Year Built, LST, and NDVI
-
 ```{r}
 CASchools_YearBuilt_Data <- read_csv("./data/CASchools_YearBuilt_Data.csv")
 
