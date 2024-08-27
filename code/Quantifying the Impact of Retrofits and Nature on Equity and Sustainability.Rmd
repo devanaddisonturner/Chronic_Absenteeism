@@ -742,12 +742,12 @@ CASchools_YearBuilt_Data <- read_csv("./data/CASchools_YearBuilt_Data.csv")
 
 p <- ggplot(CASchools_YearBuilt_Data, aes(x = Year_built))
   p <- p + geom_line(aes(y = Land_Surface_Temp, color = "Land Surface Temperature"))
-  # adding the relative humidity data, transformed to match roughly the range of the temperature
+  # adding the NDVI, transformed to match roughly the range of the temperature
   p <- p + geom_line(aes(y = NDVI_median*40, color = "Normalized Difference Vegetation Index (NDVI)"))
   # now adding the secondary axis, following the example in the help file ?scale_y_continuous
   # and, very important, reverting the above transformation
   p <- p + scale_y_continuous(sec.axis = sec, name = "Average Annual NDVI") 
-  # modifying colours and theme options
+  # modifying colors and theme options
   p <- p + scale_colour_manual(values = c("red", "blue"))
   p <- p + labs(y = "Average Annual Temperature [°C]",
                 x = "Year Built of K-12 Schools",
