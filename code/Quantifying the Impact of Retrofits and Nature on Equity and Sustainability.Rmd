@@ -718,13 +718,15 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
                show.legend = F) +
   geom_vline(xintercept = mean2, linetype="dotted") +
-  geom_vline(xintercept = mean1, linetype="dotted") +  
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 3: Impact of Energy Efficiency Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
     "\nCohen's d = ",  ES, ' (Large Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
-            values= c("treatment" = "red","control" = "black")) +
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
   # # remove axis labels
   ylab("Mean") + xlab("Standard Deviation (σ)") +
   theme_bw()+
