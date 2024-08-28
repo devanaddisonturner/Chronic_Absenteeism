@@ -740,18 +740,26 @@ ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, he
 ```{r}
 CASchools_YearBuilt_Data <- read_csv("./data/CASchools_YearBuilt_Data.csv")
 
-p <- ggplot(CASchools_YearBuilt_Data, aes(x = Year_built))
-  p <- p + geom_line(aes(y = Land_Surface_Temp, color = "Land Surface Temperature"))
+convert_factor <- 100
+
+ggplot(CASchools_YearBuilt_Data, aes(x = Year_built)) + 
+  geom_line(aes(y = Land_Surface_Temp, color = "Land Surface Temperature")) +
   # adding the NDVI, transformed to match roughly the range of the temperature
-  p <- p + geom_line(aes(y = NDVI_median*40, color = "Normalized Difference Vegetation Index (NDVI)"))
+  geom_line(aes(y = NDVI_median*convert_factor, color = "Normalized Difference Vegetation Index (NDVI)")) + 
   # now adding the secondary axis, following the example in the help file ?scale_y_continuous
   # and, very important, reverting the above transformation
-  p <- p + scale_y_continuous(sec.axis = sec, name = "Average Annual NDVI") 
+  scale_y_continuous(sec.axis = sec_axis(~. /convert_factor, name = "Average Annual NDVI")) +
   # modifying colors and theme options
-  p <- p + scale_colour_manual(values = c("red", "blue"))
-  p <- p + labs(y = "Average Annual Temperature [°C]",
+  scale_colour_manual(values = c("red", "blue")) +
+  labs(y = "Average Annual Temperature [°C]",
                 x = "Year Built of K-12 Schools",
                 color = "Parameter") +
-  ggtitle("K-12 Schools Infrastructure, Environment, and Climate Across California, USA during the COVID-19 Pandemic") + theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-  p <- p + theme(legend.position = "bottom") 
+  ggtitle("K-12 Schools Infrastructure, Environment, and Climate \nAcross California, USA during the COVID-19 Pandemic") + 
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = c(0.25, 0.9), 
+        legend.background = element_rect(fill='transparent'),
+        axis.title.y.left =  element_text(color='red'),
+        axis.title.y.right = element_text(color='blue')) 
+ggsave(filename = './figures/Time-Series.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
 ```
