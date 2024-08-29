@@ -764,4 +764,11 @@ ggplot(CASchools_YearBuilt_Data, aes(x = Year_built)) +
         axis.title.y.left =  element_text(color='red'),
         axis.title.y.right = element_text(color='blue')) 
 ggsave(filename = './figures/Time-Series.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
+
+
+ggplot(CASchools_YearBuilt_Data) + 
+  geom_point(aes(x = Land_Surface_Temp, y = NDVI_median, color = Year_built), alpha = 0.6, show.legend = T) +
+  scale_color_viridis_c() +
+  theme_bw()
+ggsave(filename = './figures/temp_ndvi_scatter.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
 ```
