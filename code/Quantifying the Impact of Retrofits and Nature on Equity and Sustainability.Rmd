@@ -300,8 +300,8 @@ m_data3_complete <- match.data(m.out3_complete)
 
 ## Control and Treatment subsets
 
-### Scenario 1
-```{r}
+### Raw Data
+```{r Scenario 1}
 ### Scenario 1: Energy Efficiency Retrofits in K-12 Schools
 
 #Control Group 
@@ -341,9 +341,9 @@ m_data_wide_2 <- merge(
 ```
 
 
-### Scenario 2
 
-```{r}
+
+```{r Scenario 2}
 ## Scenario 2: Nature Exposure in K-12 Schools
 
 #Control Group 
@@ -383,8 +383,8 @@ m_data_wide_4 <- merge(
 ```
 
 
-### Scenario 3
-```{r}
+
+```{r Scenario 3}
 ## Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools
 
 #Control Group 
@@ -423,9 +423,9 @@ m_data_wide_6 <- merge(
 )
 ```
 
-####################### Imputed Data
+### Imputed Data
 
-```{r}
+```{r Scenario 1}
 ### Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Data
 #Control Group 
 m_data_c_complete <- m_data_complete %>%
@@ -460,7 +460,7 @@ m_data_wide_2_complete <- merge(
 )
 ```
 
-```{r}
+```{r Scenario 2}
 ### Scenario 2: Nature Exposure in K-12 Schools with Imputed Data
 
 #Control Group 
@@ -497,7 +497,8 @@ m_data_wide_4_complete <- merge(
 )
 ```
 
-```{r}
+
+```{r Scenario 3}
 ### Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools with Imputed Data
 
 #Control Group 
