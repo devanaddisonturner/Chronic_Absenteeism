@@ -747,40 +747,7 @@ ggplot(df1, aes(x,y, color="control")) +
         plot.title = element_text(size=9))
 
 ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
-```
 
-## Time-Series 
-### Graph Year Built, LST, and NDVI
-```{r}
-CASchools_YearBuilt_Data <- read_csv("./data/CASchools_YearBuilt_Data.csv")
-
-convert_factor <- 100
-
-ggplot(CASchools_YearBuilt_Data, aes(x = Year_built)) + 
-  geom_line(aes(y = Land_Surface_Temp, color = "Land Surface Temperature")) +
-  # adding the NDVI, transformed to match roughly the range of the temperature
-  geom_line(aes(y = NDVI_median*convert_factor, color = "Normalized Difference Vegetation Index (NDVI)")) + 
-  # now adding the secondary axis, following the example in the help file ?scale_y_continuous
-  # and, very important, reverting the above transformation
-  scale_y_continuous(sec.axis = sec_axis(~. /convert_factor, name = "Average Annual NDVI")) +
-  # modifying colors and theme options
-  scale_colour_manual(values = c("red", "blue")) +
-  labs(y = "Average Annual Temperature [°C]",
-                x = "Year Built of K-12 Schools",
-                color = "Parameter") +
-  ggtitle("K-12 Schools Infrastructure, Environment, and Climate \nAcross California, USA during the COVID-19 Pandemic") + 
-  theme_bw() + 
-  theme(plot.title = element_text(hjust = 0.5),
-        legend.position = c(0.25, 0.9), 
-        legend.background = element_rect(fill='transparent'),
-        axis.title.y.left =  element_text(color='red'),
-        axis.title.y.right = element_text(color='blue')) 
-ggsave(filename = './figures/Time-Series.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
-
-
-ggplot(CASchools_YearBuilt_Data) + 
-  geom_point(aes(x = Land_Surface_Temp, y = NDVI_median, color = Year_built), alpha = 0.6, show.legend = T) +
-  scale_color_viridis_c() +
-  theme_bw()
-ggsave(filename = './figures/temp_ndvi_scatter.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
+#To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
+sessionInfo()
 ```
