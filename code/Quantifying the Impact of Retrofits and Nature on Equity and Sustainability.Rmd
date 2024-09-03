@@ -13,9 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## Packages --------------------------------------------------------------------
-# install.packages("readr")
-# install.packages("tidyverse")
-# install.packages("dplyr")
+# install.packages("readr", dependecies = TRUE)
+# install.packages("tidyverse", dependecies = TRUE)
+# install.packages("dplyr", dependecies = TRUE)
 
 library(readr)
 library(dplyr)
@@ -23,25 +23,28 @@ library(tidyverse)
 
 
 ### --- to impute data ----
-# install.packages("mice")
+# install.packages("devtools")
 # install.packages("lattice")
 # install.packages("VIM")
-library(mice)
 library(lattice)
 library(VIM) ## aggr()
-
-
-### ---- Matching ----
-#install.packages("MatchIt")
-##Note: MatchIt package may not install or load on MacOS. Instead, use Windows OS.
-
-library(MatchIt)
-
 
 ### --- viz ----
 # install.packages("ggplot2")
 library(ggplot2)
 ```
+
+#Run the following lines twice to complete install of the mice package. This archived version of the MICE package is not compatible with Mac0S. Instead, use Windows operating system.
+library(devtools)
+install_version("mice", version = "3.11.0", repos = "https://cloud.r-project.org")
+library(mice)
+
+### ---- Matching ----
+#install.packages("MatchIt")
+#install.packages("optmatch")
+##Note: MatchIt package may not install or load on MacOS. Instead, use Windows OS.
+
+library(MatchIt)
 
 # Data
 
@@ -53,7 +56,9 @@ library(ggplot2)
 
 #California, USA K-12 Schools Raw Dataset to study 3 interventions effects on
 #on Chronic Absenteeism during the COVID-19 Pandemic
-
+library(readr)
+library(dplyr)
+library(tidyverse)
 CASchools_PM_Data <- read_csv("./data/ChronicAbsenteeism_AllSchools_PMData_2.csv")
 
 #changing variable to numeric
@@ -99,11 +104,14 @@ CASchools_PM_Data2 <- CASchools_PM_Data %>%
   https://library.virginia.edu/data/articles/getting-started-with-multiple-imputation-in-r
 
 ```{r}
+library(lattice)
+library(VIM)
+library(mice)
 # Visualize Proportion of missing data
 f <- paste0('./figures/', 'data_missing.png'); print(f)
 png(filename = f, width = 7, height = 5, units = "in", res = 300)
 cex.axis.size = 0.425
-VIM::aggr(CASchools_PM_Data2, cex.axis=cex.axis.size)
+aggr(CASchools_PM_Data2, cex.axis=cex.axis.size)
 dev.off()
 
 #Number of rows that would not be removed due to missing data
@@ -117,7 +125,6 @@ CASchools_PM_Dataimp <- mice(CASchools_PM_Data2, seed = 123)
 
 # Complete dataset after imputation and store as a new dataframe
 CASchools_PM_Datacomplete <- complete(CASchools_PM_Dataimp)
-
 
 
 #Visualize Proportion of missing data in Imputed Dataset
@@ -166,6 +173,7 @@ scaling_maxmin_complete$School_ID <- rownames(CASchools_PM_Datacomplete)
 ### Scenario 1: Energy Efficiency (EE) Retrofits in K-12 Schools
 
 ```{r}
+library(MatchIt)
 #
 #1:1 optimal PS matching with optimal matching on School covariates
 m.out1 <- matchit(retrofit ~ 
