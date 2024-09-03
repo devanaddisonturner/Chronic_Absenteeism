@@ -13,15 +13,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## Packages --------------------------------------------------------------------
-# install.packages("readr", dependecies = TRUE)
+# install.packages("readr", dependencies = TRUE)
 
 ### --- viz ----
 # install.packages("ggplot2")
 library(ggplot2)
 ----------------
 
-# install.packages("tidyverse", dependecies = TRUE)
-# install.packages("dplyr", dependecies = TRUE)
+# install.packages("tidyverse", dependencies = TRUE)
+# install.packages("dplyr", dependencies = TRUE)
 
 library(readr)
 library(dplyr)
