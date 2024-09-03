@@ -14,13 +14,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Packages --------------------------------------------------------------------
 # install.packages("readr", dependecies = TRUE)
+
+### --- viz ----
+# install.packages("ggplot2")
+library(ggplot2)
+----------------
+
 # install.packages("tidyverse", dependecies = TRUE)
 # install.packages("dplyr", dependecies = TRUE)
 
 library(readr)
 library(dplyr)
 library(tidyverse)
-
 
 ### --- to impute data ----
 # install.packages("devtools")
@@ -29,10 +34,6 @@ library(tidyverse)
 library(lattice)
 library(VIM) ## aggr()
 
-### --- viz ----
-# install.packages("ggplot2")
-library(ggplot2)
-```
 
 #Run the following lines twice to complete install of the mice package. This archived version of the MICE package is not compatible with Mac0S. Instead, use Windows operating system.
 library(devtools)
@@ -45,12 +46,15 @@ library(mice)
 ##Note: MatchIt package may not install or load on MacOS. Instead, use Windows OS.
 
 library(MatchIt)
+```
 
 # Data
 
 ## Input data
 
 ### Raw data 
+
+
 
 ```{r}
 
