@@ -757,7 +757,7 @@ ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, he
 #Calculate and plot a Pearson Correlation Coefficient Matrix 
 ```{r}
 #Store raw data into a new dataframe
-CASchools_PM_Data_income_sub <- read_csv("Chronic_Absenteeism/data/CASchools_PM_Data_income_subset.csv")
+CASchools_PM_Data_income_sub <- read_csv("./data/CASchools_PM_Data_income_subset.csv")
 
 #Install then load package to plot C-matrix 
 install.packages("corrplot")
