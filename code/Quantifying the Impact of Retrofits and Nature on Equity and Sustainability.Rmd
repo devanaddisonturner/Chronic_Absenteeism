@@ -7,6 +7,8 @@ output: html_document
 
 
 # Setup
+getwd()
+setwd('path')
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -747,6 +749,42 @@ ggplot(df1, aes(x,y, color="control")) +
         plot.title = element_text(size=9))
 
 ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+```
+
+#Calculate and plot a Pearson Correlation Coefficient Matrix 
+```{r}
+#Store raw data into a new dataframe
+CASchools_PM_Data_income_sub <- read_csv("Chronic_Absenteeism/data/CASchools_PM_Data_income_subset.csv")
+
+#Install then load package to 
+install.packages("corrplot")
+library(corrplot)
+my_data <- CASchools_PM_Data_income_sub[, c(2:20)]
+f2 <- paste0('Pearson_Correlation_Matrix2.png'); print(f)
+png(filename = f2, width = 7, height = 4, units = "in", res = 300)
+corrplot(correlation_matrix, method = "circle")
+dev.off()
+```
+
+```{r}
+#Plot significant correlations of variables
+
+install.packages("lares")
+library(lares)
+p <- corr_cross(my_data, # name of dataframe
+  max_pvalue = 0.05, # display only significant correlations (at 5% level)
+  top = 10 # display top 10 couples of variables (by correlation coefficient)
+   # Call the recordPlot() function to record the plot
+)
+print(p)
+ggsave(filename = 'Correlation_Plot.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
+
+p2 <- corr_var(my_data, # name of dataframe
+  Chronic_Absenteeism, # name of variable to focus on
+  top = 5 # display top 5 correlations
+)
+print(p2)
+ggsave(filename = 'Correlation_Plot_2.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
 
 #To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
 sessionInfo()
