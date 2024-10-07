@@ -7,8 +7,11 @@ output: html_document
 
 
 # Setup
+```{r}
+#Get working directory and file path information, then set for working environment in the current R session.
 getwd()
 setwd('path')
+```
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
