@@ -1,5 +1,5 @@
 ---
-title: "Quantifying the Impact of Retrofits and Nature on Equity and Sustainability"
+title: "Quantifying the Impact of Building Energy Efficiency Retrofits and Exposure to Nature on Human Health and Well-Being"
 author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Gretchen Cara Daily, and Rishee Kumar Jain"
 date: "2024-06-27"
 output: html_document
