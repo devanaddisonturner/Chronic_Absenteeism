@@ -756,6 +756,10 @@ ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, he
 
 #Calculate and plot a Pearson Correlation Coefficient Matrix 
 ```{r}
+library(readr)
+library(readxl)
+library(dplyr)
+library(tidyverse) 
 #Store raw data into a new dataframe
 CASchools_PM_Data_income_sub <- read_csv("./data/CASchools_PM_Data_income_subset.csv")
 
