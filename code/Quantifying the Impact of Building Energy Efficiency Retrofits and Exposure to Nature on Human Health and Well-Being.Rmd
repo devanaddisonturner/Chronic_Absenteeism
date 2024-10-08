@@ -10,7 +10,7 @@ output: html_document
 ```{r}
 #Get working directory and file path information, then set for working environment in the current R session.
 getwd()
-setwd('path')
+# setwd('path')
 ```
 
 ```{r include=FALSE}
@@ -59,8 +59,8 @@ library(MatchIt)
 
 ### Raw data 
 
-#Examine if inequalities exist in K-12 Schools across California, USA
-#from 2020-2022 in context of the COVID-19 Pandemic
+ Examine if inequalities exist in K-12 Schools across California, USA from 2020-2022 in context of the COVID-19 Pandemic
+ 
 ```{r}
 library(ggplot2)
 library(viridis)
@@ -78,7 +78,8 @@ labs(x = "Pollution Burden, %",
        title = "Pollution Burden and Chronic Absenteeism in California,USA K-12 Schools by Household Income and Racial Diversity") + 
   theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 
-ggsave(filename = './figures/', Chronic_Absenteeism_by_SEProfile.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
+ggsave(filename = paste0('./figures/', 'Chronic_Absenteeism_by_SEProfile.png'), 
+       plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
 ```
 
 ```{r}
@@ -774,29 +775,36 @@ ggplot(df1, aes(x,y, color="control")) +
 ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
 
-#Calculate and plot a Pearson Correlation Coefficient Matrix 
+# Calculate and plot a Pearson Correlation Coefficient Matrix 
 ```{r}
 library(readr)
 library(readxl)
 library(dplyr)
 library(tidyverse) 
 #Store raw data into a new dataframe
-CASchools_Data_income_sub <- read_csv("./data/CASchools_Data_income_subset.csv")
+CASchools_Data_income_sub <- read_csv("./data/CASchools_Data_income_subset.csv", show_col_types = FALSE)
 
 #Install then load package to plot PC matrix 
-install.packages("corrplot")
+# install.packages("corrplot")
 library(corrplot)
-my_data <- CASchools_Data_income_sub[, c(2:20)]
+
+names(CASchools_Data_income_sub)
+my_data <- CASchools_Data_income_sub %>%
+  dplyr::select(NDVI_median:retrofit_and_ndvi)
+
+correlation_matrix = cor(my_data)
+corrplot(correlation_matrix, method = "ellipse", order = 'AOE', type = 'lower', tl.col = 'black', diag = F)
+
 f <- paste0('./figures/', 'Pearson_Correlation_Matrix2.png'); print(f)
-png(filename = f, width = 7, height = 4, units = "in", res = 300)
-corrplot(correlation_matrix, method = "circle")
+png(filename = f, width = 7, height = 7, units = "in", res = 300)
+corrplot(correlation_matrix, method = "ellipse", order = 'AOE', type = 'lower', tl.col = 'black', diag = F)
 dev.off()
 ```
 
 ```{r}
 #Plot significant correlations of variables
 
-install.packages("lares")
+# install.packages("lares")
 library(lares)
 p <- corr_cross(my_data, # name of dataframe
   max_pvalue = 0.05, # display only significant correlations (at 5% level)
