@@ -66,7 +66,7 @@ library(viridis)
 library(readr)
 library(readxl)
 
-CASchools_PM_Data_income_sub <- read_csv("./data/CASchools_PM_Data_income_sub.csv")
+CASchools_PM_Data_income_sub <- read_csv("./data/CA_Schools_PSM_Data_income_sub.csv")
 
 ggplot(CASchools_PM_Data_income_sub, aes(x = Pollution_Burden, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
 #geom specifies the type of graph points to be displayed
@@ -87,7 +87,7 @@ ggsave(filename = 'Chronic_Absenteeism_by_SEProfile.png', plot = last_plot(), wi
 library(readr)
 library(dplyr)
 library(tidyverse)
-CASchools_PM_Data <- read_csv("./data/ChronicAbsenteeism_AllSchools_PMData_2.csv")
+CASchools_PM_Data <- read_csv("./data/ChronicAbsenteeism_Schools_PSM_Data.csv")
 
 #changing variable to numeric
 CASchools_PM_Data2 <- CASchools_PM_Data %>%
