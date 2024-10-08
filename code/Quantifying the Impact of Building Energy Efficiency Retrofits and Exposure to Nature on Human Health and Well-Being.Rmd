@@ -60,6 +60,7 @@ library(MatchIt)
 ### Raw data 
 
 #Examine if inequalities exist in K-12 Schools across California, USA
+#from 2020-2022 in context of the COVID-19 Pandemic
 ```{r}
 library(ggplot2)
 library(viridis)
@@ -77,7 +78,7 @@ labs(x = "Pollution Burden, %",
        title = "Pollution Burden and Chronic Absenteeism in California,USA K-12 Schools by Household Income and Racial Diversity") + 
   theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 
-ggsave(filename = 'Chronic_Absenteeism_by_SEProfile.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
+ggsave(filename = './figures/', Chronic_Absenteeism_by_SEProfile.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
 ```
 
 ```{r}
@@ -786,7 +787,7 @@ CASchools_Data_income_sub <- read_csv("./data/CASchools_Data_income_subset.csv")
 install.packages("corrplot")
 library(corrplot)
 my_data <- CASchools_Data_income_sub[, c(2:20)]
-f2 <- paste0('Pearson_Correlation_Matrix2.png'); print(f)
+f2 <- paste0(./figures/', 'Pearson_Correlation_Matrix2.png'); print(f)
 png(filename = f2, width = 7, height = 4, units = "in", res = 300)
 corrplot(correlation_matrix, method = "circle")
 dev.off()
@@ -803,14 +804,14 @@ p <- corr_cross(my_data, # name of dataframe
    # Call the recordPlot() function to record the plot
 )
 print(p)
-ggsave(filename = 'Correlation_Plot.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
+ggsave(filename = ./figures/', 'Correlation_Plot.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
 
 p2 <- corr_var(my_data, # name of dataframe
   Chronic_Absenteeism, # name of variable to focus on
   top = 5 # display top 5 correlations
 )
 print(p2)
-ggsave(filename = 'Correlation_Plot_2.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
+ggsave(filename = ./figures/', 'Correlation_Plot_2.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
 
 #To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
 sessionInfo()
