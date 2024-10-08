@@ -80,7 +80,7 @@ labs(x = "Pollution Burden, %",
        title ="Pollution Burden and Chronic Absenteeism in California, USA K-12 Schools") + 
   theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 
-ggsave(filename = paste0('./figures/'Pollution_ChronicAbsenteeism_SEProfile.png', plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
+ggsave(filename = './figures/', 'Pollution_ChronicAbsenteeism_SEProfile.png', plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
 ```
 
 ```{r}
