@@ -787,7 +787,7 @@ CASchools_Data_income_sub <- read_csv("./data/CASchools_Data_income_subset.csv")
 install.packages("corrplot")
 library(corrplot)
 my_data <- CASchools_Data_income_sub[, c(2:20)]
-f <- paste0(./figures/', 'Pearson_Correlation_Matrix2.png'); print(f)
+f <- paste0('./figures/', 'Pearson_Correlation_Matrix2.png'); print(f)
 png(filename = f, width = 7, height = 4, units = "in", res = 300)
 corrplot(correlation_matrix, method = "circle")
 dev.off()
@@ -804,14 +804,14 @@ p <- corr_cross(my_data, # name of dataframe
    # Call the recordPlot() function to record the plot
 )
 print(p)
-ggsave(filename = ./figures/', 'Correlation_Plot.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
+ggsave(filename = './figures/', 'Correlation_Plot.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
 
 p2 <- corr_var(my_data, # name of dataframe
   Chronic_Absenteeism, # name of variable to focus on
   top = 5 # display top 5 correlations
 )
 print(p2)
-ggsave(filename = ./figures/', 'Correlation_Plot_2.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
+ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
 
 #To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
 sessionInfo()
