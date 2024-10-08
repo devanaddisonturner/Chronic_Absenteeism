@@ -69,9 +69,9 @@ library(readxl)
 
 CASchools_Data_income_subset <- read_csv("./data/CASchools_Data_income_subset.csv")
 
-CASchools_PSM_Data_income_subset$income_f = factor(CASchools_PSM_Data_income_subset$income, levels=c('high income','medium income','low income'))
+CASchools_Data_income_subset$income_f = factor(CASchools_Data_income_subset$income, levels=c('high income','medium income','low income'))
 
-ggplot(CASchools_PSM_Data_income_subset, aes(x = Pollution_Burden, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
+ggplot(CASchools_Data_income_subset, aes(x = Pollution_Burden, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
 #geom specifies the type of graph points to be displayed
   geom_point() + scale_color_viridis() + theme_bw() +
   facet_grid(School_Type ~ income_f) + xlim(0, 100) + ylim(0, 100) + 
