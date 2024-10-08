@@ -69,17 +69,18 @@ library(readxl)
 
 CASchools_Data_income_subset <- read_csv("./data/CASchools_Data_income_subset.csv")
 
-ggplot(CASchools_Data_income_subset, aes(x = Pollution_Burden, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
+CASchools_PSM_Data_income_subset$income_f = factor(CASchools_PSM_Data_income_subset$income, levels=c('high income','medium income','low income'))
+
+ggplot(CASchools_PSM_Data_income_subset, aes(x = Pollution_Burden, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
 #geom specifies the type of graph points to be displayed
   geom_point() + scale_color_viridis() + theme_bw() +
-  facet_grid(School_Type ~ income) + xlim(0, 100) + ylim(0, 100) + 
+  facet_grid(School_Type ~ income_f) + xlim(0, 100) + ylim(0, 100) + 
 labs(x = "Pollution Burden, %", 
-       y = "Average Rate of Chronic Absenteeism, %", 
-       title = "Pollution Burden and Chronic Absenteeism in California,USA K-12 Schools by Household Income and Racial Diversity") + 
+       y = "Chronic Absenteeism Rate, %", 
+       title ="Pollution Burden and Chronic Absenteeism in California, USA K-12 Schools") + 
   theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 
-ggsave(filename = paste0('./figures/', 'Chronic_Absenteeism_by_SEProfile.png'), 
-       plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
+ggsave(filename = paste0('./figures/'Pollution_ChronicAbsenteeism_SEProfile.png', plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
 ```
 
 ```{r}
