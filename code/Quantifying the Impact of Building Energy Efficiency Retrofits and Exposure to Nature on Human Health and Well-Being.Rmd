@@ -66,15 +66,15 @@ library(viridis)
 library(readr)
 library(readxl)
 
-CASchools_PM_Data_income_sub <- read_csv("./data/CA_Schools_PSM_Data_income_sub.csv")
+CASchools_Data_income_subset <- read_csv("./data/CASchools_Data_income_subset.csv")
 
-ggplot(CASchools_PM_Data_income_sub, aes(x = Pollution_Burden, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
+ggplot(CASchools_Data_income_subset, aes(x = Pollution_Burden, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
 #geom specifies the type of graph points to be displayed
   geom_point() + scale_color_viridis() + theme_bw() +
   facet_grid(School_Type ~ income) + xlim(0, 100) + ylim(0, 100) + 
 labs(x = "Pollution Burden, %", 
        y = "Average Rate of Chronic Absenteeism, %", 
-       title = "Pollution Burden and Chronic Absenteeism in K-12 Schools by Income and Racial Diversity in California") + 
+       title = "Pollution Burden and Chronic Absenteeism in California K-12 Schools by Income and Racial Diversity") + 
   theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 
 ggsave(filename = 'Chronic_Absenteeism_by_SEProfile.png', plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
@@ -781,12 +781,12 @@ library(readxl)
 library(dplyr)
 library(tidyverse) 
 #Store raw data into a new dataframe
-CASchools_PM_Data_income_sub <- read_csv("./data/CASchools_PM_Data_income_subset.csv")
+CASchools_Data_income_sub <- read_csv("./data/CASchools_Data_income_subset.csv")
 
 #Install then load package to plot C-matrix 
 install.packages("corrplot")
 library(corrplot)
-my_data <- CASchools_PM_Data_income_sub[, c(2:20)]
+my_data <- CASchools_Data_income_sub[, c(2:20)]
 f2 <- paste0('Pearson_Correlation_Matrix2.png'); print(f)
 png(filename = f2, width = 7, height = 4, units = "in", res = 300)
 corrplot(correlation_matrix, method = "circle")
