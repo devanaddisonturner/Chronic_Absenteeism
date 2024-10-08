@@ -783,12 +783,12 @@ library(tidyverse)
 #Store raw data into a new dataframe
 CASchools_Data_income_sub <- read_csv("./data/CASchools_Data_income_subset.csv")
 
-#Install then load package to plot C-matrix 
+#Install then load package to plot PC matrix 
 install.packages("corrplot")
 library(corrplot)
 my_data <- CASchools_Data_income_sub[, c(2:20)]
-f2 <- paste0(./figures/', 'Pearson_Correlation_Matrix2.png'); print(f)
-png(filename = f2, width = 7, height = 4, units = "in", res = 300)
+f <- paste0(./figures/', 'Pearson_Correlation_Matrix2.png'); print(f)
+png(filename = f, width = 7, height = 4, units = "in", res = 300)
 corrplot(correlation_matrix, method = "circle")
 dev.off()
 ```
