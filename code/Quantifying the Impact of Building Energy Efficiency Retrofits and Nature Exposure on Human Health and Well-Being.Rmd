@@ -87,9 +87,13 @@ ggsave(filename = './figures/', 'Pollution_ChronicAbsenteeism_SEProfile.png', pl
 #California, USA K-12 Schools Raw Dataset to simulate 3 interventions effects on
 #on Chronic Absenteeism during the COVID-19 Pandemic
 library(readr)
+library(readxl)
 library(dplyr)
 library(tidyverse)
-CASchools_PM_Data <- read_csv("./data/ChronicAbsenteeism_Schools_PSM_Data.csv")
+
+#CASchools_PM_Data <- read_csv("./data/ChronicAbsenteeism_Schools_PSM_Data.csv")
+
+CASchools_PM_Data <- read_xlsx("CA_Schools_PSM_Data_3.xlsx")
 
 #changing variable to numeric
 CASchools_PM_Data2 <- CASchools_PM_Data %>%
@@ -104,7 +108,7 @@ CASchools_PM_Data2 <- CASchools_PM_Data %>%
     Year_built = as.numeric(Year_built),
     Median_income_BG = as.numeric(Median_income_BG),
     Percent_FRPM = as.numeric(Percent_FRPM),
-    Students_Disabilities = as.numeric(Students_Disabilities),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
     Asthma_Rates = as.numeric(Asthma_Rates),
     COVID_infections = as.numeric(COVID_infections),
     Pollution_Burden = as.numeric(Pollution_Burden),
@@ -120,6 +124,9 @@ CASchools_PM_Data2 <- CASchools_PM_Data %>%
                 -Average_NDVI_median,
                 -Student_Staff_Ratio,
                 -StudentEnrollment_mean,
+                -EEM,
+                -UID,
+                -Order,
               ) %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
@@ -211,7 +218,7 @@ m.out1 <- matchit(retrofit ~
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
                     Percent_Pasture + Land_Surface_Temp + Year_built +
                     Median_income_BG +	Percent_FRPM + Staff +
-                    Students_Disabilities +	Asthma_Rates +	
+                    Students_with_Disabilities +	Asthma_Rates +	
                     COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_dropna,
                   method = "optimal") 
@@ -238,7 +245,7 @@ m.out2 <- matchit(ndvi_median_binary ~
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
                     Percent_Pasture + Land_Surface_Temp + Year_built +
                     Median_income_BG +	Percent_FRPM + Staff +	
-                    Students_Disabilities +	Asthma_Rates +	
+                    Students_with_Disabilities +	Asthma_Rates +	
                     COVID_infections +	Pollution_Burden,
                    data = scaling_maxmin_dropna,
                    method = "optimal")
@@ -261,7 +268,7 @@ m.out3 <- matchit(retrofit_and_ndvi ~
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
                     Percent_Pasture + Land_Surface_Temp	+ Year_built +
                     Median_income_BG +	Percent_FRPM + Staff +
-                    Students_Disabilities +	Asthma_Rates +	
+                    Students_with_Disabilities +	Asthma_Rates +	
                     COVID_infections +	Pollution_Burden,
                    data = scaling_maxmin_dropna,
                    method = "optimal")
@@ -287,7 +294,7 @@ m.out1_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_Disabilities +	Asthma_Rates +	
+                           Students_with_Disabilities +	Asthma_Rates +	
                            COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_complete,
                   method = "optimal") 
@@ -306,7 +313,7 @@ m.out2_complete <- matchit(ndvi_median_binary ~ retrofit +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +	
-                           Students_Disabilities +	Asthma_Rates +	
+                           Students_with_Disabilities +	Asthma_Rates +	
                            COVID_infections +	Pollution_Burden,
                    data = scaling_maxmin_complete,
                    method = "optimal")
@@ -324,7 +331,7 @@ m.out3_complete <- matchit(retrofit_and_ndvi ~ Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_Disabilities +	Asthma_Rates +	
+                           Students_with_Disabilities +	Asthma_Rates +	
                            COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_complete,
                   method = "optimal")
