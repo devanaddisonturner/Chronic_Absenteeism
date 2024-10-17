@@ -128,6 +128,7 @@ CASchools_PM_Data2 <- CASchools_PM_Data %>%
                 -StudentEnrollment_mean,
                 -EEM,
                 -UID,
+                -char_prem_id,
                 -Order,
               ) %>%
   as.data.frame() %>%
