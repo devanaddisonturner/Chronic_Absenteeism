@@ -19,6 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Packages --------------------------------------------------------------------
 # install.packages("readr", dependencies = TRUE)
+# install.packages("readxl", dependencies = TRUE)
 
 ### --- viz ----
 # install.packages("ggplot2")
@@ -28,6 +29,7 @@ library(ggplot2)
 # install.packages("dplyr", dependencies = TRUE)
 
 library(readr)
+library(readxl)
 library(dplyr)
 library(tidyverse)
 library(viridis)
