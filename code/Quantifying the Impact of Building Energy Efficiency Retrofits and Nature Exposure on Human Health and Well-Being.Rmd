@@ -95,7 +95,7 @@ library(tidyverse)
 
 #CASchools_PM_Data <- read_csv("./data/ChronicAbsenteeism_Schools_PSM_Data.csv")
 
-CASchools_PM_Data <- read_xlsx("CA_Schools_PSM_Data_3.xlsx")
+CASchools_PM_Data <- read_xlsx("./data/CA_Schools_PSM_Data_3.xlsx")
 
 #changing variable to numeric
 CASchools_PM_Data2 <- CASchools_PM_Data %>%
