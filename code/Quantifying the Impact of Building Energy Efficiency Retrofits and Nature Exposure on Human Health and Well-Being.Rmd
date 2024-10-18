@@ -97,11 +97,10 @@ library(tidyverse)
 #CASchools_PM_Data <- read_csv("./data/ChronicAbsenteeism_Schools_PSM_Data.csv")
 
 
-CASchools_PSM_Data <- read_csv("CA_Schools_PSM_Data_3.csv")
+CASchools_PSM_Data <- read_csv("./data/CA_Schools_PSM_Data_3.csv")
 
 
-
-#CASchools_PSM_Data  <- read_xlsx("CA_Schools_PSM_Data_3.xlsx")
+#CASchools_PSM_Data  <- read_xlsx("./data/CA_Schools_PSM_Data_3.xlsx")
 
 
 ### Subset Data
