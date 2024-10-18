@@ -103,8 +103,7 @@ CASchools_PSM_Data <- read_csv("./data/CA_Schools_PSM_Data_3.csv")
 #CASchools_PSM_Data  <- read_xlsx("./data/CA_Schools_PSM_Data_3.xlsx")
 
 
-### Subset Data
-
+### Subset Data by Energy Efficiency Retrofit
 CASchools_PSM_Data_subL <- subset(CASchools_PSM_Data, EE_Retrofit_Type == "Lighting")
 CASchools_PSM_Data_subH <- subset(CASchools_PSM_Data, EE_Retrofit_Type == "HVAC")
 CASchools_PSM_Data_subB <- subset(CASchools_PSM_Data, EE_Retrofit_Type == "Building_Envelope")
