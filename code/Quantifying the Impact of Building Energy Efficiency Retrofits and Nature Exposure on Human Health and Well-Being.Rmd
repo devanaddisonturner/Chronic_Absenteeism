@@ -171,6 +171,7 @@ CASchools_PSM_Datacomplete2 <- CASchools_PSM_Datacomplete %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
   column_to_rownames(var = 'School_ID')
+```
 
 #### Subset Data by 4 types of Energy Efficiency Retrofits
 ```{r}
