@@ -243,7 +243,7 @@ CASchools_PSM_Data_subH2 <- CASchools_PSM_Data_subH %>%
     )  %>%
     dplyr::select(
       #removed variables we do not need
-               -EEM,
+                -EEM,
                 -EE_Retrofit_Type,
                 -CDS_Code,
                 -char_prem_id,
@@ -356,17 +356,17 @@ set.seed(27)
 CASchools_PSM_Dataimp <- mice(CASchools_PSM_Data2, seed = 27)
 
 # Complete dataset after imputation and store as a new dataframe
-CASchools_PSM_Datacomplete <- complete(CASchools_PSM_Dataimp)
+CASchools_PSM_Datacomplete_og <- complete(CASchools_PSM_Dataimp)
 
 
 #Visualize Proportion of missing data in Imputed Dataset
 f <- paste0('./figures/', 'data_missing_Imputed.png'); print(f)
 png(filename = f, width = 7, height = 5, units = "in", res = 300)
-aggr(CASchools_PM_Datacomplete, cex.axis=cex.axis.size)
+aggr(CASchools_PSM_Datacomplete_og, cex.axis=cex.axis.size)
 dev.off()
 
 #Number of rows that would not be removed due to missing data
-nrow(na.omit(CASchools_PSM_Datacomplete))
+nrow(na.omit(CASchools_PSM_Datacomplete_og))
 
 ```
 
@@ -390,9 +390,9 @@ scaling_maxmin_dropna <- scaling_maxmin %>%
 maxmin_scalar_complete <- function(x){
   (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
   }
-scaling_maxmin_complete <- as.data.frame(lapply(CASchools_PSM_Datacomplete, maxmin_scalar_complete))
+scaling_maxmin_complete <- as.data.frame(lapply(CASchools_PSM_Datacomplete_og, maxmin_scalar_complete))
 
-scaling_maxmin_complete$School_ID <- rownames(CASchools_PSM_Datacomplete)
+scaling_maxmin_complete$School_ID <- rownames(CASchools_PSM_Datacomplete_og)
 ```
 
 ```{r  EE Retrofit --- 1. Lighting}
@@ -888,7 +888,7 @@ m_data_t_complete <- m_data_complete %>%
   dplyr::filter(retrofit == 1)
 
 ## left join raw outcome data
-raw_complete <- CASchools_PSM_Datacomplete %>%
+raw_complete <- CASchools_PSM_Datacomplete_og %>%
   dplyr::select(Chronic_Absenteeism) %>%
   dplyr::mutate(School_ID = rownames(.)) %>%
   dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
@@ -1079,7 +1079,7 @@ m_data2_t_complete <- m_data2_complete %>%
   dplyr::filter(ndvi_median_binary == 1)
 
 ## left join raw outcome data
-raw_2_complete <- CASchools_PSM_Datacomplete2 %>%
+raw_2_complete <- CASchools_PSM_Datacomplete_og %>%
   dplyr::select(Chronic_Absenteeism) %>%
   dplyr::mutate(School_ID = rownames(.)) %>%
   dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
