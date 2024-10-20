@@ -109,7 +109,7 @@ CASchools_PSM_Data2 <- CASchools_PSM_Data %>%
     Year_built = as.numeric(Year_built),
     Median_income_BG = as.numeric(Median_income_BG),
     Percent_FRPM = as.numeric(Percent_FRPM),
-    Students_with_Disabilities = as.numeric(Students_Disabilities),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
     Asthma_Rates = as.numeric(Asthma_Rates),
     COVID_infections = as.numeric(COVID_infections),
     Pollution_Burden = as.numeric(Pollution_Burden),
@@ -356,7 +356,7 @@ set.seed(27)
 CASchools_PSM_Dataimp <- mice(CASchools_PSM_Data2, seed = 27)
 
 # Complete dataset after imputation and store as a new dataframe
-CASchools_PSM_Datacomplete <- complete(CASchools_PM_Dataimp)
+CASchools_PSM_Datacomplete <- complete(CASchools_PSM_Dataimp)
 
 
 #Visualize Proportion of missing data in Imputed Dataset
@@ -387,10 +387,10 @@ scaling_maxmin_dropna <- scaling_maxmin %>%
 
 ######### Imputed Dataset
 
-maxmin_scalar <- function(x){
+maxmin_scalar_complete <- function(x){
   (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
   }
-scaling_maxmin_complete <- as.data.frame(lapply(CASchools_PSM_Datacomplete, maxmin_scalar))
+scaling_maxmin_complete <- as.data.frame(lapply(CASchools_PSM_Datacomplete, maxmin_scalar_complete))
 
 scaling_maxmin_complete$School_ID <- rownames(CASchools_PSM_Datacomplete)
 ```
