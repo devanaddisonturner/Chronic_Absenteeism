@@ -125,12 +125,6 @@ CASchools_PSM_Data2 <- CASchools_PSM_Data %>%
                 -Average_NDVI_median,
                 -Student_Staff_Ratio,
                 -StudentEnrollment_mean,
-                -EEM,
-                -EE_Retrofit_Type,
-                -CDS_Code,
-                -UID,
-                -char_prem_id,
-                -Order,
               ) %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
