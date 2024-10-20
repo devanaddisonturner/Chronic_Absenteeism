@@ -94,7 +94,7 @@ library(readxl)
 library(dplyr)
 library(tidyverse)
 
-#CASchools_PM_Data <- read_csv("./data/ChronicAbsenteeism_Schools_PSM_Data.csv")
+#CASchools_PSM_Data <- read_csv("./data/ChronicAbsenteeism_Schools_PSM_Data.csv")
 
 #changing variable to numeric for the Overall Dataset
 CASchools_PSM_Data2 <- CASchools_PSM_Data %>%
@@ -135,7 +135,6 @@ CASchools_PSM_Data2 <- CASchools_PSM_Data %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
   column_to_rownames(var = 'School_ID')
-
 ```
 
 ```{r   Subset Data}
@@ -334,8 +333,6 @@ CASchools_PSM_Data_subP2 <- CASchools_PSM_Data_subP %>%
   column_to_rownames(var = 'School_ID')
 ```
 
-
-```
 
 ### Impute data and plot
 
