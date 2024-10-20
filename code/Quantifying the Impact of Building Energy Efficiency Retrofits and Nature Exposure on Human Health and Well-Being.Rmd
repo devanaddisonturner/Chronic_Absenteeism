@@ -407,10 +407,10 @@ scaling_maxmin_complete$School_ID <- rownames(CASchools_PSM_Datacomplete)
 
 ######### Imputed Dataset
 
-maxmin_scalar_sub <- function(x){
+maxmin_scalar_L_complete <- function(x){
   (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
   }
-scaling_maxmin_L_complete <- as.data.frame(lapply(CASchools_PSM_Data_subL2, maxmin_scalar))
+scaling_maxmin_L_complete <- as.data.frame(lapply(CASchools_PSM_Data_subL2, maxmin_scalar_L_complete))
 
 scaling_maxmin_L_complete$School_ID <- rownames(CASchools_PSM_Data_subL2)
 ```
@@ -419,10 +419,10 @@ scaling_maxmin_L_complete$School_ID <- rownames(CASchools_PSM_Data_subL2)
 
 ######### Imputed Dataset
 
-maxmin_scalar <- function(x){
+maxmin_scalar_H_complete <- function(x){
   (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
   }
-scaling_maxmin_H_complete <- as.data.frame(lapply(CASchools_PSM_Data_subH2, maxmin_scalar))
+scaling_maxmin_H_complete <- as.data.frame(lapply(CASchools_PSM_Data_subH2, maxmin_scalar_H_complete))
 
 scaling_maxmin_H_complete$School_ID <- rownames(CASchools_PSM_Data_subH2)
 ```
@@ -433,10 +433,10 @@ scaling_maxmin_H_complete$School_ID <- rownames(CASchools_PSM_Data_subH2)
 
 ######### Imputed Dataset
 
-maxmin_scalar <- function(x){
+maxmin_scalar_B_complete <- function(x){
   (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
   }
-scaling_maxmin_B_complete <- as.data.frame(lapply(CASchools_PSM_Data_subB2, maxmin_scalar))
+scaling_maxmin_B_complete <- as.data.frame(lapply(CASchools_PSM_Data_subB2, maxmin_scalar_B_complete))
 
 scaling_maxmin_B_complete$School_ID <- rownames(CASchools_PSM_Data_subB2)  
 
@@ -447,13 +447,11 @@ scaling_maxmin_B_complete$Percent_Forest[which(scaling_maxmin_B_complete$Percent
 
 ```{r EE Retrofit -- 4. Pumps, Motors, and Drives}
 
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
 ######### Imputed Dataset
 
-# maxmin_scalar <- function(x){
-#   (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
-# }
-
-normalize <- function(x) {
+maxmin_scalar_P_complete <- function(x) {
   if(min(x, na.rm=TRUE)!=max(x, na.rm=TRUE)) {
     res <- ((x - min(x, na.rm=TRUE)) / (max(x, na.rm=TRUE) - min(x, na.rm=TRUE)))
   } else {
@@ -461,7 +459,7 @@ normalize <- function(x) {
   }
   res
 }
-scaling_maxmin_P_complete <- as.data.frame(lapply(CASchools_PSM_Data_subP2, normalize))
+scaling_maxmin_P_complete <- as.data.frame(lapply(CASchools_PSM_Data_subP2, maxmin_scalar_P_complete))
 scaling_maxmin_P_complete$School_ID <- rownames(CASchools_PSM_Data_subP2)  
 ```
 
