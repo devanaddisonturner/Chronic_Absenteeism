@@ -750,6 +750,9 @@ m.out3_complete
 summary(m.out3_complete_P, un = FALSE)
 m_data3_complete_P <- match.data(m.out3_complete_P)
 ```
+
+
+
 ## Control and Treatment subsets
 
 ### Raw Data
@@ -766,7 +769,7 @@ m_data_t <- m_data %>%
 
 
 ## left join raw outcome data
-raw <- CASchools_PM_Data2 %>%
+raw <- CASchools_PSM_Data2 %>%
   dplyr::select(Chronic_Absenteeism) %>%
   dplyr::mutate(School_ID = rownames(.)) %>%
   dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
@@ -808,7 +811,7 @@ m_data2_t <- m_data2 %>%
 
 
 ## left join raw outcome data
-raw_2 <- CASchools_PM_Data2 %>%
+raw_2 <- CASchools_PSM_Data2 %>%
   dplyr::select(Chronic_Absenteeism) %>%
   dplyr::mutate(School_ID = rownames(.)) %>%
   dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
@@ -849,7 +852,7 @@ m_data3_t <- m_data3 %>%
 
 
 ## left join raw outcome data
-raw_3 <- CASchools_PM_Data2 %>%
+raw_3 <- CASchools_PSM_Data2 %>%
   dplyr::select(Chronic_Absenteeism) %>%
   dplyr::mutate(School_ID = rownames(.)) %>%
   dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
