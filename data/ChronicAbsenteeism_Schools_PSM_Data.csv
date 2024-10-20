@@ -1,4 +1,4 @@
-School_ID,NDVI_median,Percent_Water,Percent_Developed,Percent_Forest,Percent_Pasture,Percent_LandCoverTotal,Land_Surface_Temp,Year_built,Median_income_BG,Percent_FRPM,Student_Staff_Ratio,Diversity_Index,Students_Disabilities,Asthma_Rates,COVID_infections,Pollution_Burden,Chronic_Absenteeism,retrofit,ndvi_median_binary,retrofit_and_ndvi,Average_NDVI_median,StudentEnrollment_mean,Staff
+School_ID,NDVI_median,Percent_Water,Percent_Developed,Percent_Forest,Percent_Pasture,Percent_LandCoverTotal,Land_Surface_Temp,Year_built,Median_income_BG,Percent_FRPM,Student_Staff_Ratio,Diversity_Index,Students_with_Disabilities,Asthma_Rates,COVID_infections,Pollution_Burden,Chronic_Absenteeism,retrofit,ndvi_median_binary,retrofit_and_ndvi,Average_NDVI_median,StudentEnrollment_mean,Staff
 27800000000000_1,0.13,0,99.64,0,0.36,100,26.74,1997,73614,NA,NA,NA,NA,49.82,39.52,45.09,NA,1,0,0,0.242049647,NA,59.75
 27800000000000_2,0.13,0,100,0,0,100,26.83,NA,69531,89.5,NA,NA,NA,49.82,39.52,45.09,19,1,0,0,NA,NA,13.25
 1610000000000_3,0.16,0,35.48,0,64.52,100,31.64,1963,74788,NA,NA,NA,NA,30.08,19.56,36.19,13.8,0,0,0,NA,NA,NA
