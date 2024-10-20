@@ -1335,8 +1335,6 @@ print(TTestS3)
 
 ### Using Imputed Data
 
-### Using Imputed Data
-
 ```{r}
 ## Scenario 1: Energy Efficiency in K-12 Schools with Imputed Data
 TTestS1_complete <- t.test(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
