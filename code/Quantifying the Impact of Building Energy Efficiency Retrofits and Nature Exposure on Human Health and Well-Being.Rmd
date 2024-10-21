@@ -1640,7 +1640,60 @@ p2 <- corr_var(my_data, # name of dataframe
 )
 print(p2)
 ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300, bg="white")
+```
 
+
+# Treatment Count for 3 Policy Interventions
+```{r}
+# Number of Pairs-Matched for K-12 Schools in each policy intervention/scenario 
+
+## Using Raw Data
+
+### Scenario 1
+length(unique(m_data_wide_2$subclass))
+#### Scenario 2
+length(unique(m_data_wide_4$subclass))
+#### Scenario 3
+length(unique(m_data_wide_6$subclass))
+
+## Using Imputed Data
+
+## Scenario 1
+length(unique(m_data_wide_2_complete$subclass))
+
+## Scenario 1L
+length(unique(m_data_wide_2_complete_L$subclass))
+
+## Scenario 1H
+length(unique(m_data_wide_2_complete_H$subclass))
+
+## Scenario 1B
+length(unique(m_data_wide_2_complete_B$subclass))
+
+## Scenario 1P
+length(unique(m_data_wide_2_complete_P$subclass))
+
+## Scenario 2
+length(unique(m_data_wide_4_complete$subclass))
+
+## Scenario 3
+length(unique(m_data_wide_6_complete$subclass))
+
+## Scenario 3L
+length(unique(m_data_wide_6_complete_L$subclass))
+
+## Scenario 3H
+length(unique(m_data_wide_6_complete_H$subclass))
+
+## Scenario 3B
+length(unique(m_data_wide_6_complete_B$subclass))
+
+## Scenario 3P
+length(unique(m_data_wide_6_complete_P$subclass))
+```
+
+# View Session Information
+```{r}
 #To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
 sessionInfo()
 ```
