@@ -1698,8 +1698,7 @@ length(unique(m_data_wide_6_complete_B$subclass))
 length(unique(m_data_wide_6_complete_P$subclass))
 ```
 
-#Statistical Power Analysis 
-
+# Statistical Power Analysis 
 ```{r}
 #install.packages("pwr")
 library(pwr)
@@ -1707,41 +1706,29 @@ library(ggplot2)
 
 ## Scenario 1: Energy Efficiency Retrofits 
 power.analysis <- pwr.t.test(n = NULL, d = -0.12, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
-
 plot(power.analysis) +  theme_bw() + 
-
 labs(title = "Statistical Power Analysis of Scenario 1: The Impact of Energy Efficiency Retrofits on Chronic Absenteeism in K-12 Schools", x = "Sample Size", y = "P-value", color = "Effect Size") + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-
 ggsave(filename = './figures/', 'PowerAnalysis_EERetrofits.png', plot = last_plot(), width = 12, height = 7, units = "in", dpi = 300)
 
 
 ## S2: Nature Exposure
 power.analysis <- pwr.t.test(n = NULL, d = 0.41, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
-
 plot(power.analysis) +  theme_bw() + 
-
 labs(title = "Statistical Power Analysis of Scenario 2: The Impact of Nature Exposure on Chronic Absenteeism in K-12 Schools", x = "Sample Size", y = "P-value", color = "Effect Size") + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-
 ggsave(filename = './figures/', 'PowerAnalysis_NatureExposure.png', plot = last_plot(), width = 12, height = 7, units = "in", dpi = 300)
 
 
 ## Scenario 3L: Lighting  Retrofits and Nature Exposure
 power.analysis <- pwr.t.test(n = NULL, d = 0.41, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
-
 plot(power.analysis) +  theme_bw() + 
-
 labs(title = "Statistical Power Analysis of Scenario 3: The Impact of Lighting Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools", x = "Sample Size", y = "P-value", color = "Effect Size") + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-
 ggsave(filename = './figures/', 'PowerAnalysis_LightingRetrofitsandNatureExposure.png', plot = last_plot(), width = 12, height = 7, units = "in", dpi = 300)
 
 
 ## Scenario 3H: HVAC  Retrofits and Nature Exposure
 power.analysis <- pwr.t.test(n = NULL, d = 0.39, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
-
 plot(power.analysis) +  theme_bw() + 
-
 labs(title = "Statistical Power Analysis of Scenario 3: The Impact of HVAC Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools", x = "Sample Size", y = "P-value", color = "Effect Size") + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-
 ggsave(filename = './figures/', 'PowerAnalysis_HVACRetrofitsandNatureExposure.png', plot = last_plot(), width = 12, height = 7, units = "in", dpi = 300)
 ```
 
