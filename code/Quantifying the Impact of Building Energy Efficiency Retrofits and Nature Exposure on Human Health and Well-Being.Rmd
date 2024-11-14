@@ -1706,7 +1706,7 @@ library(ggplot2)
 
 ## figure para
 w = 6.5
-h = 6
+h = 4
 
 ## Scenario 1: Energy Efficiency Retrofits on Chronic absenteeism
 power.analysis <- pwr.t.test(n = NULL, d = -0.12, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
