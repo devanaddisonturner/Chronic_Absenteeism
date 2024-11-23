@@ -1931,6 +1931,21 @@ ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), wi
 
 # Treatment Count for 3 Policy Interventions
 ```{r}
+# Number of Treatments for K-12 Schools in each policy intervention/scenario
+
+Treatment_Count_Data_All
+
+Treatment_Count_Data_SubL
+
+Treatment_Count_Data_SubH
+
+Treatment_Count_Data_SubB
+
+Treatment_Count_Data_SubP
+
+
+
+
 # Number of Pairs-Matched for K-12 Schools in each policy intervention/scenario 
 
 ## Using Raw Data
