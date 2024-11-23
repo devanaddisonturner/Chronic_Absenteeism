@@ -1934,7 +1934,7 @@ ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), wi
 # Number of Treatments for K-12 Schools in each policy intervention/scenario
 
 #Read individual data files to obtain total counts of treatments for the following variables (i) retrofit, (ii) ndvi_binary, (iii) retrofit and ndvi
-#Group by the unique CDS_Code 
+#Group by the unique CDSCode 
 
 Treatment_Count_Data_All <- read_csv("./data/Treatment_Count_Data_All.csv")
 
