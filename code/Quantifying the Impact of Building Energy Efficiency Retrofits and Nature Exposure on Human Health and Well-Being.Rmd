@@ -1962,13 +1962,13 @@ sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
 #Analyze Subset Data by Lighting Retrofits in K-12 schools 
 Treatment_Count_Data_SubL <- read_csv("./data/Treatment_Count_Data_SubL.csv")
 
-#Subset Data by HVAC Retrofits in K-12 schools 
+#Analyze Subset Data by HVAC Retrofits in K-12 schools 
 Treatment_Count_Data_SubH <- read_csv("./data/Treatment_Count_Data_SubH.csv")
 
-#Subset Data by Building Envelope Retrofits in K-12 schools 
+#Analyze Subset Data by Building Envelope Retrofits in K-12 schools 
 Treatment_Count_Data_SubB <- read_csv("./data/Treatment_Count_Data_SubB.csv")
 
-#Subset Data by Pumps, Motors, and Drives in K-12 schools 
+#Analyze Subset Data by Pumps, Motors, and Drives in K-12 schools 
 Treatment_Count_Data_SubP <- read_csv("./data/Treatment_Count_Data_SubP.csv")
 ```
 
@@ -1993,37 +1993,37 @@ length(unique(m_data_wide_6$subclass))
 
 ## Using Imputed Data
 
-### Scenario 1
+### Scenario 1: Energy Efficiency Retrofits in K-12 Schools
 length(unique(m_data_wide_2_complete$subclass))
 
-### Scenario 1L
+### Scenario 1L: Lighting Retrofits in K-12 Schools
 length(unique(m_data_wide_2_complete_L$subclass))
 
-### Scenario 1H
+### Scenario 1H: HVAC Retrofits in K-12 Schools
 length(unique(m_data_wide_2_complete_H$subclass))
 
-### Scenario 1B
+### Scenario 1B: Building Envelope Retrofits in K-12 Schools
 length(unique(m_data_wide_2_complete_B$subclass))
 
-### Scenario 1P
+### Scenario 1P: Pumps, Motors, & Drives in K-12 Schools
 length(unique(m_data_wide_2_complete_P$subclass))
 
-### Scenario 2
+### Scenario 2: Nature Exposure in K-12 Schools
 length(unique(m_data_wide_4_complete$subclass))
 
-### Scenario 3
+### Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete$subclass))
 
-### Scenario 3L
+### Scenario 3L: Lighting Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete_L$subclass))
 
-### Scenario 3H
+### Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete_H$subclass))
 
-### Scenario 3B
+### Scenario 3B: Building Envelope Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete_B$subclass))
 
-### Scenario 3P
+### Scenario 3P: Pumps/Motors/&Drives Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete_P$subclass))
 ```
 
