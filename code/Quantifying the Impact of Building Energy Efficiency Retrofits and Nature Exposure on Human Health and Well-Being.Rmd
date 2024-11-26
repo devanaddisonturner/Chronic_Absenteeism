@@ -1929,25 +1929,34 @@ ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), wi
 ```
 
 
-# Treatment Count for 3 Policy Interventions
+
+# Treatment Analysis for 3 Policy Interventions
 ```{r}
 # Number of Treatments for K-12 Schools in each policy intervention/scenario
 
-#Read individual data files to obtain total counts of treatments for the following variables (i) retrofit, (ii) ndvi_binary, (iii) retrofit and ndvi
+#Read individual data files to obtain total counts of treatments across each scenario and intervention
+#for the following variables (i) retrofit, (ii) ndvi_binary, (iii) retrofit and ndvi
 #Group by the unique CDSCode 
 
+#Complete Dataset with All Energy Efficiency Retrofits in K-12 schools
 Treatment_Count_Data_All <- read_csv("./data/Treatment_Count_Data_All.csv")
 
+#Subset Data by Lighting Retrofits in K-12 schools 
 Treatment_Count_Data_SubL <- read_csv("./data/Treatment_Count_Data_SubL.csv")
 
+#Subset Data by HVAC Retrofits in K-12 schools 
 Treatment_Count_Data_SubH <- read_csv("./data/Treatment_Count_Data_SubH.csv")
 
+#Subset Data by Building Envelope Retrofits in K-12 schools 
 Treatment_Count_Data_SubB <- read_csv("./data/Treatment_Count_Data_SubB.csv")
 
+#Subset Data by Pumps, Motors, and Drives in K-12 schools 
 Treatment_Count_Data_SubP <- read_csv("./data/Treatment_Count_Data_SubP.csv")
+```
 
+```{r}
 
-# Number of Pairs-Matched for K-12 Schools in each policy intervention/scenario 
+# Number of Optimal Pairs-Matched for K-12 Schools in each policy intervention/scenario 
 
 ## Using Raw Data
 
