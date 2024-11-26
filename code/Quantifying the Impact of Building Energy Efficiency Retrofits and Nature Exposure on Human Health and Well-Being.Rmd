@@ -1929,47 +1929,74 @@ ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), wi
 ```
 
 
-
 # Treatment Analysis for 3 Policy Interventions in K-12 schools 
 ```{r}
-# Number of Treatments for K-12 Schools in each policy intervention/scenario
+# Total number of Treatments for K-12 Schools in each policy intervention/scenario
 
-#Method 1: Read individual data files to obtain total counts of treatments across each scenario and intervention including subset of EE retrofit
+#Method 1: Read individual data file to obtain the total counts of treatments across each scenario and interventions 
+#including subset of EE retrofit
 #for the following variables (i) retrofit, (ii) ndvi_binary, (iii) retrofit and ndvi
 
-#Method 2: Read only the first file with the complete dataset and obtain total count of treatments across each scenario and intervention 
-#Group by the unique CDSCode 
+#Group by the unique Unique County, District, School Code (CDS Code)
 
 #Complete Dataset with All Energy Efficiency Retrofits in K-12 schools
 Treatment_Count_Data_All <- read_csv("./data/Treatment_Count_Data_All.csv")
 
 # Total Number of K-Schools analyzed by the Unique County, District, School Code (CDS Code)
-length(unique(Treatment_Count_Data_All$CDSCode_2))
+length(unique(Treatment_Count_Data_All$CDSCode))
 
 library(dplyr)
-#Calculate the sum of interventions in each scenario by K-12 school
+#calculate total number of interventions in each scenario by unique K-12 school
 Treatment_Count_Data_All_2 <- Treatment_Count_Data_All %>%
-                              group_by(CDSCode_2) %>%
+                              group_by(CDSCode) %>%
                               summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S2 = sum(ndvi_median_binary), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
-
 sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
 sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S2'], na.rm = TRUE)
 sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
-```
 
 
-```{r}
-#Analyze Subset Data by Lighting Retrofits in K-12 schools 
-Treatment_Count_Data_SubL <- read_csv("./data/Treatment_Count_Data_SubL.csv")
+## Subset Data by 4 types of Energy Efficiency Retrofits
 
-#Analyze Subset Data by HVAC Retrofits in K-12 schools 
-Treatment_Count_Data_SubH <- read_csv("./data/Treatment_Count_Data_SubH.csv")
+#1. Lighting 
+Treatment_Count_Data_All_subL <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "Lighting")
+library(dplyr)
+#calculate total number of interventions in each scenario by unique K-12 school
+Treatment_Count_Data_All_subL_2 <- Treatment_Count_Data_All_subL %>%
+                              group_by(CDSCode) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+sum(Treatment_Count_Data_All_subL_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_subL_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
 
-#Analyze Subset Data by Building Envelope Retrofits in K-12 schools 
-Treatment_Count_Data_SubB <- read_csv("./data/Treatment_Count_Data_SubB.csv")
+#2. HVAC
+Treatment_Count_Data_All_subH <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "HVAC")
+library(dplyr)
+#calculate total number of interventions in each scenario by unique K-12 school
+Treatment_Count_Data_All_subH_2 <- Treatment_Count_Data_All_subH %>%
+                              group_by(CDSCode) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+sum(Treatment_Count_Data_All_subH_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_subH_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
 
-#Analyze Subset Data by Pumps, Motors, and Drives in K-12 schools 
-Treatment_Count_Data_SubP <- read_csv("./data/Treatment_Count_Data_SubP.csv")
+#3. Building Envelope
+Treatment_Count_Data_All_subB <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "Building_Envelope")
+library(dplyr)
+#calculate total number of interventions in each scenario by unique K-12 school
+Treatment_Count_Data_All_subB_2 <- Treatment_Count_Data_All_subB %>%
+                              group_by(CDSCode) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+sum(Treatment_Count_Data_All_subB_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_subB_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
+
+
+#4. Pumps, Motors, & Drives
+Treatment_Count_Data_All_subP <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "Pumps_Motors_Drives")
+library(dplyr)
+#calculate total number of interventions in each scenario by unique K-12 school
+Treatment_Count_Data_All_subP_2 <- Treatment_Count_Data_All_subP %>%
+                              group_by(CDSCode) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+sum(Treatment_Count_Data_All_subP_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_subP_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
 ```
 
 ```{r}
