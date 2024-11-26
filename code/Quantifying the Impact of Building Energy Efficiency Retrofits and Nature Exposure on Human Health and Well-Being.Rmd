@@ -1946,7 +1946,20 @@ Treatment_Count_Data_All <- read_csv("./data/Treatment_Count_Data_All.csv")
 # Total Number of K-Schools analyzed by the Unique County, District, School Code (CDS Code)
 length(unique(Treatment_Count_Data_All$CDSCode_2))
 
-#Subset Data by Lighting Retrofits in K-12 schools 
+library(dplyr)
+#Calculate the sum of interventions in each scenario by K-12 school
+Treatment_Count_Data_All_2 <- Treatment_Count_Data_All %>%
+                              group_by(CDSCode_2) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S2 = sum(ndvi_median_binary), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+
+sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S2'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
+```
+
+
+```{r}
+#Analyze Subset Data by Lighting Retrofits in K-12 schools 
 Treatment_Count_Data_SubL <- read_csv("./data/Treatment_Count_Data_SubL.csv")
 
 #Subset Data by HVAC Retrofits in K-12 schools 
