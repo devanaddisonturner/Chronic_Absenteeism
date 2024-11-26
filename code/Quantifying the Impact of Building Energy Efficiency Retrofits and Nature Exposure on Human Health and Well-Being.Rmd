@@ -1940,7 +1940,7 @@ ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), wi
 #Group by the unique Unique County, District, School Code (CDS Code)
 
 #Complete Dataset with All Energy Efficiency Retrofits in K-12 schools
-Treatment_Count_Data_All <- read_csv("./data/Treatment_Count_Data_All.csv")
+Treatment_Count_Data_All <- read_csv("./data/Treatment_Count_Data_All_coord.csv")
 
 # Total Number of K-Schools analyzed by the Unique County, District, School Code (CDS Code)
 length(unique(Treatment_Count_Data_All$CDSCode))
