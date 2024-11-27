@@ -2208,6 +2208,22 @@ ggplot(Schools_Year_Built, aes(x = Year_built, y = ..density..)) +
 ggsave(filename = './figures/', 'Year_Built_Schools.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
 ```
 
+# Heatmap of Occupant Health by Intervention and Utility
+```{r}
+ggplot(data1, aes(x = Scenario, y = Utility, fill = value)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = value), color = "white", size = 4) +
+  scale_fill_gradient(low = "blue", high = "red") +
+  coord_fixed() + 
+  labs(title = "Occupant Health by Intervention in K-12 Schools Across California",
+       x = "Scenario",
+       y = "Utility",
+      fill = "Chronic Absenteeism Rate (%)") + 
+  theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = ./figures/', 'Scenarios_by_Utility.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
+```
+
+
 # View Session Information
 ```{r}
 #To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
