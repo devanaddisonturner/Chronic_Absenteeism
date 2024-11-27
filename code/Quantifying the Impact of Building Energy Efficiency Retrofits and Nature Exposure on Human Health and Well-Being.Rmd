@@ -2117,7 +2117,7 @@ ggsave(filename = './figures/', 'Prop39_Schools_Global_Map.png', plot = last_plo
 
 # Spherical Global Map
 ```{r}
-# World Map with a Globe
+# Spherical World Map with our Data 
 library(sf)
 df <-  sf::sf_project("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0", 
                       "+proj=moll", Treatment_Count_Data_All_coord) %>%
