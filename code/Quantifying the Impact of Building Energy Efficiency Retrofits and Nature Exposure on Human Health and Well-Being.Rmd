@@ -2208,8 +2208,17 @@ ggplot(Schools_Year_Built, aes(x = Year_built, y = ..density..)) +
 ggsave(filename = './figures/', 'Year_Built_Schools.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
 ```
 
-# Heatmap of Occupant Health by Intervention and Utility
+# Heatmap of Occupant Health by Intervention and Utility Service Area
 ```{r}
+library(dplyr)
+library(readr)
+Scenario_HeatMap_Data <- read_csv("Scenario_HeatMap_Data.csv")
+Scenario_HeatMap_Data_2 <- Scenario_HeatMap_Data %>%
+  mutate(Scenario = coalesce(Scenario_1_Type, Scenario_2_Type,	Scenario_3_Type))
+# Load the required libraries 
+library(ggplot2)
+library(reshape2)
+data1 <- melt(Scenario_HeatMap_Data_2)
 ggplot(data1, aes(x = Scenario, y = Utility, fill = value)) +
   geom_tile(color = "black") +
   geom_text(aes(label = value), color = "white", size = 4) +
