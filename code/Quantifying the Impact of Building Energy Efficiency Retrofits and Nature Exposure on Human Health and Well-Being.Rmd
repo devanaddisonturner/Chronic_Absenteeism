@@ -2158,6 +2158,8 @@ mapshot(Prop_39_schools_map, delay = 10,
 ```
 
 # Graph conditions of K-12 schools
+
+## Infrastructure 
 ```{r}
 library(dplyr)
 library(readr)
@@ -2175,6 +2177,27 @@ ggplot(Schools_Year_Built, aes(x = Year_built, y = ..density..)) +
        y = "Density") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 ggsave(filename = './figures/', 'Year_Built_Schools.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
+```
+## Environment
+```{r}
+library(dplyr)
+library(readr)
+library(ggplot2)
+Schools_Environment_Data <- read_csv("Schools_Environment_Data.csv")
+# Load the required libraries
+install.packages("ggbeeswarm")
+library(ggbeeswarm)
+library(ggplot2)
+library(viridis)
+ggplot(Schools_Environment_Data, aes(x = NDVI_Under_Over_Avg, y = NDVI_median, color = Land_Surface_Temp)) +
+  geom_quasirandom() +
+ # scale_fill_manual() +
+  labs(title = "Environmental Health of K-12 Schools in California, USA",
+       x = "Environmental Health",
+       y = "Median Normalized Difference Vegetation Index",
+      fill = "Land Surface Temperature (°C)") + 
+  theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'NDVI_LST_Schools.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
 ```
 
 # Heatmap of Occupant Health by Intervention and Utility Service Area
@@ -2198,7 +2221,7 @@ ggplot(data1, aes(x = Scenario, y = Utility, fill = value)) +
        y = "Utility",
       fill = "Chronic Absenteeism Rate (%)") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-ggsave(filename = ./figures/', 'Scenarios_by_Utility.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
+ggsave(filename = './figures/', 'Scenarios_by_Utility.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
 ```
 
 
