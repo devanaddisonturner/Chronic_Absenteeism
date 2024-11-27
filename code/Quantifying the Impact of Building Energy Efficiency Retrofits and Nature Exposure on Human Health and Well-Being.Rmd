@@ -2135,7 +2135,7 @@ ggplot() +
   geom_point(data = Treatment_Count_Data_All_coord, aes(x = LONGITUDE, y = LATITUDE, fill = Chronic_Absenteeism), size = 2, shape = 21) +
   scale_fill_gradient(low = "white", high = "red") +
   labs(x = "Longitude", y = "Latitude", title = "Proposition 39 K-12 Schools in California, USA") + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-ggsave(filename = 'Prop39_Schools_Global_Map.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
+ggsave(filename = './figures/', 'Prop39_Schools_Global_Map.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
 ```
 
 
@@ -2161,7 +2161,7 @@ world_map_2 <- world_map %>%
 ````
 
 
-# Create Interactive Map 
+# Interactive Map 
 ```{r}
 install.packages("webshot")
 webshot::install_phantomjs()
@@ -2183,6 +2183,29 @@ Prop_39_schools_map
 library(webshot)
 mapshot(Prop_39_schools_map, delay = 10, 
         file = "Prop_39_schools_map.png")
+```
+
+# Graph conditions of K-12 schools
+```{r}
+library(dplyr)
+library(readr)
+
+Schools_Year_Built <- read_csv("Schools_Year_Built_Analysis_Data.csv")
+# Load the required libraries
+
+
+library(ggplot2)
+# Create the density plot with kernel selection
+ggplot(Schools_Year_Built, aes(x = Year_built, y = ..density..)) +
+  geom_density(aes(fill = "Density"), alpha = 0.5,
+               kernel = "rectangular") +
+  scale_fill_manual(values = "lightgreen",
+                    guide = guide_legend(override.aes = list(color = NA))) +
+  labs(title = "Year Built of K-12 Schools in California, USA",
+       x = "Year Built",
+       y = "Density") + 
+  theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'Year_Built_Schools.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
 ```
 
 # View Session Information
