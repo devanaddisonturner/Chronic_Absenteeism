@@ -2115,6 +2115,77 @@ labs(title = "Statistical Power - Scenario 3: ",
 ggsave(filename = paste0('./figures/', 'PowerAnalysis_HVACRetrofitsandNatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 ```
 
+
+# Create Maps of Case Study 
+```{r}
+# View Data on the World Map 
+
+# Load required packages
+install.packages("mapdata")
+library(ggplot2)
+library(mapdata)
+
+# get world map data
+world_map <- map_data("world")
+head(world_map,10)
+
+# create map using ggplot2
+ggplot() +
+  geom_polygon(data = world_map, aes(x = long, y = lat, group = group), fill = "white", color = "grey") +
+  geom_point(data = Treatment_Count_Data_All_coord, aes(x = LONGITUDE, y = LATITUDE, fill = Chronic_Absenteeism), size = 2, shape = 21) +
+  scale_fill_gradient(low = "white", high = "red") +
+  labs(x = "Longitude", y = "Latitude", title = "Proposition 39 K-12 Schools in California, USA") + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = 'Prop39_Schools_Global_Map.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
+```
+
+
+# Spherical Global Map
+```{r}
+# World Map with a Globe
+library(sf)
+df <-  sf::sf_project("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0", 
+                      "+proj=moll", Treatment_Count_Data_All_coord) %>%
+       as.data.frame() %>%
+      setNames(c("LONGITUDE", "LATITUDE")) %>%
+      cbind(object = object)
+
+
+world_map_2 <- world_map %>% 
+  st_transform(crs = "+proj=moll") %>%
+  ggplot() + 
+  geom_sf() + 
+  theme_minimal() +
+  geom_point(data = df, aes(LONGITUDE, LATITUDE)) +
+  geom_text(data = df, aes(LONGITUDE, LATITUDE, label = object),
+            vjust = c(1, 0, -1), hjust = 1)
+````
+
+
+# Create Interactive Map 
+```{r}
+install.packages("webshot")
+webshot::install_phantomjs()
+library(sf)
+library(mapview)
+library(raster)
+
+# create viewer (background layer 'OpenTopoMap')
+mapview(Treatment_Count_Data_All_coord)
+# make rendered html self-contained
+mapviewOptions(fgb = FALSE)
+
+Prop_39_schools_map <- mapview(Treatment_Count_Data_All_coord, 
+                               xcol = "LONGITUDE", 
+                               ycol = "LATITUDE", 
+                               crs = 4326,
+                               grid = FALSE)
+Prop_39_schools_map
+# save with OpenTopoMap baackground layer
+library(webshot)
+mapshot(Prop_39_schools_map, delay = 10, 
+        file = "Prop_39_schools_map.png")
+```
+
 # View Session Information
 ```{r}
 #To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
