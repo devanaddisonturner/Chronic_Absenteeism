@@ -2208,6 +2208,7 @@ Scenario_HeatMap_Data <- read_csv("Scenario_HeatMap_Data.csv")
 Scenario_HeatMap_Data_2 <- Scenario_HeatMap_Data %>%
   mutate(Scenario = coalesce(Scenario_1_Type, Scenario_2_Type,	Scenario_3_Type))
 # Load the required libraries 
+install.packages("reshape2")
 library(ggplot2)
 library(reshape2)
 data1 <- melt(Scenario_HeatMap_Data_2)
