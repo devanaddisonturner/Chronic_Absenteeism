@@ -2098,10 +2098,18 @@ ggsave(filename = paste0('./figures/', 'PowerAnalysis_HVACRetrofitsandNatureExpo
 # Create Maps of Case Study 
 ```{r}
 # View Data on the World Map 
-# Load required packages
+# Install reqyured packages
 install.packages("mapdata")
+install.packages("mapview")
+install.packages("sf")
+install.packages("leaflet")
+
+# Load required packages
 library(ggplot2)
 library(mapdata)
+library(mapview)
+library(sf)
+library(leaflet)
 # get world map data
 world_map <- map_data("world")
 head(world_map,10)
