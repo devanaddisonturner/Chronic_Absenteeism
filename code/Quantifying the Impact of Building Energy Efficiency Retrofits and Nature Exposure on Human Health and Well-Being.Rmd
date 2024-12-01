@@ -2224,7 +2224,7 @@ ggplot() +
    ylab("Land Surface Temperature (°C)") +
    ggtitle("Relationship of LULC, NDVI, and LST near K-12 Schools in Calfornia, USA") +
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))
-ggsave(filename = 'LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
+ggsave(filename = './figures/', 'LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
 ```
 
 # Heatmap of Occupant Health by Intervention and Utility Service Area
