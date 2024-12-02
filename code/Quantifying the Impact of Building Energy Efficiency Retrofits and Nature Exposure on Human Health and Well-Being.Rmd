@@ -2198,7 +2198,6 @@ install.packages("ggbeeswarm")
 library(ggbeeswarm)
 library(ggplot2)
 library(viridis)
-# van der Corput sequence or Tukey texturing
 ggplot(Schools_Environment_Data, aes(x = NDVI_Under_Over_Avg, y = NDVI_median, color = Land_Surface_Temp)) +
   geom_quasirandom() + 
  # scale_fill_manual(low = "blue", high = "pink") +
