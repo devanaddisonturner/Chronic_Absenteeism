@@ -2249,7 +2249,7 @@ ggplot(data1, aes(x = Scenario, y = Utility, fill = value)) +
        y = "Utility",
        fill = "(%)") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-ggsave(filename = './figures/', 'Scenarios_by_Utility.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
+ggsave(filename = './figures/', 'Scenarios_by_Utility.png', plot = last_plot(), width = 11, height = 7, units = "in", dpi = 300) 
 ```
 
 
