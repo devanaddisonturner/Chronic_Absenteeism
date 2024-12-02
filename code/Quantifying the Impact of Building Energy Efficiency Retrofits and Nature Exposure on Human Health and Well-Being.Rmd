@@ -2198,15 +2198,14 @@ install.packages("ggbeeswarm")
 library(ggbeeswarm)
 library(ggplot2)
 library(viridis)
-ggplot(Schools_Environment_Data, aes(x = NDVI_Under_Over_Avg, y = NDVI_median, color = Land_Surface_Temp)) +
+p <- ggplot(Schools_Environment_Data, aes(x = NDVI_Under_Over_Avg, y = NDVI_median, color = Land_Surface_Temp)) +
   geom_quasirandom() + 
- # scale_fill_manual(low = "blue", high = "pink") +
- # scale_fill_manual() +
   labs(title = "Relationship of NDVI and LST near K-12 Schools in California, USA",
        x = "Environmental Health",
        y = "Median Normalized Difference Vegetation Index") + 
       labs(color = "(°C)") +
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+p + scale_color_gradient(low = "blue", high = "yellow")
 ggsave(filename = 'NDVI_LST_Schools.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
 ```
 
