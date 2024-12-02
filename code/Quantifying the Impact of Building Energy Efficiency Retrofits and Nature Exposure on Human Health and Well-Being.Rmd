@@ -2221,7 +2221,7 @@ ggplot() +
   xlim(0, 100) + 
   xlab("Land Use and Land Cover (%)") +
    ylab("Land Surface Temperature (°C)") +
-    labs(color = "Land Use Land Cover") +
+    labs(color = "Type of LULC") +
    ggtitle("Relationship of LULC, NDVI, and LST near K-12 Schools in Calfornia, USA") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))
 ggsave(filename = 'LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
@@ -2247,7 +2247,7 @@ ggplot(data1, aes(x = Scenario, y = Utility, fill = value)) +
   labs(title = "Average Rate of Chronic Absenteeism by Intervention and Utility Service Area in K-12 Schools Across California",
        x = "Scenario",
        y = "Utility",
-      fill = "(%)") + 
+       fill = "(%)") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 ggsave(filename = './figures/', 'Scenarios_by_Utility.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
 ```
