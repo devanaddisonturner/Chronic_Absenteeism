@@ -2198,33 +2198,34 @@ install.packages("ggbeeswarm")
 library(ggbeeswarm)
 library(ggplot2)
 library(viridis)
+# van der Corput sequence or Tukey texturing
 ggplot(Schools_Environment_Data, aes(x = NDVI_Under_Over_Avg, y = NDVI_median, color = Land_Surface_Temp)) +
-  geom_quasirandom() +
+  geom_quasirandom() + 
+ # scale_fill_manual(low = "blue", high = "pink") +
  # scale_fill_manual() +
-  labs(title = "Environmental Health of K-12 Schools in California, USA",
+  labs(title = "Relationship of NDVI and LST near K-12 Schools in California, USA",
        x = "Environmental Health",
-       y = "Median Normalized Difference Vegetation Index",
-      fill = "Land Surface Temperature (°C)") + 
+       y = "Median Normalized Difference Vegetation Index") + 
+      labs(color = "(°C)") +
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-ggsave(filename = './figures/', 'NDVI_LST_Schools.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
+ggsave(filename = 'NDVI_LST_Schools.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
 ```
 
 ```{r}
 #Graph the Relationship of LULC, NDVI, and LST
 library(ggplot2)
 ggplot() + 
-  geom_line(data=Treatment_Count_Data_All_coord, aes(x=Percent_Water, y=Land_Surface_Temp, color="Water"), size=2) + 
-  geom_line(data=Treatment_Count_Data_All_coord, aes(x=Percent_Pasture, y=Land_Surface_Temp, color="Pasture"), size=2) + 
-  geom_line(data=Treatment_Count_Data_All_coord, aes(x=Percent_Forest, y=Land_Surface_Temp, color="Forest"), size=2) +
-  geom_line(data=Treatment_Count_Data_All_coord, aes(x=Percent_Developed, y=Land_Surface_Temp, color="Developed"), size=2)+ theme_bw() +
-  #scale_x_continuous(labels=scales::percent) + 
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Water, y=Land_Surface_Temp, color="Water"), size=2) + 
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Pasture, y=Land_Surface_Temp, color="Pasture"), size=2) + 
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Forest, y=Land_Surface_Temp, color="Forest"), size=2) +
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Developed, y=Land_Surface_Temp, color="Developed"), size=2) +
   xlim(0, 100) + 
-  xlab("Land Use and Land Cover (%)") + 
-  # scale_y_continuous(labels=scales::percent) + 
+  xlab("Land Use and Land Cover (%)") +
    ylab("Land Surface Temperature (°C)") +
-   ggtitle("Relationship of LULC, NDVI, and LST near K-12 Schools in Calfornia, USA") +
+    labs(color = "Land Use Land Cover") +
+   ggtitle("Relationship of LULC, NDVI, and LST near K-12 Schools in Calfornia, USA") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))
-ggsave(filename = './figures/', 'LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
+ggsave(filename = 'LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
 ```
 
 # Heatmap of Occupant Health by Intervention and Utility Service Area
