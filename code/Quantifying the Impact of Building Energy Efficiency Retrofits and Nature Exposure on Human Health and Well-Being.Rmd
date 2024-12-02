@@ -2244,10 +2244,10 @@ ggplot(data1, aes(x = Scenario, y = Utility, fill = value)) +
   geom_text(aes(label = value), color = "white", size = 4) +
   scale_fill_gradient(low = "blue", high = "red") +
   coord_fixed() + 
-  labs(title = "Occupant Health by Intervention in K-12 Schools Across California",
+  labs(title = "Average Rate of Chronic Absenteeism by Intervention and Utility Service Area in K-12 Schools Across California",
        x = "Scenario",
        y = "Utility",
-      fill = "Chronic Absenteeism Rate (%)") + 
+      fill = "(%)") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 ggsave(filename = './figures/', 'Scenarios_by_Utility.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300) 
 ```
