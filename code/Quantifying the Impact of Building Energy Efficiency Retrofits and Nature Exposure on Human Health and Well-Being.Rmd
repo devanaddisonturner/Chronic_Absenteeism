@@ -2186,6 +2186,7 @@ ggplot(Schools_Year_Built, aes(x = Year_built, y = ..density..)) +
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 ggsave(filename = './figures/', 'Year_Built_Schools.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
 ```
+
 ## Environment
 ```{r}
 #Graph the Relationship of NDVI and LST
