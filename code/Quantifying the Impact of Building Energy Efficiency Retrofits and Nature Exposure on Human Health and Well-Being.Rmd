@@ -2214,10 +2214,10 @@ ggsave(filename = 'NDVI_LST_Schools.png', plot = last_plot(), width = 9, height 
 #Graph the Relationship of LULC, NDVI, and LST
 library(ggplot2)
 ggplot() + 
-  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Water, y=Land_Surface_Temp, color="Water"), size=2) + 
-  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Pasture, y=Land_Surface_Temp, color="Pasture"), size=2) + 
-  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Forest, y=Land_Surface_Temp, color="Forest"), size=2) +
-  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Developed, y=Land_Surface_Temp, color="Developed"), size=2) +
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Water, y=Land_Surface_Temp, color="Water",alpha = 0.5), size=2) + 
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Pasture, y=Land_Surface_Temp, color="Pasture", alpha = 0.5), size=2) + 
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Forest, y=Land_Surface_Temp, color="Forest", alpha = 0.5), size=2) +
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Developed, y=Land_Surface_Temp, color="Developed, alpha = 0.5"), size=2) +
   xlim(0, 100) + 
   xlab("Land Use and Land Cover (%)") +
    ylab("Land Surface Temperature (°C)") +
