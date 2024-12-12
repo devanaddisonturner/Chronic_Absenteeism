@@ -1372,7 +1372,6 @@ print(TTestS3_complete_L)
 TTestS3_complete_H <- t.test(m_data_wide_6_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_H$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS3_complete_H)
 
-
 ## Scenario 3B: Building Envelope Retrofits and Nature Exposure in K-12 Schools with Imputed Data
 TTestS3_complete_B <- t.test(m_data_wide_6_complete_B$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_B$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS3_complete_B)
@@ -1394,7 +1393,6 @@ function_get_d_data <- function(df, scenario = NA, group = NA) {
                      magnitude = df$magnitude)
   return(data)
 }
-
 ```
 
 
@@ -1423,11 +1421,34 @@ es3_raw <- d3_raw$estimate
 
 ```
 
+### Using Imputed Data
+```{r}
+## Scenario 1: Energy Efficiency Retrofits  in K-12 Schools 
+d1_imp <- cohen.d(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y)
+d1_imp
+es1_imp <- d1_imp$estimate
+
+
+## Scenario 2: Nature Exposure in K-12 Schools 
+d2_imp <- cohen.d(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_4_complete$Chronic_Absenteeism_raw.y)
+d2_imp
+es2_imp <- d2_imp$estimate
+
+
+## Scenario 3L: Lighting Retrofits and Nature Exposure in K-12 Schools 
+d3L_imp <- cohen.d(m_data_wide_6_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_L$Chronic_Absenteeism_raw.y)
+d3L_imp
+es3L_imp <- d3L_imp$estimate
+
+## Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools 
+d3H_imp <- cohen.d(m_data_wide_6_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_H$Chronic_Absenteeism_raw.y)
+d3H_imp
+es3H_imp <- d3H_imp$estimate
+```
 
 ### Using Imputed Dataset
 ```{r}
 library(effsize)
-
 ## Scenario 1: Energy Efficiency in K-12 Schools with Imputed Data
 EffSizeS1_complete <- cohen.d(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(EffSizeS1_complete)
@@ -1436,16 +1457,13 @@ print(EffSizeS1_complete)
 EffSizeS1_complete_L <- cohen.d(m_data_wide_2_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_L$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(EffSizeS1_complete_L)
 
-
 ## Scenario 1H: HVAC in K-12 Schools with Imputed Data
 EffSizeS1_complete_H <- cohen.d(m_data_wide_2_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_H$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(EffSizeS1_complete_H)
 
-
 ## Scenario 1B: Building Envelope in K-12 Schools with Imputed Data
 EffSizeS1_complete_B <- cohen.d(m_data_wide_2_complete_B$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_B$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(EffSizeS1_complete_B)
-
 
 ## Scenario 1P: Pumps, Motors and Drives in K-12 Schools with Imputed Data
 EffSizeS1_complete_P <- cohen.d(m_data_wide_2_complete_P$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_P$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
@@ -1466,7 +1484,6 @@ print(EffSizeS3_complete_L)
 ## Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools with Imputed Data
 EffSizeS3_complete_H <- cohen.d(m_data_wide_6_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_H$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(EffSizeS3_complete_H)
-
 
 ## Scenario 3B: Building Envelope Retrofits and Nature Exposure in K-12 Schools with Imputed Data
 EffSizeS3_complete_B <- cohen.d(m_data_wide_6_complete_B$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_B$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
@@ -1531,9 +1548,7 @@ ggsave(filename = './figures/effect_size_by_scenarios.png', plot = last_plot(), 
 
 ## Graph Effect Size
 ```{r}
-
 library(ggplot2)
-
 #' Standardized Mean Difference (Cohen's d)
 #' Here we use the effect size in scenario 3, a combined effect of 
 #'  Energy Efficiency Retrofits and Nature Exposure
@@ -1595,6 +1610,260 @@ ggplot(df1, aes(x,y, color="control")) +
 ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
 
+### Scenario 1: Energy Efficiency Retrofits 
+```{r}
+library(ggplot2)
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 1,Impact of
+#'  Energy Efficiency Retrofits 
+ES <- round(es1_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_2_complete$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 1: Impact of Energy Efficiency Retrofits on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Neglible Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+
+ggsave(filename = './figures/effect_size_scenario1.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+```
+
+### Scenario 2: Nature Exposure
+```{r}
+library(ggplot2)
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 2,Impact of
+#'  Nature Exposure
+ES <- round(es2_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_4_complete$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 2: Impact of Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+
+ggsave(filename = './figures/effect_size_scenario2.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+```
+
+
+### Scenario 3L: Lighting Retrofits and Nature Exposure
+```{r}
+library(ggplot2)
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  Lighting Retrofits and Nature Exposure
+ES <- round(es3L_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_L$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of Lighting Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+
+ggsave(filename = './figures/effect_size_scenario3L.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+```
+### Scenario 3H: HVAC Retrofits and Nature Exposure
+```{r}
+library(ggplot2)
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  HVAC Retrofits and Nature Exposure
+ES <- round(es3H_imp, digits = 2) 
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_H$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of HVAC Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+
+ggsave(filename = './figures/effect_size_scenario3H.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+```
+
 # Calculate and plot a Pearson Correlation Coefficient Matrix 
 ```{r}
 library(readr)
@@ -1623,7 +1892,6 @@ dev.off()
 
 ```{r}
 #Plot significant correlations of variables
-
 # install.packages("lares")
 library(lares)
 p <- corr_cross(my_data, # name of dataframe
@@ -1643,58 +1911,125 @@ ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), wi
 ```
 
 
-# Treatment Count for 3 Policy Interventions
+# Treatment Analysis for 3 Policy Interventions in K-12 schools 
 ```{r}
-# Number of Pairs-Matched for K-12 Schools in each policy intervention/scenario 
+# Total number of Treatments for K-12 Schools in each policy intervention/scenario
+
+#Method 1: Read individual data file to obtain the total counts of treatments across each scenario and interventions 
+#including subset of EE retrofit
+#for the following variables (i) retrofit, (ii) ndvi_binary, (iii) retrofit and ndvi
+
+#Group by the unique Unique County, District, School Code (CDS Code)
+
+#Complete Dataset with All Energy Efficiency Retrofits in K-12 schools
+Treatment_Count_Data_All <- read_csv("./data/Treatment_Count_Data_All_coord.csv")
+
+# Total Number of K-Schools analyzed by the Unique County, District, School Code (CDS Code)
+length(unique(Treatment_Count_Data_All$CDSCode))
+
+library(dplyr)
+#calculate total number of interventions in each scenario by unique K-12 school
+Treatment_Count_Data_All_2 <- Treatment_Count_Data_All %>%
+                              group_by(CDSCode) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S2 = sum(ndvi_median_binary), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S2'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
+
+
+## Subset Data by 4 types of Energy Efficiency Retrofits
+
+#1. Lighting 
+Treatment_Count_Data_All_subL <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "Lighting")
+library(dplyr)
+#calculate total number of interventions in each scenario by unique K-12 school
+Treatment_Count_Data_All_subL_2 <- Treatment_Count_Data_All_subL %>%
+                              group_by(CDSCode) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+sum(Treatment_Count_Data_All_subL_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_subL_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
+
+#2. HVAC
+Treatment_Count_Data_All_subH <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "HVAC")
+library(dplyr)
+#calculate total number of interventions in each scenario by unique K-12 school
+Treatment_Count_Data_All_subH_2 <- Treatment_Count_Data_All_subH %>%
+                              group_by(CDSCode) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+sum(Treatment_Count_Data_All_subH_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_subH_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
+
+#3. Building Envelope
+Treatment_Count_Data_All_subB <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "Building_Envelope")
+library(dplyr)
+#calculate total number of interventions in each scenario by unique K-12 school
+Treatment_Count_Data_All_subB_2 <- Treatment_Count_Data_All_subB %>%
+                              group_by(CDSCode) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+sum(Treatment_Count_Data_All_subB_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_subB_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
+
+
+#4. Pumps, Motors, & Drives
+Treatment_Count_Data_All_subP <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "Pumps_Motors_Drives")
+library(dplyr)
+#calculate total number of interventions in each scenario by unique K-12 school
+Treatment_Count_Data_All_subP_2 <- Treatment_Count_Data_All_subP %>%
+                              group_by(CDSCode) %>%
+                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
+sum(Treatment_Count_Data_All_subP_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
+sum(Treatment_Count_Data_All_subP_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
+```
+
+```{r}
+# Number of Optimal Pairs-Matched for K-12 Schools in each policy intervention/scenario 
 
 ## Using Raw Data
 
-### Scenario 1
+### Scenario 1: Energy Efficiency Retrofits in K-12 Schools
 length(unique(m_data_wide_2$subclass))
 
-### Scenario 2
+### Scenario 2: Nature Exposure in K-12 Schools
 length(unique(m_data_wide_4$subclass))
 
-### Scenario 3
+### Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6$subclass))
-
-
 ## -----------------------------------------------------------------
 
 
 ## Using Imputed Data
 
-### Scenario 1
+### Scenario 1: Energy Efficiency Retrofits in K-12 Schools
 length(unique(m_data_wide_2_complete$subclass))
 
-### Scenario 1L
+### Scenario 1L: Lighting Retrofits in K-12 Schools
 length(unique(m_data_wide_2_complete_L$subclass))
 
-### Scenario 1H
+### Scenario 1H: HVAC Retrofits in K-12 Schools
 length(unique(m_data_wide_2_complete_H$subclass))
 
-### Scenario 1B
+### Scenario 1B: Building Envelope Retrofits in K-12 Schools
 length(unique(m_data_wide_2_complete_B$subclass))
 
-### Scenario 1P
+### Scenario 1P: Pumps, Motors, & Drives in K-12 Schools
 length(unique(m_data_wide_2_complete_P$subclass))
 
-### Scenario 2
+### Scenario 2: Nature Exposure in K-12 Schools
 length(unique(m_data_wide_4_complete$subclass))
 
-### Scenario 3
+### Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete$subclass))
 
-### Scenario 3L
+### Scenario 3L: Lighting Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete_L$subclass))
 
-### Scenario 3H
+### Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete_H$subclass))
 
-### Scenario 3B
+### Scenario 3B: Building Envelope Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete_B$subclass))
 
-### Scenario 3P
+### Scenario 3P: Pumps/Motors/&Drives Retrofits and Nature Exposure in K-12 Schools
 length(unique(m_data_wide_6_complete_P$subclass))
 ```
 
@@ -1706,9 +2041,9 @@ library(ggplot2)
 
 ## figure para
 w = 6.5
-h = 6
+h = 4
 
-## Scenario 1: Energy Efficiency Retrofits 
+## Scenario 1: Energy Efficiency Retrofits on Chronic absenteeism
 power.analysis <- pwr.t.test(n = NULL, d = -0.12, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  
   theme_bw() + 
@@ -1722,8 +2057,8 @@ plot(power.analysis) +
 ggsave(filename = paste0('./figures/', 'PowerAnalysis_EERetrofits.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 
 
-## S2: Nature Exposure
-power.analysis <- pwr.t.test(n = NULL, d = 0.41, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+## Scenario 2: Nature Exposure on Chronic absenteeism
+power.analysis <- pwr.t.test(n = NULL, d = 0.42, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  theme_bw() + 
 labs(title = "Statistical Power - Scenario 2: ",
      subtitle = "The Impact of Nature Exposure on Chronic Absenteeism in K-12 Schools", 
@@ -1734,7 +2069,7 @@ labs(title = "Statistical Power - Scenario 2: ",
 ggsave(filename = paste0('./figures/', 'PowerAnalysis_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 
 
-## Scenario 3L: Lighting  Retrofits and Nature Exposure
+## Scenario 3L: Lighting  Retrofits and Nature Exposure on Chronic absenteeism
 power.analysis <- pwr.t.test(n = NULL, d = 0.41, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  
   theme_bw() + 
@@ -1747,7 +2082,7 @@ plot(power.analysis) +
 ggsave(filename = paste0('./figures/', 'PowerAnalysis_LightingRetrofitsandNatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 
 
-## Scenario 3H: HVAC  Retrofits and Nature Exposure
+## Scenario 3H: HVAC  Retrofits and Nature Exposure on Chronic absenteeism
 power.analysis <- pwr.t.test(n = NULL, d = 0.39, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  theme_bw() + 
 labs(title = "Statistical Power - Scenario 3: ",
@@ -1758,6 +2093,165 @@ labs(title = "Statistical Power - Scenario 3: ",
     plot.subtitle =  element_text(size=8))  # Center ggplot title
 ggsave(filename = paste0('./figures/', 'PowerAnalysis_HVACRetrofitsandNatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 ```
+
+
+# Create Maps of Case Study 
+```{r}
+# View Data on the World Map 
+# Install reqyured packages
+install.packages("mapdata")
+install.packages("mapview")
+install.packages("sf")
+install.packages("leaflet")
+
+# Load required packages
+library(ggplot2)
+library(mapdata)
+library(mapview)
+library(sf)
+library(leaflet)
+# get world map data
+world_map <- map_data("world")
+head(world_map,10)
+# create map using ggplot2
+ggplot() +
+  geom_polygon(data = world_map, aes(x = long, y = lat, group = group), fill = "white", color = "grey") +
+  geom_point(data = Treatment_Count_Data_All_coord, aes(x = LONGITUDE, y = LATITUDE, fill = Chronic_Absenteeism), size = 2, shape = 21) +
+  scale_fill_gradient(low = "white", high = "red") +
+  labs(x = "Longitude", y = "Latitude", title = "Proposition 39 K-12 Schools in California, USA") + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'Prop39_Schools_Global_Map.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
+```
+
+
+# Spherical Global Map
+```{r}
+# Spherical World Map with our Data 
+library(sf)
+df <-  sf::sf_project("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0", 
+                      "+proj=moll", Treatment_Count_Data_All_coord) %>%
+       as.data.frame() %>%
+      setNames(c("LONGITUDE", "LATITUDE")) %>%
+      cbind(object = object)
+world_map_2 <- world_map %>% 
+  st_transform(crs = "+proj=moll") %>%
+  ggplot() + 
+  geom_sf() + 
+  theme_minimal() +
+  geom_point(data = df, aes(LONGITUDE, LATITUDE)) +
+  geom_text(data = df, aes(LONGITUDE, LATITUDE, label = object),
+            vjust = c(1, 0, -1), hjust = 1)
+````
+
+
+# Interactive Map 
+```{r}
+install.packages("webshot")
+webshot::install_phantomjs()
+library(sf)
+library(mapview)
+# create viewer (background layer 'OpenTopoMap')
+mapview(Treatment_Count_Data_All_coord)
+# make rendered html self-contained
+mapviewOptions(fgb = FALSE)
+Prop_39_schools_map <- mapview(Treatment_Count_Data_All_coord, 
+                               xcol = "LONGITUDE", 
+                               ycol = "LATITUDE", 
+                               crs = 4326,
+                               grid = FALSE)
+Prop_39_schools_map
+# save with OpenTopoMap baackground layer
+library(webshot)
+mapshot(Prop_39_schools_map, delay = 10, 
+        file = "Prop_39_schools_map.png")
+```
+
+# Graph conditions of K-12 schools
+
+## Infrastructure 
+```{r}
+library(dplyr)
+library(readr)
+Schools_Year_Built <- read_csv("Schools_Year_Built_Analysis_Data.csv")
+# Load the required libraries
+library(ggplot2)
+# Create the density plot with kernel selection
+ggplot(Schools_Year_Built, aes(x = Year_built, y = ..density..)) +
+  geom_density(aes(fill = "Density"), alpha = 0.5,
+               kernel = "rectangular") +
+  scale_fill_manual(values = "lightgreen",
+                    guide = guide_legend(override.aes = list(color = NA))) +
+  labs(title = "Year Built of K-12 Schools in California, USA",
+       x = "Year Built",
+       y = "Density") + 
+  theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'Year_Built_Schools.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
+```
+
+## Environment
+```{r}
+#Graph the Relationship of NDVI and LST
+library(dplyr)
+library(readr)
+library(ggplot2)
+Schools_Environment_Data <- read_csv("Schools_Environment_Data.csv")
+# Load the required libraries
+install.packages("ggbeeswarm")
+library(ggbeeswarm)
+library(ggplot2)
+library(viridis)
+p <- ggplot(Schools_Environment_Data, aes(x = NDVI_Under_Over_Avg, y = NDVI_median, color = Land_Surface_Temp)) +
+  geom_quasirandom() + 
+  labs(title = "Relationship of NDVI and LST near K-12 Schools in California, USA",
+       x = "Environmental Health",
+       y = "Median Normalized Difference Vegetation Index") + 
+      labs(color = "(°C)") +
+  theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+p + scale_color_gradient(low = "blue", high = "yellow")
+ggsave(filename = 'NDVI_LST_Schools.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
+```
+
+```{r}
+#Graph the Relationship of LULC, NDVI, and LST
+library(ggplot2)
+ggplot() + 
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Water, y=Land_Surface_Temp, color="Water",alpha = 0.5), size=2) + 
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Pasture, y=Land_Surface_Temp, color="Pasture", alpha = 0.5), size=2) + 
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Forest, y=Land_Surface_Temp, color="Forest", alpha = 0.5), size=2) +
+  geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Developed, y=Land_Surface_Temp, color="Developed, alpha = 0.5"), size=2) +
+  xlim(0, 100) + 
+  xlab("Land Use and Land Cover (%)") +
+   ylab("Land Surface Temperature (°C)") +
+    labs(color = "Type of LULC") +
+   ggtitle("Relationship of LULC, NDVI, and LST near K-12 Schools in Calfornia, USA") + 
+  theme_bw() + theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = 'LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
+```
+
+# Heatmap of Occupant Health by Intervention and Utility Service Area
+```{r}
+library(dplyr)
+library(readr)
+Scenario_HeatMap_Data <- read_csv("Scenario_HeatMap_Data.csv")
+Scenario_HeatMap_Data_2 <- Scenario_HeatMap_Data %>%
+  mutate(Scenario = coalesce(Scenario_1_Type, Scenario_2_Type,	Scenario_3_Type))
+# Load the required libraries 
+install.packages("reshape2")
+library(ggplot2)
+library(reshape2)
+data1 <- melt(Scenario_HeatMap_Data_2)
+ggplot(data1, aes(x = Scenario, y = Utility, fill = value)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = value), color = "white", size = 4) +
+  scale_fill_gradient(low = "blue", high = "red") +
+  coord_fixed() + 
+  labs(title = "Average Rate of Chronic Absenteeism by Intervention and Utility Service Area in K-12 Schools Across California",
+       x = "Scenario",
+       y = "Utility",
+       fill = "(%)") + 
+  theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'Scenarios_by_Utility.png', plot = last_plot(), width = 11, height = 7, units = "in", dpi = 300) 
+```
+
 
 # View Session Information
 ```{r}
