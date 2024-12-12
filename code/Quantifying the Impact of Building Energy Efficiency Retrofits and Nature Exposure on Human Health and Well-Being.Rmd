@@ -1929,7 +1929,7 @@ Treatment_Count_Data_All <- read_csv("./data/Treatment_Count_Data_All_coord.csv"
 # Total Number of K-Schools analyzed by the Unique County, District, School Code (CDS Code)
 length(unique(Treatment_Count_Data_All$CDSCode))
 
-library(dplyr)
+
 #calculate total number of interventions in each scenario by unique K-12 school
 treatment_count_by_scenario <- Treatment_Count_Data_All %>% 
   select(retrofit, ndvi_median_binary, retrofit_and_ndvi) %>% 
@@ -1953,10 +1953,10 @@ treatment_count_byScenario_byRetrofitType <- Treatment_Count_Data_All %>%
   mutate(Type = paste0(EE_Retrofit_Type, ' - ', treatment_control))
 
 
+
 ## plot
 treatment_count_byScenario_byRetrofitType %>%
   filter(!is.na(EE_Retrofit_Type)) %>%
-  # pivot_longer(cols = 2:ncol(.), names_to = 'Scenario') %>%
   ggplot(., aes(fill = Scenario, x = Type, y = n)) +
   geom_bar(
     aes(
@@ -2098,12 +2098,7 @@ ggsave(filename = paste0('./figures/', 'PowerAnalysis_HVACRetrofitsandNatureExpo
 # Create Maps of Case Study 
 ```{r}
 # View Data on the World Map 
-# Install reqyured packages
-install.packages("mapdata")
-install.packages("mapview")
-install.packages("sf")
-install.packages("leaflet")
-
+Treatment_Count_Data_All_coord <- read_csv("./data/Treatment_Count_Data_All_coord.csv", show_col_types = F)
 # Load required packages
 library(ggplot2)
 library(mapdata)
@@ -2111,7 +2106,7 @@ library(mapview)
 library(sf)
 library(leaflet)
 # get world map data
-world_map <- map_data("world")
+world_map <- map_data("world") %>% filter(long < -110 & long > -125, lat > 0 & lat < 50)
 head(world_map,10)
 # create map using ggplot2
 ggplot() +
@@ -2119,50 +2114,48 @@ ggplot() +
   geom_point(data = Treatment_Count_Data_All_coord, aes(x = LONGITUDE, y = LATITUDE, fill = Chronic_Absenteeism), size = 2, shape = 21) +
   scale_fill_gradient(low = "white", high = "red") +
   labs(x = "Longitude", y = "Latitude", title = "Proposition 39 K-12 Schools in California, USA") + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-ggsave(filename = './figures/', 'Prop39_Schools_Global_Map.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
+ggsave(filename = paste0('./figures/', 'Prop39_Schools_Global_Map.png'), plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
 ```
 
-
-# Spherical Global Map
+# Spherical Global Map [YJL: not sure what's this - may not needed for your publication]
 ```{r}
-# Spherical World Map with our Data 
-library(sf)
-df <-  sf::sf_project("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0", 
-                      "+proj=moll", Treatment_Count_Data_All_coord) %>%
-       as.data.frame() %>%
-      setNames(c("LONGITUDE", "LATITUDE")) %>%
-      cbind(object = object)
-world_map_2 <- world_map %>% 
-  st_transform(crs = "+proj=moll") %>%
-  ggplot() + 
-  geom_sf() + 
-  theme_minimal() +
-  geom_point(data = df, aes(LONGITUDE, LATITUDE)) +
-  geom_text(data = df, aes(LONGITUDE, LATITUDE, label = object),
-            vjust = c(1, 0, -1), hjust = 1)
-````
+# # Spherical World Map with our Data 
+# library(sf)
+# df <-  sf::sf_project("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0", 
+#                       "+proj=moll", Treatment_Count_Data_All_coord) %>%
+#        as.data.frame() %>%
+#       setNames(c("LONGITUDE", "LATITUDE")) %>%
+#       cbind(object = object)
+# world_map_2 <- world_map %>% 
+#   st_transform(crs = "+proj=moll") %>%
+#   ggplot() + 
+#   geom_sf() + 
+#   theme_minimal() +
+#   geom_point(data = df, aes(LONGITUDE, LATITUDE)) +
+#   geom_text(data = df, aes(LONGITUDE, LATITUDE, label = object),
+#             vjust = c(1, 0, -1), hjust = 1)
+```
 
-
-# Interactive Map 
+# Interactive Map [YJL: not sure how to do this - may not needed for your publication]
 ```{r}
-install.packages("webshot")
-webshot::install_phantomjs()
-library(sf)
-library(mapview)
-# create viewer (background layer 'OpenTopoMap')
-mapview(Treatment_Count_Data_All_coord)
-# make rendered html self-contained
-mapviewOptions(fgb = FALSE)
-Prop_39_schools_map <- mapview(Treatment_Count_Data_All_coord, 
-                               xcol = "LONGITUDE", 
-                               ycol = "LATITUDE", 
-                               crs = 4326,
-                               grid = FALSE)
-Prop_39_schools_map
-# save with OpenTopoMap baackground layer
-library(webshot)
-mapshot(Prop_39_schools_map, delay = 10, 
-        file = "Prop_39_schools_map.png")
+# install.packages("webshot")
+# webshot::install_phantomjs()
+# library(sf)
+# library(mapview)
+# # create viewer (background layer 'OpenTopoMap')
+# mapview(Treatment_Count_Data_All_coord)
+# # make rendered html self-contained
+# mapviewOptions(fgb = FALSE)
+# Prop_39_schools_map <- mapview(Treatment_Count_Data_All_coord, 
+#                                xcol = "LONGITUDE", 
+#                                ycol = "LATITUDE", 
+#                                crs = 4326,
+#                                grid = FALSE)
+# Prop_39_schools_map
+# # save with OpenTopoMap baackground layer
+# library(webshot)
+# mapshot(Prop_39_schools_map, delay = 10, 
+#         file = "Prop_39_schools_map.png")
 ```
 
 # Graph conditions of K-12 schools
@@ -2171,7 +2164,7 @@ mapshot(Prop_39_schools_map, delay = 10,
 ```{r}
 library(dplyr)
 library(readr)
-Schools_Year_Built <- read_csv("Schools_Year_Built_Analysis_Data.csv")
+Schools_Year_Built <- read_csv("./data/Schools_Year_Built_Analysis_Data.csv", show_col_types = F)
 # Load the required libraries
 library(ggplot2)
 # Create the density plot with kernel selection
@@ -2184,7 +2177,7 @@ ggplot(Schools_Year_Built, aes(x = Year_built, y = ..density..)) +
        x = "Year Built",
        y = "Density") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-ggsave(filename = './figures/', 'Year_Built_Schools.png', plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
+ggsave(filename = paste0('./figures/', 'Year_Built_Schools.png'), plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
 ```
 
 ## Environment
@@ -2193,9 +2186,9 @@ ggsave(filename = './figures/', 'Year_Built_Schools.png', plot = last_plot(), wi
 library(dplyr)
 library(readr)
 library(ggplot2)
-Schools_Environment_Data <- read_csv("Schools_Environment_Data.csv")
+Schools_Environment_Data <- read_csv("./data/Schools_Environment_Data.csv")
 # Load the required libraries
-install.packages("ggbeeswarm")
+# install.packages("ggbeeswarm")
 library(ggbeeswarm)
 library(ggplot2)
 library(viridis)
@@ -2207,11 +2200,11 @@ p <- ggplot(Schools_Environment_Data, aes(x = NDVI_Under_Over_Avg, y = NDVI_medi
       labs(color = "(°C)") +
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 p + scale_color_gradient(low = "blue", high = "yellow")
-ggsave(filename = 'NDVI_LST_Schools.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
+ggsave(filename = './figures/NDVI_LST_Schools.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
 ```
 
 ```{r}
-#Graph the Relationship of LULC, NDVI, and LST
+#Graph the Relationship of LULC, NDVI, and LST [YJL: there is no need to have this figure]
 library(ggplot2)
 ggplot() + 
   geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Water, y=Land_Surface_Temp, color="Water",alpha = 0.5), size=2) + 
@@ -2224,18 +2217,18 @@ ggplot() +
     labs(color = "Type of LULC") +
    ggtitle("Relationship of LULC, NDVI, and LST near K-12 Schools in Calfornia, USA") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))
-ggsave(filename = 'LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
+ggsave(filename = './figures/LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
 ```
 
-# Heatmap of Occupant Health by Intervention and Utility Service Area
+# Heatmap of Occupant Health by Intervention and Utility Service Area [YJL: not clear what this is, may not need for your publication]
 ```{r}
 library(dplyr)
 library(readr)
-Scenario_HeatMap_Data <- read_csv("Scenario_HeatMap_Data.csv")
+Scenario_HeatMap_Data <- read_csv("./data/Scenario_HeatMap_Data.csv")
 Scenario_HeatMap_Data_2 <- Scenario_HeatMap_Data %>%
   mutate(Scenario = coalesce(Scenario_1_Type, Scenario_2_Type,	Scenario_3_Type))
 # Load the required libraries 
-install.packages("reshape2")
+# install.packages("reshape2")
 library(ggplot2)
 library(reshape2)
 data1 <- melt(Scenario_HeatMap_Data_2)
@@ -2249,7 +2242,7 @@ ggplot(data1, aes(x = Scenario, y = Utility, fill = value)) +
        y = "Utility",
        fill = "(%)") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-ggsave(filename = './figures/', 'Scenarios_by_Utility.png', plot = last_plot(), width = 11, height = 7, units = "in", dpi = 300) 
+ggsave(filename = './figures/Scenarios_by_Utility.png', plot = last_plot(), width = 11, height = 7, units = "in", dpi = 300) 
 ```
 
 
