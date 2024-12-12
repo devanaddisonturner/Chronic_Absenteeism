@@ -3,6 +3,8 @@ title: "Quantifying the Impact of Building Energy Efficiency Retrofits and Natur
 author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Gretchen Cara Daily, and Rishee Kumar Jain"
 date: "2024-06-27"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -64,10 +66,10 @@ library(MatchIt)
  Examine if inequalities exist in K-12 Schools across California, USA from 2020-2022 in context of the COVID-19 Pandemic
  
 ```{r}
-library(ggplot2)
-library(viridis)
-library(readr)
-library(readxl)
+# library(ggplot2)
+# library(viridis)
+# library(readr)
+# library(readxl)
 
 CASchools_Data_income_subset <- read_csv("./data/CASchools_Data_income_subset.csv")
 
@@ -1929,56 +1931,54 @@ length(unique(Treatment_Count_Data_All$CDSCode))
 
 library(dplyr)
 #calculate total number of interventions in each scenario by unique K-12 school
-Treatment_Count_Data_All_2 <- Treatment_Count_Data_All %>%
-                              group_by(CDSCode) %>%
-                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S2 = sum(ndvi_median_binary), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
-sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
-sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S2'], na.rm = TRUE)
-sum(Treatment_Count_Data_All_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
+treatment_count_by_scenario <- Treatment_Count_Data_All %>% 
+  select(retrofit, ndvi_median_binary, retrofit_and_ndvi) %>% 
+  summarise_if(is.numeric, list(sum = ~sum(., na.rm = TRUE)))
 
 
 ## Subset Data by 4 types of Energy Efficiency Retrofits
 
 #1. Lighting 
-Treatment_Count_Data_All_subL <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "Lighting")
-library(dplyr)
-#calculate total number of interventions in each scenario by unique K-12 school
-Treatment_Count_Data_All_subL_2 <- Treatment_Count_Data_All_subL %>%
-                              group_by(CDSCode) %>%
-                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
-sum(Treatment_Count_Data_All_subL_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
-sum(Treatment_Count_Data_All_subL_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
-
 #2. HVAC
-Treatment_Count_Data_All_subH <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "HVAC")
-library(dplyr)
-#calculate total number of interventions in each scenario by unique K-12 school
-Treatment_Count_Data_All_subH_2 <- Treatment_Count_Data_All_subH %>%
-                              group_by(CDSCode) %>%
-                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
-sum(Treatment_Count_Data_All_subH_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
-sum(Treatment_Count_Data_All_subH_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
-
 #3. Building Envelope
-Treatment_Count_Data_All_subB <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "Building_Envelope")
-library(dplyr)
-#calculate total number of interventions in each scenario by unique K-12 school
-Treatment_Count_Data_All_subB_2 <- Treatment_Count_Data_All_subB %>%
-                              group_by(CDSCode) %>%
-                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
-sum(Treatment_Count_Data_All_subB_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
-sum(Treatment_Count_Data_All_subB_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
-
-
 #4. Pumps, Motors, & Drives
-Treatment_Count_Data_All_subP <- subset(Treatment_Count_Data_All, EE_Retrofit_Type == "Pumps_Motors_Drives")
-library(dplyr)
-#calculate total number of interventions in each scenario by unique K-12 school
-Treatment_Count_Data_All_subP_2 <- Treatment_Count_Data_All_subP %>%
-                              group_by(CDSCode) %>%
-                              summarise(Intervention_Total_Count_S1 = sum(retrofit), Intervention_Total_Count_S3 = sum(retrofit_and_ndvi))
-sum(Treatment_Count_Data_All_subP_2[, 'Intervention_Total_Count_S1'], na.rm = TRUE)
-sum(Treatment_Count_Data_All_subP_2[, 'Intervention_Total_Count_S3'], na.rm = TRUE)
+
+treatment_count_byScenario_byRetrofitType <- Treatment_Count_Data_All %>% 
+  select(EE_Retrofit_Type, retrofit, ndvi_median_binary, retrofit_and_ndvi) %>% 
+  pivot_longer(cols = 2:ncol(.), names_to = 'Scenario') %>%
+  group_by(EE_Retrofit_Type, Scenario, value) %>% 
+  count() %>%
+  mutate(treatment_control = ifelse(value==1, 'T', 'C'),
+         treatment_control = as.factor(treatment_control)) %>%
+  mutate(Type = paste0(EE_Retrofit_Type, ' - ', treatment_control))
+
+
+## plot
+treatment_count_byScenario_byRetrofitType %>%
+  filter(!is.na(EE_Retrofit_Type)) %>%
+  # pivot_longer(cols = 2:ncol(.), names_to = 'Scenario') %>%
+  ggplot(., aes(fill = Scenario, x = Type, y = n)) +
+  geom_bar(
+    aes(
+      # color = treatment_control,
+      alpha = treatment_control),
+    position = "stack",
+    stat = "identity") +
+  # scale_color_manual(values = c('white', 'black')) +
+  scale_alpha_manual(values = c(.5, 1)) +
+  guides(alpha = "none") +
+  # Add text labels
+  geom_text(aes(label = ifelse(n >= 60, n, "")),
+            position = position_stack(vjust = 0.5), # Center labels in the stack
+            color = "black") +                     # Change label color to white
+  labs(x = "EE Retrofit Type", y = "Count") +
+  coord_flip() +
+  theme_minimal() +
+  theme(legend.position = c(.8,.2))
+
+
+f <- paste0('./figures/', 'treatment_count_byScenario_byRetrofitType2.png')
+ggsave(filename = f, plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
 ```
 
 ```{r}
