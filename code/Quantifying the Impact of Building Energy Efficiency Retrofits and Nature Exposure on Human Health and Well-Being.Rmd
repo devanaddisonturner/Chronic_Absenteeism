@@ -2219,32 +2219,6 @@ ggplot() +
 ggsave(filename = './figures/LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
 ```
 
-# Heatmap of Occupant Health by Intervention and Utility Service Area [YJL: not clear what this is, may not need for your publication]
-```{r}
-library(dplyr)
-library(readr)
-Scenario_HeatMap_Data <- read_csv("./data/Scenario_HeatMap_Data.csv")
-Scenario_HeatMap_Data_2 <- Scenario_HeatMap_Data %>%
-  mutate(Scenario = coalesce(Scenario_1_Type, Scenario_2_Type,	Scenario_3_Type))
-# Load the required libraries 
-# install.packages("reshape2")
-library(ggplot2)
-library(reshape2)
-data1 <- melt(Scenario_HeatMap_Data_2)
-ggplot(data1, aes(x = Scenario, y = Utility, fill = value)) +
-  geom_tile(color = "black") +
-  geom_text(aes(label = value), color = "white", size = 4) +
-  scale_fill_gradient(low = "blue", high = "red") +
-  coord_fixed() + 
-  labs(title = "Average Rate of Chronic Absenteeism by Intervention and Utility Service Area in K-12 Schools Across California",
-       x = "Scenario",
-       y = "Utility",
-       fill = "(%)") + 
-  theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-ggsave(filename = './figures/Scenarios_by_Utility.png', plot = last_plot(), width = 11, height = 7, units = "in", dpi = 300) 
-```
-
-
 # View Session Information
 ```{r}
 #To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
