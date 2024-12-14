@@ -2203,7 +2203,7 @@ ggsave(filename = './figures/NDVI_LST_Schools.png', plot = last_plot(), width = 
 ```
 
 ```{r}
-#Graph the Relationship of LULC, NDVI, and LST [YJL: there is no need to have this figure]
+#Graph the Relationship of LULC, NDVI, and LST 
 library(ggplot2)
 ggplot() + 
   geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Water, y=Land_Surface_Temp, color="Water",alpha = 0.5), size=2) + 
