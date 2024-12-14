@@ -1952,8 +1952,6 @@ treatment_count_byScenario_byRetrofitType <- Treatment_Count_Data_All %>%
          treatment_control = as.factor(treatment_control)) %>%
   mutate(Type = paste0(EE_Retrofit_Type, ' - ', treatment_control))
 
-
-
 ## plot
 treatment_count_byScenario_byRetrofitType %>%
   filter(!is.na(EE_Retrofit_Type)) %>%
@@ -1971,14 +1969,15 @@ treatment_count_byScenario_byRetrofitType %>%
   geom_text(aes(label = ifelse(n >= 60, n, "")),
             position = position_stack(vjust = 0.5), # Center labels in the stack
             color = "black") +                     # Change label color to white
-  labs(x = "EE Retrofit Type", y = "Count") +
+  labs(x = "Energy Efficiency Retrofit", y = "Number of K-12 Schools", title = "Intervention Groups in California, USA K-12 Schools") +
   coord_flip() +
-  theme_minimal() +
-  theme(legend.position = c(.8,.2))
-
+  theme_bw() +
+  theme(legend.position = c(.8,.2)) +
+  scale_fill_discrete(labels=c('Scenario 2: Nature Exposure', 'Scenario 1: EE Retrofit', 'Scenario 3: EE Retrofit and Nature Exposure')) +
+  theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 
 f <- paste0('./figures/', 'treatment_count_byScenario_byRetrofitType2.png')
-ggsave(filename = f, plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
+ggsave(filename = f, plot = last_plot(), width = 10, height = 7, units = "in", dpi = 300)
 ```
 
 ```{r}
