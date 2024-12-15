@@ -2043,7 +2043,7 @@ w = 6.5
 h = 4
 
 ## Scenario 1: Energy Efficiency Retrofits on Chronic absenteeism
-power.analysis <- pwr.t.test(n = NULL, d = -0.12, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+power.analysis <- pwr.t.test(n = NULL, d = -0.11, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  
   theme_bw() + 
   labs(title = "Statistical Power - Scenario 1:", 
@@ -2055,6 +2055,18 @@ plot(power.analysis) +
     plot.subtitle =  element_text(size=8))  # Center ggplot title
 ggsave(filename = paste0('./figures/', 'PowerAnalysis_EERetrofits.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 
+## Scenario 1L: Lighting Retrofits on Chronic absenteeism
+power.analysis <- pwr.t.test(n = NULL, d = -0.28, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+plot(power.analysis) +  
+  theme_bw() + 
+  labs(title = "Statistical Power - Scenario 1:", 
+       subtitle = "The Impact of Lighting Retrofits on Chronic Absenteeism in K-12 Schools",
+       x = "Sample Size", y = "P-value", 
+       color = "Effect Size") + 
+  theme(
+    plot.title = element_text(size=8, face = 'bold'), 
+    plot.subtitle =  element_text(size=8))  # Center ggplot title
+ggsave(filename = paste0('./figures/', 'PowerAnalysis_LightingRetrofits.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300
 
 ## Scenario 2: Nature Exposure on Chronic absenteeism
 power.analysis <- pwr.t.test(n = NULL, d = 0.42, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
@@ -2067,9 +2079,8 @@ labs(title = "Statistical Power - Scenario 2: ",
     plot.subtitle =  element_text(size=8))  # Center ggplot title
 ggsave(filename = paste0('./figures/', 'PowerAnalysis_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 
-
 ## Scenario 3L: Lighting  Retrofits and Nature Exposure on Chronic absenteeism
-power.analysis <- pwr.t.test(n = NULL, d = 0.41, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+power.analysis <- pwr.t.test(n = NULL, d = 0.45, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  
   theme_bw() + 
   labs(title = "Statistical Power - Scenario 3:",
@@ -2082,7 +2093,7 @@ ggsave(filename = paste0('./figures/', 'PowerAnalysis_LightingRetrofitsandNature
 
 
 ## Scenario 3H: HVAC  Retrofits and Nature Exposure on Chronic absenteeism
-power.analysis <- pwr.t.test(n = NULL, d = 0.39, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+power.analysis <- pwr.t.test(n = NULL, d = 0.37, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  theme_bw() + 
 labs(title = "Statistical Power - Scenario 3: ",
      subtitle = "The Impact of HVAC Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
