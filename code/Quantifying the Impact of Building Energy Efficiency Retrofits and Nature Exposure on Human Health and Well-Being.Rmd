@@ -2156,7 +2156,7 @@ power.analysis <- pwr.t.test(n = NULL, d = 0.45, sig.level = 0.05, power = 0.8, 
 plot(power.analysis) +  
   theme_bw() + 
   labs(title = "Statistical Power - Scenario 3:",
-       subtitle = " The Impact of Lighting Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+       subtitle = " The Combined Impact of Lighting Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
        x = "Sample Size", y = "P-value", color = "Effect Size") + 
   theme(
     plot.title = element_text(size=8, face = 'bold'), 
@@ -2168,7 +2168,7 @@ ggsave(filename = paste0('./figures/', 'PowerAnalysis_LightingRetrofitsandNature
 power.analysis <- pwr.t.test(n = NULL, d = 0.37, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  theme_bw() + 
 labs(title = "Statistical Power - Scenario 3: ",
-     subtitle = "The Impact of HVAC Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+     subtitle = "The Combined Impact of HVAC Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
      x = "Sample Size", y = "P-value", color = "Effect Size") + 
   theme(
     plot.title = element_text(size=8, face = 'bold'), 
@@ -2286,7 +2286,7 @@ ggsave(filename = './figures/NDVI_LST_Schools.png', plot = last_plot(), width = 
 ```
 
 ```{r}
-#Graph the Relationship of LULC, NDVI, and LST 
+#Graph the Relationship of LULC and LST 
 library(ggplot2)
 ggplot() + 
   geom_point(data=Treatment_Count_Data_All_coord, aes(x=Percent_Water, y=Land_Surface_Temp, color="Water",alpha = 0.5), size=2) + 
