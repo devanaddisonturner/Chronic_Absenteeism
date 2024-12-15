@@ -2199,25 +2199,6 @@ ggplot() +
 ggsave(filename = paste0('./figures/', 'Prop39_Schools_Global_Map.png'), plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
 ```
 
-# Spherical Global Map [YJL: not sure what's this - may not needed for your publication]
-```{r}
-# # Spherical World Map with our Data 
-# library(sf)
-# df <-  sf::sf_project("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0", 
-#                       "+proj=moll", Treatment_Count_Data_All_coord) %>%
-#        as.data.frame() %>%
-#       setNames(c("LONGITUDE", "LATITUDE")) %>%
-#       cbind(object = object)
-# world_map_2 <- world_map %>% 
-#   st_transform(crs = "+proj=moll") %>%
-#   ggplot() + 
-#   geom_sf() + 
-#   theme_minimal() +
-#   geom_point(data = df, aes(LONGITUDE, LATITUDE)) +
-#   geom_text(data = df, aes(LONGITUDE, LATITUDE, label = object),
-#             vjust = c(1, 0, -1), hjust = 1)
-```
-
 # Interactive Map [YJL: not sure how to do this - may not needed for your publication]
 ```{r}
 # install.packages("webshot")
