@@ -1430,6 +1430,10 @@ d1_imp <- cohen.d(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_
 d1_imp
 es1_imp <- d1_imp$estimate
 
+## Scenario 1: Lighting Retrofits in K-12 Schools 
+d1L_imp <- cohen.d(m_data_wide_2_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_L$Chronic_Absenteeism_raw.y)
+d1L_imp
+es1L_imp <- d1L_imp$estimate
 
 ## Scenario 2: Nature Exposure in K-12 Schools 
 d2_imp <- cohen.d(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_4_complete$Chronic_Absenteeism_raw.y)
@@ -1675,6 +1679,74 @@ ggplot(df1, aes(x,y, color="control")) +
 
 ggsave(filename = './figures/effect_size_scenario1.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
+
+## Graph Effect Size
+### Scenario 1L: Lighting Retrofits 
+```{r}
+
+library(ggplot2)
+
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 1,Impact of
+#'  Energy Efficiency Retrofits 
+ES <- round(es1L_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_2_complete_L$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 1: Impact of Lighting Retrofits on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Neglible Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+
+ggsave(filename = 'effect_size_scenario1L.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+```
+
 
 ### Scenario 2: Nature Exposure
 ```{r}
