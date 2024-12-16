@@ -1600,7 +1600,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 3: Impact of Energy Efficiency Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, ' (Large Effect)')) +
+    "\nCohen's d = ",  ES, '(Large Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1664,7 +1664,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 1: Impact of Energy Efficiency Retrofits on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, ' (Neglible Effect)')) +
+    "\nCohen's d = ",  ES, '(Neglible Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1731,7 +1731,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 1: Impact of Lighting Retrofits on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, ' (Neglible Effect)')) +
+    "\nCohen's d = ",  ES, '(Neglible Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1796,7 +1796,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 2: Impact of Nature Exposure on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+    "\nCohen's d = ",  ES, '(Small Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1861,7 +1861,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 3: Combined Impact of Lighting Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+    "\nCohen's d = ",  ES, '(Small Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1922,7 +1922,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 3: Combined Impact of HVAC Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+    "\nCohen's d = ",  ES, '(Small Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1964,8 +1964,8 @@ corrplot(correlation_matrix, method = "ellipse", order = 'AOE', type = 'lower', 
 dev.off()
 ```
 
-```{r}
 #Plot significant correlations of variables
+```{r}
 # install.packages("lares")
 library(lares)
 p <- corr_cross(my_data, # name of dataframe
@@ -1989,9 +1989,9 @@ ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), wi
 ```{r}
 # Total number of Treatments for K-12 Schools in each policy intervention/scenario
 
-#Method 1: Read individual data file to obtain the total counts of treatments across each scenario and interventions 
+#Read individual data file to obtain the total counts of treatments across each scenario and interventions 
 #including subset of EE retrofit
-#for the following variables (i) retrofit, (ii) ndvi_binary, (iii) retrofit and ndvi
+#for the following variables (i) retrofit, (ii) ndvi_median_binary, (iii) retrofit_and_ndvi
 
 #Group by the unique Unique County, District, School Code (CDS Code)
 
@@ -2002,7 +2002,7 @@ Treatment_Count_Data_All <- read_csv("./data/Treatment_Count_Data_All_coord.csv"
 length(unique(Treatment_Count_Data_All$CDSCode))
 
 
-#calculate total number of interventions in each scenario by unique K-12 school
+#calculate total number of interventions in each scenario by the unique K-12 school
 treatment_count_by_scenario <- Treatment_Count_Data_All %>% 
   select(retrofit, ndvi_median_binary, retrofit_and_ndvi) %>% 
   summarise_if(is.numeric, list(sum = ~sum(., na.rm = TRUE)))
@@ -2064,7 +2064,7 @@ ggsave(filename = f, plot = last_plot(), width = 7, height = 5, units = "in", dp
 ```
 
 ```{r}
-# Number of Optimal Pairs-Matched for K-12 Schools in each policy intervention/scenario 
+# Number of Optimal Pairs-Matched on Propensity Score (PSM) for K-12 Schools in each policy intervention/scenario 
 
 ## Using Raw Data
 
