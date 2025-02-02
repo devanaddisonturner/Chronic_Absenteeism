@@ -96,7 +96,7 @@ treatment_count_by_scenario <- Treatment_Count_Data_All %>%
 ```
 
 
-### with Scenario
+### with scenario
 ```{r}
 treatment_count_byScenario_byRetrofitType <- Treatment_Count_Data_All %>% 
   select(EE_Retrofit_Type, retrofit, ndvi_median_binary, retrofit_and_ndvi) %>% 
@@ -153,7 +153,7 @@ ggsave(filename = f, plot = last_plot(), width = 7, height = 5, units = "in", dp
 
 
 
-### without Scenario
+### without scenario
 ```{r}
 treatment_count_noScenario_byRetrofitType <- Treatment_Count_Data_All %>% 
   select(EE_Retrofit_Type, retrofit, ndvi_median_binary, retrofit_and_ndvi) %>% 
@@ -165,6 +165,7 @@ treatment_count_noScenario_byRetrofitType <- Treatment_Count_Data_All %>%
          ) %>%
   mutate(Type = paste0(EE_Retrofit_Type, ' - ', treatment_control)) %>%
   as.data.frame()
+
 ```
 
 
@@ -199,6 +200,53 @@ f <- paste0('./figures/', 'treatment_count_comb1_noScenario.png')
 ggsave(filename = f, plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
 ```
 
+
+### without scenario, color by EE type
+
+```{r}
+## plot
+comb1 <- treatment_count_noScenario_byRetrofitType %>%
+  filter(!is.na(EE_Retrofit_Type)) %>%
+  arrange((n)) %>% 
+  mutate(
+    EE_Retrofit_Type = factor(EE_Retrofit_Type, levels = unique(EE_Retrofit_Type))
+  ) %>%
+  select(-Type, -value)
+
+# The palette with grey:
+cbPalette <- c("#F0E442", "#56B4E9", "#009E73", "#CC79A7")
+
+
+comb1 %>%
+  ggplot(., aes(x = treatment_control, 
+                fill = EE_Retrofit_Type,
+                y = n)) +
+  geom_bar(
+    # aes(
+    #   # alpha = treatment_control,
+    #   fill = EE_Retrofit_Type),
+    position = "stack",
+    stat = "identity") +
+  # scale_alpha_manual(values = c(.5, 1)) +
+  # scale_fill_brewer(palette = 'Paired') +
+  scale_fill_manual(values=rev(cbPalette)) +
+  # guides(alpha = "none") +
+  # Add text labels
+  geom_text(aes(label = ifelse(n >= 10, n, "")),
+            position = position_stack(vjust = 0.5), # Center labels in the stack
+            color = "black") +                      # Change label color to white
+  labs(x = "Interventions", 
+       y = "Number of K-12 Schools", 
+       title = "Intervention Groups in California, USA K-12 Schools") +
+  coord_flip() +
+  theme_bw() +
+  theme(legend.position = c(0.85, 0.2),
+        legend.background=element_blank()) +
+  theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+
+f <- paste0('./figures/', 'treatment_count_comb1_noScenario_byEE.png')
+ggsave(filename = f, plot = last_plot(), width = 7, height = 5, units = "in", dpi = 300)
+```
 
 
 ## EE - comb 2
