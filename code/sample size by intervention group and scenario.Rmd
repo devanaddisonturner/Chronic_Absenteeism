@@ -24,41 +24,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## Packages --------------------------------------------------------------------
-# install.packages("readr", dependencies = TRUE)
-# install.packages("readxl", dependencies = TRUE)
-
-### --- viz ----
-# install.packages("ggplot2")
-library(ggplot2)
-#install.packages("viridis")
-# install.packages("tidyverse", dependencies = TRUE)
-# install.packages("dplyr", dependencies = TRUE)
-
 library(readr)
 library(readxl)
 library(dplyr)
 library(tidyverse)
+
+
+### --- viz ----
+library(ggplot2)
 library(viridis)
 
-### --- to impute data ----
-# install.packages("devtools")
-# install.packages("lattice")
-# install.packages("VIM")
-library(lattice)
-library(VIM) ## aggr()
 
 
-#Run the following lines twice to complete install of the mice package. This archived version of the MICE package is not compatible with Mac0S. Instead, use Windows operating system.
-library(devtools)
-#install_version("mice", version = "3.11.0", repos = "https://cloud.r-project.org")
-library(mice)
-
-### ---- Matching ----
-#install.packages("MatchIt")
-#install.packages("optmatch")
-##Note: MatchIt package may not install or load on MacOS. Instead, use Windows OS.
-
-library(MatchIt)
 ```
 
 
@@ -98,14 +75,19 @@ treatment_count_by_scenario <- Treatment_Count_Data_All %>%
 
 ### with scenario
 ```{r}
-treatment_count_byScenario_byRetrofitType <- Treatment_Count_Data_All %>% 
-  select(EE_Retrofit_Type, retrofit, ndvi_median_binary, retrofit_and_ndvi) %>% 
-  pivot_longer(cols = 2:ncol(.), names_to = 'Scenario') %>%
-  group_by(EE_Retrofit_Type, Scenario, value) %>% 
-  count() %>%
+Treatment_Count_df <- Treatment_Count_Data_All %>% 
+  filter(!is.na(EE_Retrofit_Type)) %>%
+  select(EEM, EE_Retrofit_Type, retrofit, ndvi_median_binary, retrofit_and_ndvi) %>% 
+  pivot_longer(cols = 3:ncol(.), names_to = 'Scenario') %>%
   mutate(treatment_control = ifelse(value==1, 'T', 'C'),
-         treatment_control = as.factor(treatment_control),
-         Scenario = factor(Scenario, 
+         treatment_control = as.factor(treatment_control))
+
+
+## by Retrofit Type and by scenario
+count_df_byScenario_byRetrofitType <- Treatment_Count_df %>%
+  group_by(EE_Retrofit_Type, Scenario, treatment_control) %>% 
+  count() %>%
+  mutate(Scenario = factor(Scenario, 
                            levels = c("retrofit", 
                                       "ndvi_median_binary", 
                                       "retrofit_and_ndvi"), 
@@ -116,14 +98,14 @@ treatment_count_byScenario_byRetrofitType <- Treatment_Count_Data_All %>%
   mutate(Type = paste0(EE_Retrofit_Type, ' - ', treatment_control)) %>%
   as.data.frame()
 
-# str(treatment_count_byScenario_byRetrofitType)
+# str(count_df_byScenario_byRetrofitType)
 ```
 
 
 
 ```{r}
 ## plot
-treatment_count_byScenario_byRetrofitType %>%
+count_df_byScenario_byRetrofitType %>%
   filter(!is.na(EE_Retrofit_Type)) %>%
   ggplot(., aes(fill = Scenario, x = Type, y = n)) +
   geom_bar(
@@ -154,6 +136,10 @@ ggsave(filename = f, plot = last_plot(), width = 7, height = 5, units = "in", dp
 
 
 ### without scenario
+
+
+#### by type and intervention 
+
 ```{r}
 treatment_count_noScenario_byRetrofitType <- Treatment_Count_Data_All %>% 
   select(EE_Retrofit_Type, retrofit, ndvi_median_binary, retrofit_and_ndvi) %>% 
@@ -176,8 +162,7 @@ treatment_count_noScenario_byRetrofitType %>%
   filter(!is.na(EE_Retrofit_Type)) %>%
   ggplot(., aes(x = Type, y = n)) +
   geom_bar(
-    aes(
-      alpha = treatment_control),
+    aes(alpha = treatment_control),
     position = "stack",
     stat = "identity") +
   # scale_color_manual(values = c('white', 'black')) +
@@ -201,7 +186,52 @@ ggsave(filename = f, plot = last_plot(), width = 7, height = 5, units = "in", dp
 ```
 
 
-### without scenario, color by EE type
+#### by intervention, Retrofit Type, and EEM
+
+```{r}
+## by Retrofit Type and by EEM
+count_df_byEEM <- Treatment_Count_df %>% 
+  group_by(EE_Retrofit_Type, EEM, treatment_control) %>% 
+  count() %>%
+  mutate(group = paste0(EEM, ' - ', treatment_control))
+
+
+count_df_byEEM %>%
+  ggplot(., aes(x = group, 
+                fill = EE_Retrofit_Type,
+                y = n)) +
+  geom_bar(
+    aes(alpha = treatment_control),
+    position = "stack",
+    stat = "identity") +
+  scale_alpha_manual(values = c(.5, 1)) +
+  guides(alpha = "none") +
+
+  geom_text(aes(label = ifelse(n >= 0, n, "")),
+            # position = position_stack(vjust = 0), # Center labels in the stack
+            position = position_dodge(width = 1),
+            hjust = -0.1,
+            inherit.aes = TRUE,
+            color = "black") +                      # Change label color to white
+  scale_y_continuous(expand = expansion(mult = c(0.02, 0.1))) +  # Add 2% left and 10% space on the right
+  
+  labs(x = "Energy Efficiency Measure", 
+       y = "Number of K-12 Schools", 
+       title = "Intervention Groups in California, USA K-12 Schools") +
+  coord_flip() +
+  theme_bw() +
+  theme(legend.position = c(0.75, 0.1),
+        legend.background=element_blank()) +
+  theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+
+f <- paste0('./figures/', 'treatment_count_comb1_byEEM.png')
+ggsave(filename = f, plot = last_plot(), width = 7, height = 9, units = "in", dpi = 300)
+
+```
+
+
+
+#### by intervention, Retrofit Type
 
 ```{r}
 ## plot
@@ -252,7 +282,7 @@ ggsave(filename = f, plot = last_plot(), width = 7, height = 5, units = "in", dp
 ## EE - comb 2
 
 ```{r}
-comb <- treatment_count_byScenario_byRetrofitType %>%
+comb <- count_df_byScenario_byRetrofitType %>%
   filter(!is.na(EE_Retrofit_Type)) %>%
   as.data.frame()
 
