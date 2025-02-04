@@ -84,7 +84,8 @@ labs(x = "Pollution Burden, %",
        title ="Pollution Burden and Chronic Absenteeism in California, USA K-12 Schools") + 
   theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 
-ggsave(filename = './figures/', 'Pollution_ChronicAbsenteeism_SEProfile.png', plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
+ggsave(filename = paste0('./figures/', 'Pollution_ChronicAbsenteeism_SEProfile.png'), 
+       plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
 ```
 
 
@@ -96,7 +97,7 @@ library(readxl)
 library(dplyr)
 library(tidyverse)
 
-#CASchools_PSM_Data <- read_csv("./data/ChronicAbsenteeism_Schools_PSM_Data.csv")
+CASchools_PSM_Data <- read_csv("./data/ChronicAbsenteeism_Schools_PSM_Data.csv", show_col_types = F)
 
 #changing variable to numeric for the Overall Dataset
 CASchools_PSM_Data2 <- CASchools_PSM_Data %>%
@@ -111,7 +112,7 @@ CASchools_PSM_Data2 <- CASchools_PSM_Data %>%
     Year_built = as.numeric(Year_built),
     Median_income_BG = as.numeric(Median_income_BG),
     Percent_FRPM = as.numeric(Percent_FRPM),
-    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Students_Disabilities = as.numeric(Students_Disabilities),
     Asthma_Rates = as.numeric(Asthma_Rates),
     COVID_infections = as.numeric(COVID_infections),
     Pollution_Burden = as.numeric(Pollution_Burden),
@@ -124,7 +125,7 @@ CASchools_PSM_Data2 <- CASchools_PSM_Data %>%
       #removed variables we do not need
                 -Percent_LandCoverTotal,
                 -Diversity_Index,
-                -Average_NDVI_median,
+                -NDVI_median,
                 -Student_Staff_Ratio,
                 -StudentEnrollment_mean,
               ) %>%
@@ -138,7 +139,7 @@ library(readr)
 library(readxl)
 library(dplyr)
 library(tidyverse)
-CASchools_PSM_Datacomplete <- read_csv("CA_Schools_PSM_Datacomplete_2.csv")
+CASchools_PSM_Datacomplete <- read_csv("./data/CA_Schools_PSM_Datacomplete2.csv")
 
 #changing variable to numeric for the Overall Dataset
 CASchools_PSM_Datacomplete2 <- CASchools_PSM_Datacomplete %>%
@@ -166,9 +167,9 @@ CASchools_PSM_Datacomplete2 <- CASchools_PSM_Datacomplete %>%
       #removed variables we do not need
                 -EEM,
                 -EE_Retrofit_Type,
-                -CDS_Code,
-                -char_prem_id,
-                -Order,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
               ) %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
@@ -211,9 +212,9 @@ CASchools_PSM_Data_subL2 <- CASchools_PSM_Data_subL %>%
       #removed variables we do not need
                 -EEM,
                 -EE_Retrofit_Type,
-                -CDS_Code,
-                -char_prem_id,
-                -Order,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
               ) %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
@@ -247,9 +248,9 @@ CASchools_PSM_Data_subH2 <- CASchools_PSM_Data_subH %>%
       #removed variables we do not need
                 -EEM,
                 -EE_Retrofit_Type,
-                -CDS_Code,
-                -char_prem_id,
-                -Order,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
               ) %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
@@ -284,9 +285,9 @@ CASchools_PSM_Data_subB2 <- CASchools_PSM_Data_subB %>%
       #removed variables we do not need
                 -EEM,
                 -EE_Retrofit_Type,
-                -CDS_Code,
-                -char_prem_id,
-                -Order,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
               ) %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
@@ -321,9 +322,9 @@ CASchools_PSM_Data_subP2 <- CASchools_PSM_Data_subP %>%
       #removed variables we do not need
                 -EEM,
                 -EE_Retrofit_Type,
-                -CDS_Code,
-                -char_prem_id,
-                -Order,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
               ) %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
@@ -331,7 +332,7 @@ CASchools_PSM_Data_subP2 <- CASchools_PSM_Data_subP %>%
 ```
 
 
-### Impute data and plot
+## Impute data and plot
 
   All multiple imputation techniques start with the MAR assumption (Missing at Random). 
 
@@ -372,7 +373,7 @@ nrow(na.omit(CASchools_PSM_Datacomplete_og))
 
 ```
 
-### Data Normalization
+## Data Normalization
 ```{r  Overall Data}
 
 #Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
@@ -396,6 +397,8 @@ scaling_maxmin_complete <- as.data.frame(lapply(CASchools_PSM_Datacomplete_og, m
 
 scaling_maxmin_complete$School_ID <- rownames(CASchools_PSM_Datacomplete_og)
 ```
+
+
 
 ```{r  EE Retrofit --- 1. Lighting}
 
