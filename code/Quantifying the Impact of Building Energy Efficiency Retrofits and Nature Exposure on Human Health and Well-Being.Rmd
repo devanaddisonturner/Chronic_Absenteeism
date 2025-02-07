@@ -75,17 +75,56 @@ CASchools_Data_income_subset <- read_csv("./data/CASchools_Data_income_subset.cs
 
 CASchools_Data_income_subset$income_f = factor(CASchools_Data_income_subset$income, levels=c('high income','medium income','low income'))
 
+ggplot(CASchools_Data_income_subset, aes(x = Year_built, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
+#geom specifies the type of graph points to be displayed
+  geom_point() + scale_color_viridis() + theme_bw() +
+  facet_grid(School_Type ~ income_f) + xlim(1850, 2022) + ylim(0, 100) + 
+labs(x = "Year Built of K-12 Schools", 
+       y = "Chronic Absenteeism Rate (%)", 
+       title ="Year Built and Chronic Absenteeism in California, USA K-12 Schools") + 
+  theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'YearBuilt_ChronicAbsenteeism_SEProfile.png', plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
+
+
 ggplot(CASchools_Data_income_subset, aes(x = Pollution_Burden, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
 #geom specifies the type of graph points to be displayed
   geom_point() + scale_color_viridis() + theme_bw() +
   facet_grid(School_Type ~ income_f) + xlim(0, 100) + ylim(0, 100) + 
-labs(x = "Pollution Burden, %", 
-       y = "Chronic Absenteeism Rate, %", 
+labs(x = "Pollution Burden (%)", 
+       y = "Chronic Absenteeism Rate (%)", 
        title ="Pollution Burden and Chronic Absenteeism in California, USA K-12 Schools") + 
   theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'Pollution_ChronicAbsenteeism_SEProfile.png', plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
 
-ggsave(filename = paste0('./figures/', 'Pollution_ChronicAbsenteeism_SEProfile.png'), 
-       plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
+ggplot(CASchools_Data_income_subset, aes(x = COVID_infections, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
+#geom specifies the type of graph points to be displayed
+  geom_point() + scale_color_viridis() + theme_bw() +
+  facet_grid(School_Type ~ income_f) + xlim(0, 100) + ylim(0, 100) + 
+labs(x = "COVID-19 Infections Rate (%)", 
+       y = "Chronic Absenteeism Rate (%)", 
+       title ="COVID-19 and Chronic Absenteeism in California, USA K-12 Schools") + 
+  theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'COVID19_ChronicAbsenteeism_SEProfile.png', plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
+
+ggplot(CASchools_Data_income_subset, aes(x = NDVI_median, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
+#geom specifies the type of graph points to be displayed
+  geom_point() + scale_color_viridis() + theme_bw() +
+  facet_grid(School_Type ~ income_f) + xlim(-1, 1) + ylim(0, 100) + 
+labs(x = "Normalized Difference Vegetation Index", 
+       y = "Chronic Absenteeism Rate (%)", 
+       title ="NDVI and Chronic Absenteeism in California, USA K-12 Schools") + 
+  theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'NDVI_ChronicAbsenteeism_SEProfile.png', plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
+
+ggplot(CASchools_Data_income_subset, aes(x = Land_Surface_Temp, y = Chronic_Absenteeism, color =  Diversity_Index, alpha = 0.5)) + 
+#geom specifies the type of graph points to be displayed
+  geom_point() + scale_color_viridis() + theme_bw() +
+  facet_grid(School_Type ~ income_f) + xlim(0, 100) + ylim(0, 100) + 
+labs(x = "Land Surface Temperature (°C)", 
+       y = "Chronic Absenteeism Rate (%)", 
+       title ="Land Surface Temperature and Chronic Absenteeism in California, USA K-12 Schools") + 
+  theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ggsave(filename = './figures/', 'LST_ChronicAbsenteeism_SEProfile.png', plot = last_plot(), width = 9, height = 6, units = "in", dpi = 300)
 ```
 
 
@@ -176,16 +215,37 @@ CASchools_PSM_Datacomplete2 <- CASchools_PSM_Datacomplete %>%
   column_to_rownames(var = 'School_ID')
 ```
 
-#### Subset Data by 4 types of Energy Efficiency Retrofits
+Subset Data by 4 types of Energy Efficiency Retrofits
 ```{r}
+
+#Single EE Retrofit Sub-System
 CASchools_PSM_Data_subL <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Lighting")
 CASchools_PSM_Data_subH <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "HVAC")
 CASchools_PSM_Data_subB <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Building_Envelope")
 CASchools_PSM_Data_subP <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Pumps_Motors_Drives")
+
+
+#Dual EE Retrofit Sub-System
+CASchools_PSM_Data_subLH <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "HVAC")
+CASchools_PSM_Data_subLB <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "Building_Envelope")
+CASchools_PSM_Data_subLP <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+CASchools_PSM_Data_subHB <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Building_Envelope")
+CASchools_PSM_Data_subHP <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+CASchools_PSM_Data_subBP <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+
+
+#Triple EE Retrofit SUb-System
+CASchools_PSM_Data_subLHB <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Building_Envelope")
+CASchools_PSM_Data_subLHP <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+CASchools_PSM_Data_subHBP <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+CASchools_PSM_Data_subBLP <- subset(CASchools_PSM_Datacomplete, EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Lighting | EE_Retrofit_Type == Pumps_Motors_Drives")
+
 ```
 
+
+##Single EE Retrofit
 ```{r}
-# 1. EE Retrofit - Lighting 
+# 1. EE Retrofit = Lighting 
 #changing variable to numeric with subset data
 CASchools_PSM_Data_subL2 <- CASchools_PSM_Data_subL %>%
   dplyr::mutate(
@@ -221,7 +281,7 @@ CASchools_PSM_Data_subL2 <- CASchools_PSM_Data_subL %>%
   column_to_rownames(var = 'School_ID')
 
 
-#2. EE Retrofit - HVAC
+#2. EE Retrofit = HVAC
 #changing variable to numeric with subset data
 CASchools_PSM_Data_subH2 <- CASchools_PSM_Data_subH %>%
   dplyr::mutate(
@@ -257,7 +317,7 @@ CASchools_PSM_Data_subH2 <- CASchools_PSM_Data_subH %>%
   column_to_rownames(var = 'School_ID')
 
 
-#3. EE Retrofit - Building Envelope 
+#3. EE Retrofit = Building Envelope 
 
 #changing variable to numeric with subset data
 CASchools_PSM_Data_subB2 <- CASchools_PSM_Data_subB %>%
@@ -294,7 +354,7 @@ CASchools_PSM_Data_subB2 <- CASchools_PSM_Data_subB %>%
   column_to_rownames(var = 'School_ID')
 
 
-#4. EE Retrofit - Pumps, Motors, & Drives
+#4. EE Retrofit = Pumps, Motors, & Drives
 
 #changing variable to numeric with subset data
 CASchools_PSM_Data_subP2 <- CASchools_PSM_Data_subP %>%
@@ -329,7 +389,378 @@ CASchools_PSM_Data_subP2 <- CASchools_PSM_Data_subP %>%
   as.data.frame() %>%
 #We moved the school ID as column as row name to keep all the data in numeric
   column_to_rownames(var = 'School_ID')
+
 ```
+
+
+## Dual EE Retrofit
+```{r}
+#5. EE Retrofit = Lighting + HVAC
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subLH2 <- CASchools_PSM_Data_subLH %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+
+
+#6. EE Retrofit = Lighting + Building Envelope
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subLB2 <- CASchools_PSM_Data_subLB %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+
+
+#7.EE Retrofit = Lighting + Pumps, Motors, & Drives
+
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subLP2 <- CASchools_PSM_Data_subLP %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+
+
+#8.EE Retrofit = HVAC + Building Envelope
+
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subHB2 <- CASchools_PSM_Data_subHB %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+
+#9. EE Retrofit = HVAC + Pumps, Motors, & Drives
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subHP2 <- CASchools_PSM_Data_subHP %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+
+
+#10. EE Retrofit = Building Envelope + Pumps, Motors, & Drives
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subBP2 <- CASchools_PSM_Data_subBP %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+```
+
+
+## Triple EE Retrofit
+```{r}
+#11. EE Retrofit = Lighting + HVAC + Building Envelope
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subLHB2 <- CASchools_PSM_Data_subLHB %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+
+
+#12. EE Retrofit = Lighting + HVAC + Pumps, Motors, & Drives
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subLHP2 <- CASchools_PSM_Data_subLHP %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+
+
+#13.EE Retrofit = HVAC + Building Envelope + Pumps, Motors, & Drives
+
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subHBP2 <- CASchools_PSM_Data_subHBP %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+
+
+#14.EE Retrofit = Building Envelope + Lighting + Pumps, Motors, & Drives
+
+#changing variable to numeric with subset data
+CASchools_PSM_Data_subBLP2 <- CASchools_PSM_Data_subBLP %>%
+  dplyr::mutate(
+    Percent_Water = as.numeric(Percent_Water), 
+    Percent_Developed = as.numeric(Percent_Developed),
+    Percent_Forest = as.numeric(Percent_Forest),
+    Percent_Pasture = as.numeric(Percent_Pasture),
+    Staff = as.numeric(Staff), 
+    NDVI_median = as.numeric(NDVI_median),
+    Land_Surface_Temp = as.numeric(Land_Surface_Temp),
+    Year_built = as.numeric(Year_built),
+    Median_income_BG = as.numeric(Median_income_BG),
+    Percent_FRPM = as.numeric(Percent_FRPM),
+    Students_with_Disabilities = as.numeric(Students_with_Disabilities),
+    Asthma_Rates = as.numeric(Asthma_Rates),
+    COVID_infections = as.numeric(COVID_infections),
+    Pollution_Burden = as.numeric(Pollution_Burden),
+    Chronic_Absenteeism = as.numeric(Chronic_Absenteeism),
+    retrofit = as.numeric(retrofit),
+    ndvi_median_binary = as.numeric(ndvi_median_binary),
+    retrofit_and_ndvi = as.numeric(retrofit_and_ndvi),
+    )  %>%
+    dplyr::select(
+      #removed variables we do not need
+                -EEM,
+                -EE_Retrofit_Type,
+                # -CDS_Code,
+                # -char_prem_id,
+                # -Order,
+              ) %>%
+  as.data.frame() %>%
+#We moved the school ID as column as row name to keep all the data in numeric
+  column_to_rownames(var = 'School_ID')
+```
+
 
 
 ## Impute data and plot
@@ -373,7 +804,7 @@ nrow(na.omit(CASchools_PSM_Datacomplete_og))
 
 ```
 
-## Data Normalization
+### Data Normalization
 ```{r  Overall Data}
 
 #Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
@@ -393,14 +824,12 @@ scaling_maxmin_dropna <- scaling_maxmin %>%
 maxmin_scalar_complete <- function(x){
   (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
   }
-scaling_maxmin_complete <- as.data.frame(lapply(CASchools_PSM_Datacomplete_og, maxmin_scalar_complete))
+scaling_maxmin_complete <- as.data.frame(lapply(CASchools_PSM_Datacomplete2, maxmin_scalar_complete))
 
-scaling_maxmin_complete$School_ID <- rownames(CASchools_PSM_Datacomplete_og)
+scaling_maxmin_complete$School_ID <- rownames(CASchools_PSM_Datacomplete2)
 ```
 
-
-
-```{r  EE Retrofit --- 1. Lighting}
+```{r  EE Retrofit =  1. Lighting}
 
 ######### Imputed Dataset
 
@@ -412,7 +841,7 @@ scaling_maxmin_L_complete <- as.data.frame(lapply(CASchools_PSM_Data_subL2, maxm
 scaling_maxmin_L_complete$School_ID <- rownames(CASchools_PSM_Data_subL2)
 ```
 
-```{r EE Retrofit -- 2. HVAC}
+```{r EE Retrofit =  2. HVAC}
 
 ######### Imputed Dataset
 
@@ -424,7 +853,7 @@ scaling_maxmin_H_complete <- as.data.frame(lapply(CASchools_PSM_Data_subH2, maxm
 scaling_maxmin_H_complete$School_ID <- rownames(CASchools_PSM_Data_subH2)
 ```
 
-```{r  EE Retrofit -- 3. Building Envelope}
+```{r  EE Retrofit = 3. Building Envelope}
 
 #Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
 
@@ -442,7 +871,7 @@ scaling_maxmin_B_complete$Percent_Forest[scaling_maxmin_B_complete$Percent_Fores
 scaling_maxmin_B_complete$Percent_Forest[which(scaling_maxmin_B_complete$Percent_Forest == "NaN")] = 0.0000000
 ```
 
-```{r EE Retrofit -- 4. Pumps, Motors, and Drives}
+```{r EE Retrofit = 4. Pumps, Motors, and Drives}
 
 #Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
 
@@ -460,11 +889,191 @@ scaling_maxmin_P_complete <- as.data.frame(lapply(CASchools_PSM_Data_subP2, maxm
 scaling_maxmin_P_complete$School_ID <- rownames(CASchools_PSM_Data_subP2)  
 ```
 
+
+```{r  EE Retrofit = 5. Lighting + HVAC}
+
+######### Imputed Dataset
+
+maxmin_scalar_LH_complete <- function(x){
+  (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
+  }
+scaling_maxmin_LH_complete <- as.data.frame(lapply(CASchools_PSM_Data_subLH2, maxmin_scalar_LH_complete))
+
+scaling_maxmin_LH_complete$School_ID <- rownames(CASchools_PSM_Data_subLH2)
+```
+
+
+```{r  EE Retrofit = 6. Lighting + Building Envelope}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
+######### Imputed Dataset
+
+maxmin_scalar_LB_complete <- function(x){
+  (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
+  }
+scaling_maxmin_LB_complete <- as.data.frame(lapply(CASchools_PSM_Data_subLB2, maxmin_scalar_LB_complete))
+
+scaling_maxmin_LB_complete$School_ID <- rownames(CASchools_PSM_Data_subLB2)  
+
+scaling_maxmin_LB_complete$Percent_Forest[scaling_maxmin_LB_complete$Percent_Forest] <- 0
+
+scaling_maxmin_LB_complete$Percent_Forest[which(scaling_maxmin_LB_complete$Percent_Forest == "NaN")] = 0.0000000
+```
+
+```{r EE Retrofit = 7. Lighting + Pumps, Motors, and Drives}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
+######### Imputed Dataset
+
+maxmin_scalar_LP_complete <- function(x) {
+  if(min(x, na.rm=TRUE)!=max(x, na.rm=TRUE)) {
+    res <- ((x - min(x, na.rm=TRUE)) / (max(x, na.rm=TRUE) - min(x, na.rm=TRUE)))
+  } else {
+    res <- 0.5
+  }
+  res
+}
+scaling_maxmin_LP_complete <- as.data.frame(lapply(CASchools_PSM_Data_subLP2, maxmin_scalar_LP_complete))
+scaling_maxmin_LP_complete$School_ID <- rownames(CASchools_PSM_Data_subLP2)  
+```
+
+```{r  EE Retrofit = 8. HVAC + Building Envelope}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
+######### Imputed Dataset
+
+maxmin_scalar_HB_complete <- function(x){
+  (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
+  }
+scaling_maxmin_HB_complete <- as.data.frame(lapply(CASchools_PSM_Data_subHB2, maxmin_scalar_HB_complete))
+
+scaling_maxmin_HB_complete$School_ID <- rownames(CASchools_PSM_Data_subHB2)  
+
+scaling_maxmin_HB_complete$Percent_Forest[scaling_maxmin_HB_complete$Percent_Forest] <- 0
+
+scaling_maxmin_HB_complete$Percent_Forest[which(scaling_maxmin_HB_complete$Percent_Forest == "NaN")] = 0.0000000
+```
+
+```{r EE Retrofit = 9. HVAC + Pumps, Motors, and Drives}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
+######### Imputed Dataset
+
+maxmin_scalar_HP_complete <- function(x) {
+  if(min(x, na.rm=TRUE)!=max(x, na.rm=TRUE)) {
+    res <- ((x - min(x, na.rm=TRUE)) / (max(x, na.rm=TRUE) - min(x, na.rm=TRUE)))
+  } else {
+    res <- 0.5
+  }
+  res
+}
+scaling_maxmin_HP_complete <- as.data.frame(lapply(CASchools_PSM_Data_subHP2, maxmin_scalar_HP_complete))
+scaling_maxmin_HP_complete$School_ID <- rownames(CASchools_PSM_Data_subHP2)  
+```
+
+
+```{r EE Retrofit = 10. Building Envelope + Pumps, Motors, and Drives}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
+######### Imputed Dataset
+
+maxmin_scalar_BP_complete <- function(x) {
+  if(min(x, na.rm=TRUE)!=max(x, na.rm=TRUE)) {
+    res <- ((x - min(x, na.rm=TRUE)) / (max(x, na.rm=TRUE) - min(x, na.rm=TRUE)))
+  } else {
+    res <- 0.5
+  }
+  res
+}
+scaling_maxmin_BP_complete <- as.data.frame(lapply(CASchools_PSM_Data_subBP2, maxmin_scalar_BP_complete))
+scaling_maxmin_BP_complete$School_ID <- rownames(CASchools_PSM_Data_subBP2)  
+```
+
+
+```{r  EE Retrofit = 11. Lighting +  HVAC + Building Envelope}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
+######### Imputed Dataset
+
+maxmin_scalar_LHB_complete <- function(x){
+  (x- min(x, na.rm = T)) / (max(x, na.rm = T) - min(x, na.rm = T))
+  }
+scaling_maxmin_LHB_complete <- as.data.frame(lapply(CASchools_PSM_Data_subLHB2, maxmin_scalar_LHB_complete))
+
+scaling_maxmin_LHB_complete$School_ID <- rownames(CASchools_PSM_Data_subLHB2)  
+
+scaling_maxmin_LHB_complete$Percent_Forest[scaling_maxmin_LHB_complete$Percent_Forest] <- 0
+
+scaling_maxmin_LHB_complete$Percent_Forest[which(scaling_maxmin_LHB_complete$Percent_Forest == "NaN")] = 0.0000000
+```
+
+```{r EE Retrofit = 12. Lighting + HVAC + Pumps, Motors, and Drives}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
+######### Imputed Dataset
+
+maxmin_scalar_LHP_complete <- function(x) {
+  if(min(x, na.rm=TRUE)!=max(x, na.rm=TRUE)) {
+    res <- ((x - min(x, na.rm=TRUE)) / (max(x, na.rm=TRUE) - min(x, na.rm=TRUE)))
+  } else {
+    res <- 0.5
+  }
+  res
+}
+scaling_maxmin_LHP_complete <- as.data.frame(lapply(CASchools_PSM_Data_subLHP2, maxmin_scalar_LHP_complete))
+scaling_maxmin_LHP_complete$School_ID <- rownames(CASchools_PSM_Data_subLHP2)  
+```
+
+
+```{r EE Retrofit = 13. HVAC + Building Envelope + Pumps, Motors, and Drives}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
+######### Imputed Dataset
+
+maxmin_scalar_HBP_complete <- function(x) {
+  if(min(x, na.rm=TRUE)!=max(x, na.rm=TRUE)) {
+    res <- ((x - min(x, na.rm=TRUE)) / (max(x, na.rm=TRUE) - min(x, na.rm=TRUE)))
+  } else {
+    res <- 0.5
+  }
+  res
+}
+scaling_maxmin_HBP_complete <- as.data.frame(lapply(CASchools_PSM_Data_subHBP2, maxmin_scalar_HBP_complete))
+scaling_maxmin_HBP_complete$School_ID <- rownames(CASchools_PSM_Data_subHBP2)  
+```
+
+
+```{r EE Retrofit = 14. Building Envelope + Lighting +  Pumps, Motors, and Drives}
+
+#Create a function to normalize variables on a scale from 0 to 1 then apply to dataset
+
+######### Imputed Dataset
+
+maxmin_scalar_BLP_complete <- function(x) {
+  if(min(x, na.rm=TRUE)!=max(x, na.rm=TRUE)) {
+    res <- ((x - min(x, na.rm=TRUE)) / (max(x, na.rm=TRUE) - min(x, na.rm=TRUE)))
+  } else {
+    res <- 0.5
+  }
+  res
+}
+scaling_maxmin_BLP_complete <- as.data.frame(lapply(CASchools_PSM_Data_subBLP2, maxmin_scalar_BLP_complete))
+scaling_maxmin_BLP_complete$School_ID <- rownames(CASchools_PSM_Data_subBLP2)  
+```
+
 # Pair-Matching Algorithm - 3 Scenarios
 
 ## Using non-imputed data
 
-### Scenario 1: Energy Efficiency (EE) Retrofits in K-12 Schools
+### Scenario 1 = Energy Efficiency (EE) Retrofits in K-12 Schools
 
 ```{r}
 library(MatchIt)
@@ -475,8 +1084,7 @@ m.out1 <- matchit(retrofit ~
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
                     Percent_Pasture + Land_Surface_Temp + Year_built +
                     Median_income_BG +	Percent_FRPM + Staff +
-                    Students_with_Disabilities +	Asthma_Rates +	
-                    COVID_infections +	Pollution_Burden,
+                    Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_dropna,
                   method = "optimal") 
 summary(m.out1)
@@ -495,15 +1103,14 @@ m_data <- m_data[rownames(m_data) %in% rownames(mm) |
 
 
 
-### Scenario 2: Nature Exposure in K-12 Schools
+### Scenario 2 = Nature Exposure in K-12 Schools
 ```{r}
 m.out2 <- matchit(ndvi_median_binary ~ 
                     retrofit +	
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
                     Percent_Pasture + Land_Surface_Temp + Year_built +
                     Median_income_BG +	Percent_FRPM + Staff +	
-                    Students_with_Disabilities +	Asthma_Rates +	
-                    COVID_infections +	Pollution_Burden,
+                    Asthma_Rates + COVID_infections +	Pollution_Burden,
                    data = scaling_maxmin_dropna,
                    method = "optimal")
 summary(m.out2)
@@ -519,14 +1126,13 @@ m_data2 <- m_data2[rownames(m_data2) %in% rownames(mm2) |
 
 
 
-### Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
+### Scenario 3 = Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
 ```{r}
 m.out3 <- matchit(retrofit_and_ndvi ~ 
                     Percent_Water	+ Percent_Developed + Percent_Forest +	
                     Percent_Pasture + Land_Surface_Temp	+ Year_built +
                     Median_income_BG +	Percent_FRPM + Staff +
-                    Students_with_Disabilities +	Asthma_Rates +	
-                    COVID_infections +	Pollution_Burden,
+                    Asthma_Rates + COVID_infections +	Pollution_Burden,
                    data = scaling_maxmin_dropna,
                    method = "optimal")
 summary(m.out3)
@@ -543,7 +1149,7 @@ m_data3 <- m_data3[rownames(m_data3) %in% rownames(mm3) |
 
 ## Using Imputed Data
 
-### Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Dataset
+### Scenario 1 = Energy Efficiency Retrofits in K-12 Schools with Imputed Dataset
 
 ```{r}
 #1:1 optimal PS matching with optimal matching on School covariates
@@ -551,8 +1157,7 @@ m.out1_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_complete,
                   method = "optimal") 
 summary(m.out1_complete)
@@ -562,8 +1167,8 @@ summary(m.out1_complete, un = FALSE)
 m_data_complete <- match.data(m.out1_complete)
 ```
 
-
-#### Scenario 1L: Lighting Retrofits in K-12 Schools with Imputed Dataset
+##Single EE Retrofit
+#### Scenario 1L = Lighting Retrofits in K-12 Schools with Imputed Dataset
 
 ```{r}
 #1:1 optimal PS matching with optimal matching on School covariates
@@ -571,8 +1176,7 @@ m.out1L_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_L_complete,
                   method = "optimal") 
 summary(m.out1L_complete)
@@ -583,7 +1187,7 @@ m_data_L_complete <- match.data(m.out1L_complete)
 ```
 
 
-#### Scenario 1H: HVAC Retrofits in K-12 Schools with Imputed Dataset
+#### Scenario 1H = HVAC Retrofits in K-12 Schools with Imputed Dataset
 
 ```{r}
 #1:1 optimal PS matching with optimal matching on School covariates
@@ -591,8 +1195,7 @@ m.out1H_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_H_complete,
                   method = "optimal") 
 summary(m.out1H_complete)
@@ -604,7 +1207,7 @@ m_data_H_complete <- match.data(m.out1H_complete)
 ```
 
 
-#### Scenario 1B: Building Envelope Retrofits in K-12 Schools with Imputed Dataset
+#### Scenario 1B = Building Envelope Retrofits in K-12 Schools with Imputed Dataset
 
 ```{r}
 #1:1 optimal PS matching with optimal matching on School covariates
@@ -612,8 +1215,7 @@ m.out1B_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_B_complete,
                   method = "optimal") 
 summary(m.out1B_complete)
@@ -625,7 +1227,7 @@ m_data_B_complete <- match.data(m.out1B_complete)
 ```
 
 
-#### Scenario 1P: Pumps, Motors, and Drives Retrofits in K-12 Schools with Imputed Dataset
+#### Scenario 1P = Pumps, Motors, & Drives Retrofits in K-12 Schools with Imputed Dataset
 
 ```{r}
 #1:1 optimal PS matching with optimal matching on School covariates
@@ -633,8 +1235,7 @@ m.out1P_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_P_complete,
                   method = "optimal") 
 summary(m.out1P_complete)
@@ -646,15 +1247,218 @@ m_data_P_complete <- match.data(m.out1P_complete)
 ```
 
 
-### Scenario 2: Nature Exposure in K-12 Schools with Imputed Dataset
+
+
+##Dual EE Retrofit
+
+#### Scenario 1LH = Lighting + HVAC in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1LH_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LH_complete,
+                  method = "optimal") 
+summary(m.out1LH_complete)
+ 
+m.out1LH_complete
+summary(m.out1LH_complete, un = FALSE)
+m_data_LH_complete <- match.data(m.out1LH_complete)
+```
+
+
+#### Scenario 1LB = Lighting + Builing Envelope in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1LB_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LB_complete,
+                  method = "optimal") 
+summary(m.out1LB_complete)
+ 
+m.out1LB_complete
+summary(m.out1LB_complete, un = FALSE)
+m_data_LB_complete <- match.data(m.out1LB_complete)
+
+```
+
+
+#### Scenario 1LP = Lighting + Pumps, Motors, & Drives in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1LP_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LP_complete,
+                  method = "optimal") 
+summary(m.out1LP_complete)
+ 
+m.out1LP_complete
+summary(m.out1LP_complete, un = FALSE)
+m_data_LP_complete <- match.data(m.out1LP_complete)
+
+```
+
+
+#### Scenario 1HB = HVAC + Builing Envelope in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1HB_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_HB_complete,
+                  method = "optimal") 
+summary(m.out1HB_complete)
+ 
+m.out1HB_complete
+summary(m.out1HB_complete, un = FALSE)
+m_data_HB_complete <- match.data(m.out1HB_complete)
+
+```
+
+#### Scenario 1HP = HVAC + Pumps, Motors, & Drives in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1HP_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_HP_complete,
+                  method = "optimal") 
+summary(m.out1HP_complete)
+ 
+m.out1HP_complete
+summary(m.out1HP_complete, un = FALSE)
+m_data_HP_complete <- match.data(m.out1HP_complete)
+
+```
+
+
+#### Scenario 1BP = Building Envelope + Pumps, Motors, & Drives in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1BP_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_BP_complete,
+                  method = "optimal") 
+summary(m.out1BP_complete)
+ 
+m.out1BP_complete
+summary(m.out1BP_complete, un = FALSE)
+m_data_BP_complete <- match.data(m.out1BP_complete)
+
+```
+
+
+##Triple EE Retrofit
+
+#### Scenario 1LHB = Lighting + HVAC + Building Envelope in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1LHB_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LHB_complete,
+                  method = "optimal") 
+summary(m.out1LHB_complete)
+ 
+m.out1LHB_complete
+summary(m.out1LHB_complete, un = FALSE)
+m_data_LHB_complete <- match.data(m.out1LHB_complete)
+```
+
+
+#### Scenario 1LHP = Lighting + HVAC + Pumps, Motors, & Drives in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1LHP_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LHP_complete,
+                  method = "optimal") 
+summary(m.out1LHP_complete)
+ 
+m.out1LHP_complete
+summary(m.out1LHP_complete, un = FALSE)
+m_data_LHP_complete <- match.data(m.out1LHP_complete)
+
+```
+
+
+#### Scenario 1HBP = HVAC + Building Envelope + Pumps, Motors, & Drives in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1HBP_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_HBP_complete,
+                  method = "optimal") 
+summary(m.out1HBP_complete)
+ 
+m.out1HBP_complete
+summary(m.out1HBP_complete, un = FALSE)
+m_data_HBP_complete <- match.data(m.out1HBP_complete)
+
+```
+
+
+#### Scenario 1BLP = Builing Envelope + Lighting + Pumps, Motors, & Drives in K-12 Schools in K-12 Schools with Imputed Dataset
+
+```{r}
+#1:1 optimal PS matching with optimal matching on School covariates
+m.out1BLP_complete <- matchit(retrofit ~ NDVI_median +	Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_BLP_complete,
+                  method = "optimal") 
+summary(m.out1BLP_complete)
+ 
+m.out1BLP_complete
+summary(m.out1BLP_complete, un = FALSE)
+m_data_BLP_complete <- match.data(m.out1BLP_complete)
+
+```
+
+
+
+### Scenario 2 = Nature Exposure in K-12 Schools with Imputed Dataset
 
 ```{r}
 m.out2_complete <- matchit(ndvi_median_binary ~ retrofit +	Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +	
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                    data = scaling_maxmin_complete,
                    method = "optimal")
 summary(m.out2_complete)
@@ -664,15 +1468,14 @@ m_data2_complete <- match.data(m.out2_complete)
 ```
 
 
-### Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools with Imputed Dataset
+### Scenario 3 = Energy Efficiency Retrofits + Nature Exposure in K-12 Schools with Imputed Dataset
 
 ```{r}
 m.out3_complete <- matchit(retrofit_and_ndvi ~ Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_complete,
                   method = "optimal")
 summary(m.out3_complete)
@@ -682,16 +1485,16 @@ summary(m.out3_complete, un = FALSE)
 m_data3_complete <- match.data(m.out3_complete)
 ```
 
+##Single EE Retrofit
 
-#### Scenario 3L: Lighting Retrofits and Nature Exposure in K-12 Schools with Imputed Dataset
+#### Scenario 3L = Lighting Retrofits + Nature Exposure in K-12 Schools with Imputed Dataset
 
 ```{r}
 m.out3_complete_L <- matchit(retrofit_and_ndvi ~ Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_L_complete,
                   method = "optimal")
 summary(m.out3_complete_L)
@@ -701,15 +1504,14 @@ summary(m.out3_complete_L, un = FALSE)
 m_data3_complete_L <- match.data(m.out3_complete_L)
 ```
 
-#### Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools with Imputed Dataset
+#### Scenario 3H = HVAC Retrofits + Nature Exposure in K-12 Schools with Imputed Dataset
 
 ```{r}
 m.out3_complete_H <- matchit(retrofit_and_ndvi ~ Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_H_complete,
                   method = "optimal")
 summary(m.out3_complete_H)
@@ -719,15 +1521,14 @@ summary(m.out3_complete_H, un = FALSE)
 m_data3_complete_H <- match.data(m.out3_complete_H)
 ```
 
-#### Scenario 3B: Building Envelope Retrofits and Nature Exposure in K-12 Schools with Imputed Dataset
+#### Scenario 3B = Building Envelope Retrofits + Nature Exposure in K-12 Schools with Imputed Dataset
 
 ```{r}
 m.out3_complete_B <- matchit(retrofit_and_ndvi ~ Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_B_complete,
                   method = "optimal")
 summary(m.out3_complete_B)
@@ -738,15 +1539,14 @@ m_data3_complete_B <- match.data(m.out3_complete_B)
 ```
 
 
-#### Scenario 3P: Pumps, Motors, & Drives Retrofits and Nature Exposure in K-12 Schools with Imputed Dataset
+#### Scenario 3P = Pumps, Motors, & Drives Retrofits + Nature Exposure in K-12 Schools with Imputed Dataset
 
 ```{r}
 m.out3_complete_P <- matchit(retrofit_and_ndvi ~ Percent_Water	+
                            Percent_Developed + Percent_Forest +	
                            Percent_Pasture + Land_Surface_Temp + Year_built +
                            Median_income_BG +	Percent_FRPM + Staff +
-                           Students_with_Disabilities +	Asthma_Rates +	
-                           COVID_infections +	Pollution_Burden,
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
                   data = scaling_maxmin_P_complete,
                   method = "optimal")
 summary(m.out3_complete_P)
@@ -755,6 +1555,186 @@ m.out3_complete
 summary(m.out3_complete_P, un = FALSE)
 m_data3_complete_P <- match.data(m.out3_complete_P)
 ```
+
+
+##Dual EE Retrofit
+
+
+#### Scenario 3LH = Lighting  + HVAC + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_LH <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LH_complete,
+                  method = "optimal")
+summary(m.out3_complete_LH)
+
+m.out3_complete_LH
+summary(m.out3_complete_LH, un = FALSE)
+m_data3_complete_LH <- match.data(m.out3_complete_LH)
+```
+
+#### Scenario 3LB = Lighting + Builing Envelope + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_LB <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LB_complete,
+                  method = "optimal")
+summary(m.out3_complete_LB)
+
+m.out3_complete_LB
+summary(m.out3_complete_LB, un = FALSE)
+m_data3_complete_LB <- match.data(m.out3_complete_LB)
+```
+
+#### Scenario 3LP = Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_LP <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LP_complete,
+                  method = "optimal")
+summary(m.out3_complete_LP)
+
+m.out3_complete_LP
+summary(m.out3_complete_LP, un = FALSE)
+m_data3_complete_LP <- match.data(m.out3_complete_LP)
+```
+
+#### Scenario 3HB = HVAC + Building Envelope + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_HB <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_HB_complete,
+                  method = "optimal")
+summary(m.out3_complete_HB)
+
+m.out3_complete
+summary(m.out3_complete_HB, un = FALSE)
+m_data3_complete_HB <- match.data(m.out3_complete_HB)
+```
+
+
+#### Scenario 3HP =  HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_HP <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_HP_complete,
+                  method = "optimal")
+summary(m.out3_complete_HP)
+
+m.out3_complete_HP
+summary(m.out3_complete_HP, un = FALSE)
+m_data3_complete_HP<- match.data(m.out3_complete_HP)
+```
+
+#### Scenario 3BP = Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_BP <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_BP_complete,
+                  method = "optimal")
+summary(m.out3_complete_BP)
+
+m.out3_complete_BP
+summary(m.out3_complete_BP, un = FALSE)
+m_data3_complete_BP <- match.data(m.out3_complete_BP)
+```
+
+##Triple EE Retrofit
+
+#### Scenario 3LHB = Lighting + HVAC + Builing Envelope + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_LHB <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LHB_complete,
+                  method = "optimal")
+summary(m.out3_complete_LHB)
+
+m.out3_complete_LHB
+summary(m.out3_complete_LHB, un = FALSE)
+m_data3_complete_LHB <- match.data(m.out3_complete_LHB)
+```
+
+#### Scenario 3LHP = Lighting + HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_LHP <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_LHP_complete,
+                  method = "optimal")
+summary(m.out3_complete_LHP)
+
+m.out3_complete_LHP
+summary(m.out3_complete_LHP, un = FALSE)
+m_data3_complete_LHP <- match.data(m.out3_complete_LHP)
+```
+
+#### Scenario 3HBP = HVAC + Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_HBP <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_HBP_complete,
+                  method = "optimal")
+summary(m.out3_complete_HBP)
+
+m.out3_complete
+summary(m.out3_complete_HBP, un = FALSE)
+m_data3_complete_HBP <- match.data(m.out3_complete_HBP)
+```
+
+
+#### Scenario 3BLP = Building Envelope + Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Dataset
+
+```{r}
+m.out3_complete_BLP <- matchit(retrofit_and_ndvi ~ Percent_Water	+
+                           Percent_Developed + Percent_Forest +	
+                           Percent_Pasture + Land_Surface_Temp + Year_built +
+                           Median_income_BG +	Percent_FRPM + Staff +
+                           Asthma_Rates + COVID_infections +	Pollution_Burden,
+                  data = scaling_maxmin_BLP_complete,
+                  method = "optimal")
+summary(m.out3_complete_BLP)
+
+m.out3_complete_BLP
+summary(m.out3_complete_BLP, un = FALSE)
+m_data3_complete_BLP <- match.data(m.out3_complete_BLP)
+```
+
+
 
 
 
@@ -896,7 +1876,7 @@ m_data_t_complete <- m_data_complete %>%
   dplyr::filter(retrofit == 1)
 
 ## left join raw outcome data
-raw_complete <- CASchools_PSM_Datacomplete_og %>%
+raw_complete <- CASchools_PSM_Datacomplete2 %>%
   dplyr::select(Chronic_Absenteeism) %>%
   dplyr::mutate(School_ID = rownames(.)) %>%
   dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
@@ -921,11 +1901,11 @@ m_data_wide_2_complete <- merge(
 ```
 
 
-
+# Single EE Retrofit
 #### Imputed Data 1L
 
 ```{r Scenario 1L}
-### Scenario 1: Lighting Retrofits in K-12 Schools with Imputed Data
+### Scenario 1 = Lighting Retrofits in K-12 Schools with Imputed Data
 #Control Group 
 m_data_c_complete_L <- m_data_L_complete %>%
   dplyr::filter(retrofit == 0)
@@ -964,7 +1944,7 @@ m_data_wide_2_complete_L <- merge(
 #### Imputed Data 1H
 
 ```{r Scenario 1H}
-### Scenario 1: HVAC Retrofits in K-12 Schools with Imputed Data
+### Scenario 1 = HVAC Retrofits in K-12 Schools with Imputed Data
 #Control Group 
 m_data_c_complete_H <- m_data_H_complete %>%
   dplyr::filter(retrofit == 0)
@@ -1001,7 +1981,7 @@ m_data_wide_2_complete_H <- merge(
 #### Imputed Data 1B
 
 ```{r Scenario 1B}
-### Scenario 1: Building Envelope Retrofits in K-12 Schools with Imputed Data
+### Scenario 1B = Building Envelope Retrofits in K-12 Schools with Imputed Data
 #Control Group 
 m_data_c_complete_B <- m_data_B_complete %>%
   dplyr::filter(retrofit == 0)
@@ -1038,7 +2018,7 @@ m_data_wide_2_complete_B <- merge(
 #### Imputed Data 1P
 
 ```{r Scenario 1P}
-### Scenario 1: Pumps, Motors, & Drives Retrofits in K-12 Schools with Imputed Data
+### Scenario 1P = Pumps, Motors, & Drives Retrofits in K-12 Schools with Imputed Data
 #Control Group 
 m_data_c_complete_P <- m_data_P_complete %>%
   dplyr::filter(retrofit == 0)
@@ -1072,11 +2052,394 @@ m_data_wide_2_complete_P <- merge(
 )
 ```
 
+#Dual EE Retrofit
+#### Imputed Data 1LH
+
+```{r Scenario 1LH}
+### Scenario 1 = Lighting + HVAC in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LH <- m_data_LH_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LH <- m_data_LH_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LH <- CASchools_PSM_Data_subLH2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LH <- m_data_c_complete_LH %>%
+  left_join(., raw_complete_LH, by = 'School_ID')
+
+m_data_t_withRaw_complete_LH <- m_data_t_complete_LH %>%
+  left_join(., raw_complete_LH, by = 'School_ID')
+
+m_data_wide_complete_LH <- merge(
+  x = m_data_c_complete_LH, 
+  y = m_data_t_complete_LH,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LH <- merge(
+  x = m_data_c_withRaw_complete_LH, 
+  y = m_data_t_withRaw_complete_LH,
+  by = 'subclass'
+)
+```
+
+
+#### Imputed Data 1LB
+
+```{r Scenario 1LB}
+### Scenario 1LB = Lighting + Building Envelope in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LB <- m_data_LB_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LB <- m_data_LB_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LB <- CASchools_PSM_Data_subLB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LB <- m_data_c_complete_LB %>%
+  left_join(., raw_complete_LB, by = 'School_ID')
+
+m_data_t_withRaw_complete_LB <- m_data_t_complete_LB %>%
+  left_join(., raw_complete_LB, by = 'School_ID')
+
+m_data_wide_complete_LB <- merge(
+  x = m_data_c_complete_LB, 
+  y = m_data_t_complete_LB,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LB <- merge(
+  x = m_data_c_withRaw_complete_LB, 
+  y = m_data_t_withRaw_complete_LB,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1LP
+
+```{r Scenario 1LP}
+### Scenario 1LP = Lighting + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LP <- m_data_LP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LP <- m_data_LP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LP <- CASchools_PSM_Data_subLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LP <- m_data_c_complete_LP %>%
+  left_join(., raw_complete_LP, by = 'School_ID')
+
+m_data_t_withRaw_complete_LP <- m_data_t_complete_LP %>%
+  left_join(., raw_complete_LP, by = 'School_ID')
+
+m_data_wide_complete_LP <- merge(
+  x = m_data_c_complete_LP, 
+  y = m_data_t_complete_LP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LP <- merge(
+  x = m_data_c_withRaw_complete_LP, 
+  y = m_data_t_withRaw_complete_LP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1HB
+
+```{r Scenario 1HB}
+### Scenario 1HB = HVAC + Building Envelope in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_HB <- m_data_HB_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_HB <- m_data_HB_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_HB <- CASchools_PSM_Data_subHB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_HB <- m_data_c_complete_HB %>%
+  left_join(., raw_complete_HB, by = 'School_ID')
+
+m_data_t_withRaw_complete_HB <- m_data_t_complete_HB %>%
+  left_join(., raw_complete_HB, by = 'School_ID')
+
+m_data_wide_complete_HB <- merge(
+  x = m_data_c_complete_HB, 
+  y = m_data_t_complete_HB,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_HB <- merge(
+  x = m_data_c_withRaw_complete_HB, 
+  y = m_data_t_withRaw_complete_HB,
+  by = 'subclass'
+)
+```
+
+
+
+#### Imputed Data 1HP
+
+```{r Scenario 1HP}
+### Scenario 1P = HVAC + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_HP <- m_data_HP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_HP <- m_data_HP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_HP <- CASchools_PSM_Data_subHP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_HP <- m_data_c_complete_HP %>%
+  left_join(., raw_complete_HP, by = 'School_ID')
+
+m_data_t_withRaw_complete_HP <- m_data_t_complete_HP %>%
+  left_join(., raw_complete_HP, by = 'School_ID')
+
+m_data_wide_complete_HP <- merge(
+  x = m_data_c_complete_HP, 
+  y = m_data_t_complete_HP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_HP <- merge(
+  x = m_data_c_withRaw_complete_HP, 
+  y = m_data_t_withRaw_complete_HP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1BP
+
+```{r Scenario 1BP}
+### Scenario 1BP = Building Envelope + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_BP <- m_data_BP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_BP <- m_data_BP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_BP <- CASchools_PSM_Data_subBP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_BP <- m_data_c_complete_BP %>%
+  left_join(., raw_complete_BP, by = 'School_ID')
+
+m_data_t_withRaw_complete_BP <- m_data_t_complete_BP %>%
+  left_join(., raw_complete_BP, by = 'School_ID')
+
+m_data_wide_complete_BP <- merge(
+  x = m_data_c_complete_BP, 
+  y = m_data_t_complete_BP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_BP <- merge(
+  x = m_data_c_withRaw_complete_BP, 
+  y = m_data_t_withRaw_complete_BP,
+  by = 'subclass'
+)
+```
+
+
+
+#Triple EE Retrofit
+
+#### Imputed Data 1LHB
+
+```{r Scenario 1LHB}
+### Scenario 1LHB = Lighting + HVAC + Building Envelope in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LHB <- m_data_LHB_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LHB <- m_data_LHB_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LHB <- CASchools_PSM_Data_subLHB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LHB <- m_data_c_complete_LHB %>%
+  left_join(., raw_complete_LHB, by = 'School_ID')
+
+m_data_t_withRaw_complete_LHB <- m_data_t_complete_LHB %>%
+  left_join(., raw_complete_LHB, by = 'School_ID')
+
+m_data_wide_complete_LHB <- merge(
+  x = m_data_c_complete_LHB, 
+  y = m_data_t_complete_LHB,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LHB <- merge(
+  x = m_data_c_withRaw_complete_LHB, 
+  y = m_data_t_withRaw_complete_LHB,
+  by = 'subclass'
+)
+```
+
+
+
+#### Imputed Data 1LHP
+
+```{r Scenario 1LHP}
+### Scenario 1LHP = Lighting + HVAC + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LHP <- m_data_LHP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LHP <- m_data_LHP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LHP <- CASchools_PSM_Data_subLHP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LHP <- m_data_c_complete_LHP %>%
+  left_join(., raw_complete_LHP, by = 'School_ID')
+
+m_data_t_withRaw_complete_LHP <- m_data_t_complete_LHP %>%
+  left_join(., raw_complete_LHP, by = 'School_ID')
+
+m_data_wide_complete_LHP <- merge(
+  x = m_data_c_complete_LHP, 
+  y = m_data_t_complete_LHP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LHP <- merge(
+  x = m_data_c_withRaw_complete_LHP, 
+  y = m_data_t_withRaw_complete_LHP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1HBP
+
+```{r Scenario 1HBP}
+### Scenario 1HBP = HVAC + Building Envelope + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_HBP <- m_data_HBP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_HBP <- m_data_HBP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_HBP <- CASchools_PSM_Data_subBLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_HBP <- m_data_c_complete_HBP %>%
+  left_join(., raw_complete_HBP, by = 'School_ID')
+
+m_data_t_withRaw_complete_HBP <- m_data_t_complete_HBP %>%
+  left_join(., raw_complete_HBP, by = 'School_ID')
+
+m_data_wide_complete_HBP <- merge(
+  x = m_data_c_complete_HBP, 
+  y = m_data_t_complete_HBP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_HBP <- merge(
+  x = m_data_c_withRaw_complete_HBP, 
+  y = m_data_t_withRaw_complete_HBP,
+  by = 'subclass'
+)
+```
+
+
+
+#### Imputed Data 1BLP
+
+```{r Scenario 1BLP}
+### Scenario 1BLP = Building Envelope + Lighting + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_BLP <- m_data_BLP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_BLP <- m_data_BLP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_BLP <- CASchools_PSM_Data_subBLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_BLP <- m_data_c_complete_BLP %>%
+  left_join(., raw_complete_BLP, by = 'School_ID')
+
+m_data_t_withRaw_complete_BLP <- m_data_t_complete_BLP %>%
+  left_join(., raw_complete_BLP, by = 'School_ID')
+
+m_data_wide_complete_BLP <- merge(
+  x = m_data_c_complete_BLP, 
+  y = m_data_t_complete_BLP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_BLP <- merge(
+  x = m_data_c_withRaw_complete_BLP, 
+  y = m_data_t_withRaw_complete_BLP,
+  by = 'subclass'
+)
+```
+
+
 
 ### Scenario 2
 
 ```{r Scenario 2}
-### Scenario 2: Nature Exposure in K-12 Schools with Imputed Data
+### Scenario 2 = Nature Exposure in K-12 Schools with Imputed Data
 
 #Control Group 
 m_data2_c_complete <- m_data2_complete %>%
@@ -1087,7 +2450,7 @@ m_data2_t_complete <- m_data2_complete %>%
   dplyr::filter(ndvi_median_binary == 1)
 
 ## left join raw outcome data
-raw_2_complete <- CASchools_PSM_Datacomplete_og %>%
+raw_2_complete <- CASchools_PSM_Datacomplete2 %>%
   dplyr::select(Chronic_Absenteeism) %>%
   dplyr::mutate(School_ID = rownames(.)) %>%
   dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
@@ -1116,7 +2479,7 @@ m_data_wide_4_complete <- merge(
 ### Scenario 3
 
 ```{r Scenario 3}
-### Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools with Imputed Data
+### Scenario 3 = Energy Efficiency + Nature Exposure in K-12 Schools with Imputed Data
 
 #Control Group 
 m_data3_c_complete <- m_data3_complete %>%
@@ -1154,10 +2517,12 @@ m_data_wide_6_complete <- merge(
 )
 ```
 
+
+# Single EE Retrofit
 #### Imputed Data 3L
 
 ```{r Scenario 3L}
-### Scenario 3L: Lighting Retrofits in K-12 Schools with Imputed Data
+### Scenario 3L = Lighting + Nature Exposure in K-12 Schools with Imputed Data
 #Control Group 
 m_data3_c_complete_L <- m_data3_complete_L %>%
   dplyr::filter(retrofit_and_ndvi == 0)
@@ -1199,7 +2564,7 @@ m_data_wide_6_complete_L <- merge(
 #### Imputed Data 3H
 
 ```{r Scenario 3H}
-### Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools with Imputed Data
+### Scenario 3H = HVAC + Nature Exposure in K-12 Schools with Imputed Data
 #Control Group 
 m_data3_c_complete_H <- m_data3_complete_H %>%
   dplyr::filter(retrofit_and_ndvi == 0)
@@ -1239,7 +2604,7 @@ m_data_wide_6_complete_H <- merge(
 #### Imputed Data 3B
 
 ```{r Scenario 3B}
-### Scenario 3B: Building Envelope Retrofits and Nature Exposure in K-12 Schools with Imputed Data
+### Scenario 3B = Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
 #Control Group 
 m_data3_c_complete_B <- m_data3_complete_B %>%
   dplyr::filter(retrofit_and_ndvi == 0)
@@ -1279,7 +2644,7 @@ m_data_wide_6_complete_B <- merge(
 #### Imputed Data 3P
 
 ```{r Scenario 3P}
-### Scenario 3P: Pumps, Motors, & Drives Retrofits and Nature Exposure in K-12 Schools with Imputed Data
+### Scenario 3P = Pumps, Motors, & Drives Retrofits + Nature Exposure in K-12 Schools with Imputed Data
 #Control Group 
 m_data3_c_complete_P <- m_data3_complete_P %>%
   dplyr::filter(retrofit_and_ndvi == 0)
@@ -1316,21 +2681,1778 @@ m_data_wide_6_complete_P <- merge(
 )
 ```
 
+
+#Dual EE Retrofit
+#### Imputed Data 3LH
+
+```{r Scenario 3LH}
+### Scenario 3LH = Lighting + HVAC + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LH <- m_data3_complete_LH %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LH <- m_data3_complete_LH %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LH <- CASchools_PSM_Data_subLH2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LH <- m_data3_c_complete_LH %>%
+  left_join(., raw_3_complete_LH, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LH <- m_data3_t_complete_LH %>%
+  left_join(., raw_3_complete_LH, by = 'School_ID')
+
+m_data_wide_5_complete_LH <- merge(
+  x = m_data3_c_complete_LH, 
+  y = m_data3_t_complete_LH,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LH <- merge(
+  x = m_data3_c_withRaw_complete_LH, 
+  y = m_data3_t_withRaw_complete_LH,
+  by = 'subclass'
+)
+```
+
+
+#### Imputed Data 3LB
+
+```{r Scenario 3LB}
+### Scenario 3LB = Lighting + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LB <- m_data3_complete_LB %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LB <- m_data3_complete_LB %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LB <- CASchools_PSM_Data_subLB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LB <- m_data3_c_complete_LB %>%
+  left_join(., raw_3_complete_LB, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LB <- m_data3_t_complete_LB %>%
+  left_join(., raw_3_complete_LB, by  = 'School_ID')
+
+m_data_wide_5_complete_LB <- merge(
+  x = m_data3_c_complete_LB, 
+  y = m_data3_t_complete_LB,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LB <- merge(
+  x = m_data3_c_withRaw_complete_LB, 
+  y = m_data3_t_withRaw_complete_LB,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3LP
+
+```{r Scenario 3LP}
+### Scenario 3LP: Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LP <- m_data3_complete_LP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LP <- m_data3_complete_LP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LP <- CASchools_PSM_Data_subLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LP <- m_data3_c_complete_LP %>%
+  left_join(., raw_3_complete_LP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LP <- m_data3_t_complete_LP %>%
+  left_join(., raw_3_complete_LP, by = 'School_ID')
+
+m_data_wide_5_complete_LP <- merge(
+  x = m_data3_c_complete_LP, 
+  y = m_data3_t_complete_LP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LP <- merge(
+  x = m_data3_c_withRaw_complete_LP, 
+  y = m_data3_t_withRaw_complete_LP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3HB
+
+```{r Scenario 3HB}
+### Scenario 3HB = HVAC + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_HB <- m_data3_complete_HB %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_HB <- m_data3_complete_HB %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_HB <- CASchools_PSM_Data_subHB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_HB <- m_data3_c_complete_HB %>%
+  left_join(., raw_3_complete_HB, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_HB <- m_data3_t_complete_HB %>%
+  left_join(., raw_3_complete_HB, by = 'School_ID')
+
+m_data_wide_5_complete_HB <- merge(
+  x = m_data3_c_complete_HB, 
+  y = m_data3_t_complete_HB,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_HB <- merge(
+  x = m_data3_c_withRaw_complete_HB, 
+  y = m_data3_t_withRaw_complete_HB,
+  by = 'subclass'
+)
+```
+
+
+#### Imputed Data 3HP
+
+```{r Scenario 3HP}
+### Scenario 3LP = HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_HP <- m_data3_complete_HP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_HP <- m_data3_complete_HP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_HP <- CASchools_PSM_Data_subHP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_HP <- m_data3_c_complete_HP %>%
+  left_join(., raw_3_complete_HP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_HP <- m_data3_t_complete_HP %>%
+  left_join(., raw_3_complete_HP, by = 'School_ID')
+
+m_data_wide_5_complete_HP <- merge(
+  x = m_data3_c_complete_HP, 
+  y = m_data3_t_complete_HP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_HP <- merge(
+  x = m_data3_c_withRaw_complete_HP, 
+  y = m_data3_t_withRaw_complete_HP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3BP
+
+```{r Scenario 3BP}
+### Scenario 3HB = Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_BP <- m_data3_complete_BP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_BP <- m_data3_complete_BP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_BP <- CASchools_PSM_Data_subBP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_BP <- m_data3_c_complete_BP %>%
+  left_join(., raw_3_complete_BP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_BP <- m_data3_t_complete_BP %>%
+  left_join(., raw_3_complete_BP, by = 'School_ID')
+
+m_data_wide_5_complete_BP <- merge(
+  x = m_data3_c_complete_BP, 
+  y = m_data3_t_complete_BP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_BP <- merge(
+  x = m_data3_c_withRaw_complete_BP, 
+  y = m_data3_t_withRaw_complete_BP,
+  by = 'subclass'
+)
+```
+
+#Triple EE Retrofit
+#### Imputed Data 3LHB
+
+```{r Scenario 3LHB}
+### Scenario 3LHB = Lighting + HVAC + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LHB <- m_data3_complete_LHB %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LHB <- m_data3_complete_LHB %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LHB <- CASchools_PSM_Data_subLHB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LHB <- m_data3_c_complete_LHB %>%
+  left_join(., raw_3_complete_LHB, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LHB <- m_data3_t_complete_LHB %>%
+  left_join(., raw_3_complete_LHB, by  = 'School_ID')
+
+m_data_wide_5_complete_LHB <- merge(
+  x = m_data3_c_complete_LHB, 
+  y = m_data3_t_complete_LHB,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LHB <- merge(
+  x = m_data3_c_withRaw_complete_LHB, 
+  y = m_data3_t_withRaw_complete_LHB,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3LHP
+
+```{r Scenario 3LHP}
+### Scenario 3LP: Lighting + HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LHP <- m_data3_complete_LHP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LHP <- m_data3_complete_LHP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LHP <- CASchools_PSM_Data_subLHP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LHP <- m_data3_c_complete_LHP %>%
+  left_join(., raw_3_complete_LHP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LHP <- m_data3_t_complete_LHP %>%
+  left_join(., raw_3_complete_LHP, by = 'School_ID')
+
+m_data_wide_5_complete_LHP <- merge(
+  x = m_data3_c_complete_LHP, 
+  y = m_data3_t_complete_LHP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LHP <- merge(
+  x = m_data3_c_withRaw_complete_LHP, 
+  y = m_data3_t_withRaw_complete_LHP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3HBP
+
+```{r Scenario 3HBP}
+### Scenario 3HBP = HVAC + Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_HBP <- m_data3_complete_HBP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_HBP <- m_data3_complete_HBP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_HBP <- CASchools_PSM_Data_subHBP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_HBP <- m_data3_c_complete_HBP %>%
+  left_join(., raw_3_complete_HBP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_HBP <- m_data3_t_complete_HBP %>%
+  left_join(., raw_3_complete_HBP, by = 'School_ID')
+
+m_data_wide_5_complete_HBP <- merge(
+  x = m_data3_c_complete_HBP, 
+  y = m_data3_t_complete_HBP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_HBP <- merge(
+  x = m_data3_c_withRaw_complete_HBP, 
+  y = m_data3_t_withRaw_complete_HBP,
+  by = 'subclass'
+)
+```
+
+
+#### Imputed Data 3BLP
+
+```{r Scenario 3BLP}
+### Scenario 3BLP = Building Envelope + Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_BLP <- m_data3_complete_BLP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_BLP <- m_data3_complete_BLP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_BLP <- CASchools_PSM_Data_subBLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_BLP <- m_data3_c_complete_BLP %>%
+  left_join(., raw_3_complete_BLP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_BLP <- m_data3_t_complete_BLP %>%
+  left_join(., raw_3_complete_BLP, by = 'School_ID')
+
+m_data_wide_5_complete_BLP<- merge(
+  x = m_data3_c_complete_BLP, 
+  y = m_data3_t_complete_BLP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_BLP <- merge(
+  x = m_data3_c_withRaw_complete_BLP, 
+  y = m_data3_t_withRaw_complete_BLP,
+  by = 'subclass'
+)
+```
+
+## Control and Treatment subsets
+
+### Raw Data
+```{r Scenario 1}
+### Scenario 1: Energy Efficiency Retrofits in K-12 Schools
+
+#Control Group 
+m_data_c <- m_data %>%
+  dplyr::filter(retrofit == 0 )
+
+#Treatment Group
+m_data_t <- m_data %>%
+  dplyr::filter(retrofit == 1)
+
+
+## left join raw outcome data
+raw <- CASchools_PSM_Data2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data_c_withRaw <- m_data_c %>%
+  left_join(., raw, by = 'School_ID')
+
+
+m_data_t_withRaw <- m_data_t %>%
+  left_join(., raw, by = 'School_ID')
+
+m_data_wide <- merge(
+  x = m_data_c, 
+  y = m_data_t,
+  by = 'subclass'
+)
+
+m_data_wide_2 <- merge(
+  x = m_data_c_withRaw, 
+  y = m_data_t_withRaw,
+  by = 'subclass'
+)
+```
+
+
+
+
+```{r Scenario 2}
+## Scenario 2: Nature Exposure in K-12 Schools
+
+#Control Group 
+m_data2_c <- m_data2 %>%
+  dplyr::filter(ndvi_median_binary == 0 )
+
+#Treatment Group
+m_data2_t <- m_data2 %>%
+  dplyr::filter(ndvi_median_binary == 1)
+
+
+## left join raw outcome data
+raw_2 <- CASchools_PSM_Data2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data2_c_withRaw <- m_data2_c %>%
+  left_join(., raw_2, by = 'School_ID')
+
+
+m_data2_t_withRaw <- m_data2_t %>%
+  left_join(., raw_2, by = 'School_ID')
+
+m_data_wide_3 <- merge(
+  x = m_data2_c, 
+  y = m_data2_t,
+  by = 'subclass'
+)
+
+m_data_wide_4 <- merge(
+  x = m_data2_c_withRaw, 
+  y = m_data2_t_withRaw,
+  by = 'subclass'
+)
+```
+
+
+
+```{r Scenario 3}
+## Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools
+
+#Control Group 
+m_data3_c <- m_data3 %>%
+  dplyr::filter(retrofit_and_ndvi == 0 )
+
+#Treatment Group
+m_data3_t <- m_data3 %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3 <- CASchools_PSM_Data2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw <- m_data3_c %>%
+  left_join(., raw_3, by = 'School_ID')
+
+
+m_data3_t_withRaw <- m_data3_t %>%
+  left_join(., raw_3, by = 'School_ID')
+
+m_data_wide_5 <- merge(
+  x = m_data3_c, 
+  y = m_data3_t,
+  by = 'subclass'
+)
+
+m_data_wide_6 <- merge(
+  x = m_data3_c_withRaw, 
+  y = m_data3_t_withRaw,
+  by = 'subclass'
+)
+```
+
+### Imputed Data Scenario 1
+
+```{r Scenario 1}
+### Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete <- m_data_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete <- m_data_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete <- CASchools_PSM_Datacomplete2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete <- m_data_c_complete %>%
+  left_join(., raw_complete, by = 'School_ID')
+
+m_data_t_withRaw_complete <- m_data_t_complete %>%
+  left_join(., raw_complete, by = 'School_ID')
+
+m_data_wide_complete <- merge(
+  x = m_data_c_complete, 
+  y = m_data_t_complete,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete <- merge(
+  x = m_data_c_withRaw_complete, 
+  y = m_data_t_withRaw_complete,
+  by = 'subclass'
+)
+```
+
+
+# Single EE Retrofit
+#### Imputed Data 1L
+
+```{r Scenario 1L}
+### Scenario 1 = Lighting Retrofits in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_L <- m_data_L_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_L <- m_data_L_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_L <- CASchools_PSM_Data_subL2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_L <- m_data_c_complete_L %>%
+  left_join(., raw_complete_L, by = 'School_ID')
+
+m_data_t_withRaw_complete_L <- m_data_t_complete_L %>%
+  left_join(., raw_complete_L, by = 'School_ID')
+
+m_data_wide_complete_L <- merge(
+  x = m_data_c_complete_L, 
+  y = m_data_t_complete_L,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_L <- merge(
+  x = m_data_c_withRaw_complete_L, 
+  y = m_data_t_withRaw_complete_L,
+  by = 'subclass'
+)
+```
+
+
+
+#### Imputed Data 1H
+
+```{r Scenario 1H}
+### Scenario 1 = HVAC Retrofits in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_H <- m_data_H_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_H <- m_data_H_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_H <- CASchools_PSM_Data_subH2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_H <- m_data_c_complete_H %>%
+  left_join(., raw_complete_H, by = 'School_ID')
+
+m_data_t_withRaw_complete_H <- m_data_t_complete_H %>%
+  left_join(., raw_complete_H, by = 'School_ID')
+
+m_data_wide_complete_H <- merge(
+  x = m_data_c_complete_H, 
+  y = m_data_t_complete_H,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_H <- merge(
+  x = m_data_c_withRaw_complete_H, 
+  y = m_data_t_withRaw_complete_H,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1B
+
+```{r Scenario 1B}
+### Scenario 1B = Building Envelope Retrofits in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_B <- m_data_B_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_B <- m_data_B_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_B <- CASchools_PSM_Data_subB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_B <- m_data_c_complete_B %>%
+  left_join(., raw_complete_B, by = 'School_ID')
+
+m_data_t_withRaw_complete_B <- m_data_t_complete_B %>%
+  left_join(., raw_complete_B, by = 'School_ID')
+
+m_data_wide_complete_B <- merge(
+  x = m_data_c_complete_B, 
+  y = m_data_t_complete_B,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_B <- merge(
+  x = m_data_c_withRaw_complete_B, 
+  y = m_data_t_withRaw_complete_B,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1P
+
+```{r Scenario 1P}
+### Scenario 1P = Pumps, Motors, & Drives Retrofits in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_P <- m_data_P_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_P <- m_data_P_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_P <- CASchools_PSM_Data_subP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_P <- m_data_c_complete_P %>%
+  left_join(., raw_complete_P, by = 'School_ID')
+
+m_data_t_withRaw_complete_P <- m_data_t_complete_P %>%
+  left_join(., raw_complete_P, by = 'School_ID')
+
+m_data_wide_complete_P <- merge(
+  x = m_data_c_complete_P, 
+  y = m_data_t_complete_P,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_P <- merge(
+  x = m_data_c_withRaw_complete_P, 
+  y = m_data_t_withRaw_complete_P,
+  by = 'subclass'
+)
+```
+
+#Dual EE Retrofit
+#### Imputed Data 1LH
+
+```{r Scenario 1LH}
+### Scenario 1 = Lighting + HVAC in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LH <- m_data_LH_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LH <- m_data_LH_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LH <- CASchools_PSM_Data_subLH2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LH <- m_data_c_complete_LH %>%
+  left_join(., raw_complete_LH, by = 'School_ID')
+
+m_data_t_withRaw_complete_LH <- m_data_t_complete_LH %>%
+  left_join(., raw_complete_LH, by = 'School_ID')
+
+m_data_wide_complete_LH <- merge(
+  x = m_data_c_complete_LH, 
+  y = m_data_t_complete_LH,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LH <- merge(
+  x = m_data_c_withRaw_complete_LH, 
+  y = m_data_t_withRaw_complete_LH,
+  by = 'subclass'
+)
+```
+
+
+#### Imputed Data 1LB
+
+```{r Scenario 1LB}
+### Scenario 1LB = Lighting + Building Envelope in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LB <- m_data_LB_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LB <- m_data_LB_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LB <- CASchools_PSM_Data_subLB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LB <- m_data_c_complete_LB %>%
+  left_join(., raw_complete_LB, by = 'School_ID')
+
+m_data_t_withRaw_complete_LB <- m_data_t_complete_LB %>%
+  left_join(., raw_complete_LB, by = 'School_ID')
+
+m_data_wide_complete_LB <- merge(
+  x = m_data_c_complete_LB, 
+  y = m_data_t_complete_LB,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LB <- merge(
+  x = m_data_c_withRaw_complete_LB, 
+  y = m_data_t_withRaw_complete_LB,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1LP
+
+```{r Scenario 1LP}
+### Scenario 1LP = Lighting + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LP <- m_data_LP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LP <- m_data_LP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LP <- CASchools_PSM_Data_subLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LP <- m_data_c_complete_LP %>%
+  left_join(., raw_complete_LP, by = 'School_ID')
+
+m_data_t_withRaw_complete_LP <- m_data_t_complete_LP %>%
+  left_join(., raw_complete_LP, by = 'School_ID')
+
+m_data_wide_complete_LP <- merge(
+  x = m_data_c_complete_LP, 
+  y = m_data_t_complete_LP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LP <- merge(
+  x = m_data_c_withRaw_complete_LP, 
+  y = m_data_t_withRaw_complete_LP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1HB
+
+```{r Scenario 1HB}
+### Scenario 1HB = HVAC + Building Envelope in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_HB <- m_data_HB_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_HB <- m_data_HB_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_HB <- CASchools_PSM_Data_subHB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_HB <- m_data_c_complete_HB %>%
+  left_join(., raw_complete_HB, by = 'School_ID')
+
+m_data_t_withRaw_complete_HB <- m_data_t_complete_HB %>%
+  left_join(., raw_complete_HB, by = 'School_ID')
+
+m_data_wide_complete_HB <- merge(
+  x = m_data_c_complete_HB, 
+  y = m_data_t_complete_HB,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_HB <- merge(
+  x = m_data_c_withRaw_complete_HB, 
+  y = m_data_t_withRaw_complete_HB,
+  by = 'subclass'
+)
+```
+
+
+
+#### Imputed Data 1HP
+
+```{r Scenario 1HP}
+### Scenario 1P = HVAC + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_HP <- m_data_HP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_HP <- m_data_HP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_HP <- CASchools_PSM_Data_subHP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_HP <- m_data_c_complete_HP %>%
+  left_join(., raw_complete_HP, by = 'School_ID')
+
+m_data_t_withRaw_complete_HP <- m_data_t_complete_HP %>%
+  left_join(., raw_complete_HP, by = 'School_ID')
+
+m_data_wide_complete_HP <- merge(
+  x = m_data_c_complete_HP, 
+  y = m_data_t_complete_HP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_HP <- merge(
+  x = m_data_c_withRaw_complete_HP, 
+  y = m_data_t_withRaw_complete_HP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1BP
+
+```{r Scenario 1BP}
+### Scenario 1BP = Building Envelope + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_BP <- m_data_BP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_BP <- m_data_BP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_BP <- CASchools_PSM_Data_subBP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_BP <- m_data_c_complete_BP %>%
+  left_join(., raw_complete_BP, by = 'School_ID')
+
+m_data_t_withRaw_complete_BP <- m_data_t_complete_BP %>%
+  left_join(., raw_complete_BP, by = 'School_ID')
+
+m_data_wide_complete_BP <- merge(
+  x = m_data_c_complete_BP, 
+  y = m_data_t_complete_BP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_BP <- merge(
+  x = m_data_c_withRaw_complete_BP, 
+  y = m_data_t_withRaw_complete_BP,
+  by = 'subclass'
+)
+```
+
+
+
+#Triple EE Retrofit
+
+#### Imputed Data 1LHB
+
+```{r Scenario 1LHB}
+### Scenario 1LHB = Lighting + HVAC + Building Envelope in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LHB <- m_data_LHB_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LHB <- m_data_LHB_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LHB <- CASchools_PSM_Data_subLHB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LHB <- m_data_c_complete_LHB %>%
+  left_join(., raw_complete_LHB, by = 'School_ID')
+
+m_data_t_withRaw_complete_LHB <- m_data_t_complete_LHB %>%
+  left_join(., raw_complete_LHB, by = 'School_ID')
+
+m_data_wide_complete_LHB <- merge(
+  x = m_data_c_complete_LHB, 
+  y = m_data_t_complete_LHB,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LHB <- merge(
+  x = m_data_c_withRaw_complete_LHB, 
+  y = m_data_t_withRaw_complete_LHB,
+  by = 'subclass'
+)
+```
+
+
+
+#### Imputed Data 1LHP
+
+```{r Scenario 1LHP}
+### Scenario 1LHP = Lighting + HVAC + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_LHP <- m_data_LHP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_LHP <- m_data_LHP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_LHP <- CASchools_PSM_Data_subLHP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_LHP <- m_data_c_complete_LHP %>%
+  left_join(., raw_complete_LHP, by = 'School_ID')
+
+m_data_t_withRaw_complete_LHP <- m_data_t_complete_LHP %>%
+  left_join(., raw_complete_LHP, by = 'School_ID')
+
+m_data_wide_complete_LHP <- merge(
+  x = m_data_c_complete_LHP, 
+  y = m_data_t_complete_LHP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_LHP <- merge(
+  x = m_data_c_withRaw_complete_LHP, 
+  y = m_data_t_withRaw_complete_LHP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 1HBP
+
+```{r Scenario 1HBP}
+### Scenario 1HBP = HVAC + Building Envelope + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_HBP <- m_data_HBP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_HBP <- m_data_HBP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_HBP <- CASchools_PSM_Data_subBLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_HBP <- m_data_c_complete_HBP %>%
+  left_join(., raw_complete_HBP, by = 'School_ID')
+
+m_data_t_withRaw_complete_HBP <- m_data_t_complete_HBP %>%
+  left_join(., raw_complete_HBP, by = 'School_ID')
+
+m_data_wide_complete_HBP <- merge(
+  x = m_data_c_complete_HBP, 
+  y = m_data_t_complete_HBP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_HBP <- merge(
+  x = m_data_c_withRaw_complete_HBP, 
+  y = m_data_t_withRaw_complete_HBP,
+  by = 'subclass'
+)
+```
+
+
+
+#### Imputed Data 1BLP
+
+```{r Scenario 1BLP}
+### Scenario 1BLP = Building Envelope + Lighting + Pumps, Motors, & Drives in K-12 Schools with Imputed Data
+#Control Group 
+m_data_c_complete_BLP <- m_data_BLP_complete %>%
+  dplyr::filter(retrofit == 0)
+
+#Treatment Group
+m_data_t_complete_BLP <- m_data_BLP_complete %>%
+  dplyr::filter(retrofit == 1)
+
+## left join raw outcome data
+raw_complete_BLP <- CASchools_PSM_Data_subBLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+m_data_c_withRaw_complete_BLP <- m_data_c_complete_BLP %>%
+  left_join(., raw_complete_BLP, by = 'School_ID')
+
+m_data_t_withRaw_complete_BLP <- m_data_t_complete_BLP %>%
+  left_join(., raw_complete_BLP, by = 'School_ID')
+
+m_data_wide_complete_BLP <- merge(
+  x = m_data_c_complete_BLP, 
+  y = m_data_t_complete_BLP,
+  by = 'subclass'
+)
+
+m_data_wide_2_complete_BLP <- merge(
+  x = m_data_c_withRaw_complete_BLP, 
+  y = m_data_t_withRaw_complete_BLP,
+  by = 'subclass'
+)
+```
+
+
+
+### Scenario 2
+
+```{r Scenario 2}
+### Scenario 2 = Nature Exposure in K-12 Schools with Imputed Data
+
+#Control Group 
+m_data2_c_complete <- m_data2_complete %>%
+  dplyr::filter(ndvi_median_binary == 0 )
+
+#Treatment Group
+m_data2_t_complete <- m_data2_complete %>%
+  dplyr::filter(ndvi_median_binary == 1)
+
+## left join raw outcome data
+raw_2_complete <- CASchools_PSM_Datacomplete2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data2_c_withRaw_complete <- m_data2_c_complete %>%
+  left_join(., raw_2_complete, by = 'School_ID')
+
+m_data2_t_withRaw_complete <- m_data2_t_complete %>%
+  left_join(., raw_2_complete, by = 'School_ID')
+
+m_data_wide_3_complete <- merge(
+  x = m_data2_c_complete, 
+  y = m_data2_t_complete,
+  by = 'subclass'
+)
+
+m_data_wide_4_complete <- merge(
+  x = m_data2_c_withRaw_complete, 
+  y = m_data2_t_withRaw_complete,
+  by = 'subclass'
+)
+```
+
+
+### Scenario 3
+
+```{r Scenario 3}
+### Scenario 3 = Energy Efficiency + Nature Exposure in K-12 Schools with Imputed Data
+
+#Control Group 
+m_data3_c_complete <- m_data3_complete %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete <- m_data3_complete %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete <- CASchools_PSM_Datacomplete2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete <- m_data3_c_complete %>%
+  left_join(., raw_3_complete, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete <- m_data3_t_complete %>%
+  left_join(., raw_3_complete, by = 'School_ID')
+
+m_data_wide_5_complete <- merge(
+  x = m_data3_c_complete, 
+  y = m_data3_t_complete,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete <- merge(
+  x = m_data3_c_withRaw_complete, 
+  y = m_data3_t_withRaw_complete,
+  by = 'subclass'
+)
+```
+
+
+# Single EE Retrofit
+#### Imputed Data 3L
+
+```{r Scenario 3L}
+### Scenario 3L = Lighting + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_L <- m_data3_complete_L %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_L <- m_data3_complete_L %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_L <- CASchools_PSM_Data_subL2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_L <- m_data3_c_complete_L %>%
+  left_join(., raw_3_complete_L, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_L <- m_data3_t_complete_L %>%
+  left_join(., raw_3_complete_L, by = 'School_ID')
+
+m_data_wide_5_complete_L <- merge(
+  x = m_data3_c_complete_L, 
+  y = m_data3_t_complete_L,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_L <- merge(
+  x = m_data3_c_withRaw_complete_L, 
+  y = m_data3_t_withRaw_complete_L,
+  by = 'subclass'
+)
+```
+
+
+
+#### Imputed Data 3H
+
+```{r Scenario 3H}
+### Scenario 3H = HVAC + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_H <- m_data3_complete_H %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_H <- m_data3_complete_H %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_H <- CASchools_PSM_Data_subH2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_H <- m_data3_c_complete_H %>%
+  left_join(., raw_3_complete_H, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_H <- m_data3_t_complete_H %>%
+  left_join(., raw_3_complete_H, by = 'School_ID')
+
+m_data_wide_5_complete_H <- merge(
+  x = m_data3_c_complete_H, 
+  y = m_data3_t_complete_H,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_H <- merge(
+  x = m_data3_c_withRaw_complete_H, 
+  y = m_data3_t_withRaw_complete_H,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3B
+
+```{r Scenario 3B}
+### Scenario 3B = Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_B <- m_data3_complete_B %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_B <- m_data3_complete_B %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_B <- CASchools_PSM_Data_subB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_B <- m_data3_c_complete_B %>%
+  left_join(., raw_3_complete_B, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_B <- m_data3_t_complete_B %>%
+  left_join(., raw_3_complete_B, by = 'School_ID')
+
+m_data_wide_5_complete_B <- merge(
+  x = m_data3_c_complete_B, 
+  y = m_data3_t_complete_B,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_B <- merge(
+  x = m_data3_c_withRaw_complete_B, 
+  y = m_data3_t_withRaw_complete_B,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3P
+
+```{r Scenario 3P}
+### Scenario 3P = Pumps, Motors, & Drives Retrofits + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_P <- m_data3_complete_P %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_P <- m_data3_complete_P %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_P <- CASchools_PSM_Data_subP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_P <- m_data3_c_complete_P %>%
+  left_join(., raw_3_complete_P, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_P <- m_data3_t_complete_P %>%
+  left_join(., raw_3_complete_P, by = 'School_ID')
+
+m_data_wide_5_complete_P <- merge(
+  x = m_data3_c_complete_P, 
+  y = m_data3_t_complete_P,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_P <- merge(
+  x = m_data3_c_withRaw_complete_P, 
+  y = m_data3_t_withRaw_complete_P,
+  by = 'subclass'
+)
+```
+
+
+#Dual EE Retrofit
+#### Imputed Data 3LH
+
+```{r Scenario 3LH}
+### Scenario 3LH = Lighting + HVAC + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LH <- m_data3_complete_LH %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LH <- m_data3_complete_LH %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LH <- CASchools_PSM_Data_subLH2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LH <- m_data3_c_complete_LH %>%
+  left_join(., raw_3_complete_LH, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LH <- m_data3_t_complete_LH %>%
+  left_join(., raw_3_complete_LH, by = 'School_ID')
+
+m_data_wide_5_complete_LH <- merge(
+  x = m_data3_c_complete_LH, 
+  y = m_data3_t_complete_LH,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LH <- merge(
+  x = m_data3_c_withRaw_complete_LH, 
+  y = m_data3_t_withRaw_complete_LH,
+  by = 'subclass'
+)
+```
+
+
+#### Imputed Data 3LB
+
+```{r Scenario 3LB}
+### Scenario 3LB = Lighting + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LB <- m_data3_complete_LB %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LB <- m_data3_complete_LB %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LB <- CASchools_PSM_Data_subLB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LB <- m_data3_c_complete_LB %>%
+  left_join(., raw_3_complete_LB, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LB <- m_data3_t_complete_LB %>%
+  left_join(., raw_3_complete_LB, by  = 'School_ID')
+
+m_data_wide_5_complete_LB <- merge(
+  x = m_data3_c_complete_LB, 
+  y = m_data3_t_complete_LB,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LB <- merge(
+  x = m_data3_c_withRaw_complete_LB, 
+  y = m_data3_t_withRaw_complete_LB,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3LP
+
+```{r Scenario 3LP}
+### Scenario 3LP: Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LP <- m_data3_complete_LP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LP <- m_data3_complete_LP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LP <- CASchools_PSM_Data_subLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LP <- m_data3_c_complete_LP %>%
+  left_join(., raw_3_complete_LP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LP <- m_data3_t_complete_LP %>%
+  left_join(., raw_3_complete_LP, by = 'School_ID')
+
+m_data_wide_5_complete_LP <- merge(
+  x = m_data3_c_complete_LP, 
+  y = m_data3_t_complete_LP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LP <- merge(
+  x = m_data3_c_withRaw_complete_LP, 
+  y = m_data3_t_withRaw_complete_LP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3HB
+
+```{r Scenario 3HB}
+### Scenario 3HB = HVAC + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_HB <- m_data3_complete_HB %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_HB <- m_data3_complete_HB %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_HB <- CASchools_PSM_Data_subHB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_HB <- m_data3_c_complete_HB %>%
+  left_join(., raw_3_complete_HB, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_HB <- m_data3_t_complete_HB %>%
+  left_join(., raw_3_complete_HB, by = 'School_ID')
+
+m_data_wide_5_complete_HB <- merge(
+  x = m_data3_c_complete_HB, 
+  y = m_data3_t_complete_HB,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_HB <- merge(
+  x = m_data3_c_withRaw_complete_HB, 
+  y = m_data3_t_withRaw_complete_HB,
+  by = 'subclass'
+)
+```
+
+
+#### Imputed Data 3HP
+
+```{r Scenario 3HP}
+### Scenario 3LP = HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_HP <- m_data3_complete_HP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_HP <- m_data3_complete_HP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_HP <- CASchools_PSM_Data_subHP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_HP <- m_data3_c_complete_HP %>%
+  left_join(., raw_3_complete_HP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_HP <- m_data3_t_complete_HP %>%
+  left_join(., raw_3_complete_HP, by = 'School_ID')
+
+m_data_wide_5_complete_HP <- merge(
+  x = m_data3_c_complete_HP, 
+  y = m_data3_t_complete_HP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_HP <- merge(
+  x = m_data3_c_withRaw_complete_HP, 
+  y = m_data3_t_withRaw_complete_HP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3BP
+
+```{r Scenario 3BP}
+### Scenario 3HB = Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_BP <- m_data3_complete_BP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_BP <- m_data3_complete_BP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_BP <- CASchools_PSM_Data_subBP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_BP <- m_data3_c_complete_BP %>%
+  left_join(., raw_3_complete_BP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_BP <- m_data3_t_complete_BP %>%
+  left_join(., raw_3_complete_BP, by = 'School_ID')
+
+m_data_wide_5_complete_BP <- merge(
+  x = m_data3_c_complete_BP, 
+  y = m_data3_t_complete_BP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_BP <- merge(
+  x = m_data3_c_withRaw_complete_BP, 
+  y = m_data3_t_withRaw_complete_BP,
+  by = 'subclass'
+)
+```
+
+#Triple EE Retrofit
+#### Imputed Data 3LHB
+
+```{r Scenario 3LHB}
+### Scenario 3LHB = Lighting + HVAC + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LHB <- m_data3_complete_LHB %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LHB <- m_data3_complete_LHB %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LHB <- CASchools_PSM_Data_subLHB2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LHB <- m_data3_c_complete_LHB %>%
+  left_join(., raw_3_complete_LHB, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LHB <- m_data3_t_complete_LHB %>%
+  left_join(., raw_3_complete_LHB, by  = 'School_ID')
+
+m_data_wide_5_complete_LHB <- merge(
+  x = m_data3_c_complete_LHB, 
+  y = m_data3_t_complete_LHB,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LHB <- merge(
+  x = m_data3_c_withRaw_complete_LHB, 
+  y = m_data3_t_withRaw_complete_LHB,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3LHP
+
+```{r Scenario 3LHP}
+### Scenario 3LP: Lighting + HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_LHP <- m_data3_complete_LHP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_LHP <- m_data3_complete_LHP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_LHP <- CASchools_PSM_Data_subLHP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_LHP <- m_data3_c_complete_LHP %>%
+  left_join(., raw_3_complete_LHP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_LHP <- m_data3_t_complete_LHP %>%
+  left_join(., raw_3_complete_LHP, by = 'School_ID')
+
+m_data_wide_5_complete_LHP <- merge(
+  x = m_data3_c_complete_LHP, 
+  y = m_data3_t_complete_LHP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_LHP <- merge(
+  x = m_data3_c_withRaw_complete_LHP, 
+  y = m_data3_t_withRaw_complete_LHP,
+  by = 'subclass'
+)
+```
+
+#### Imputed Data 3HBP
+
+```{r Scenario 3HBP}
+### Scenario 3HBP = HVAC + Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_HBP <- m_data3_complete_HBP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_HBP <- m_data3_complete_HBP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_HBP <- CASchools_PSM_Data_subHBP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_HBP <- m_data3_c_complete_HBP %>%
+  left_join(., raw_3_complete_HBP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_HBP <- m_data3_t_complete_HBP %>%
+  left_join(., raw_3_complete_HBP, by = 'School_ID')
+
+m_data_wide_5_complete_HBP <- merge(
+  x = m_data3_c_complete_HBP, 
+  y = m_data3_t_complete_HBP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_HBP <- merge(
+  x = m_data3_c_withRaw_complete_HBP, 
+  y = m_data3_t_withRaw_complete_HBP,
+  by = 'subclass'
+)
+```
+
+
+#### Imputed Data 3BLP
+
+```{r Scenario 3BLP}
+### Scenario 3BLP = Building Envelope + Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+#Control Group 
+m_data3_c_complete_BLP <- m_data3_complete_BLP %>%
+  dplyr::filter(retrofit_and_ndvi == 0)
+
+#Treatment Group
+m_data3_t_complete_BLP <- m_data3_complete_BLP %>%
+  dplyr::filter(retrofit_and_ndvi == 1)
+
+
+## left join raw outcome data
+raw_3_complete_BLP <- CASchools_PSM_Data_subBLP2 %>%
+  dplyr::select(Chronic_Absenteeism) %>%
+  dplyr::mutate(School_ID = rownames(.)) %>%
+  dplyr::rename('Chronic_Absenteeism_raw' = 'Chronic_Absenteeism')
+
+
+m_data3_c_withRaw_complete_BLP <- m_data3_c_complete_BLP %>%
+  left_join(., raw_3_complete_BLP, by = 'School_ID')
+
+
+m_data3_t_withRaw_complete_BLP <- m_data3_t_complete_BLP %>%
+  left_join(., raw_3_complete_BLP, by = 'School_ID')
+
+m_data_wide_5_complete_BLP<- merge(
+  x = m_data3_c_complete_BLP, 
+  y = m_data3_t_complete_BLP,
+  by = 'subclass'
+)
+
+m_data_wide_6_complete_BLP <- merge(
+  x = m_data3_c_withRaw_complete_BLP, 
+  y = m_data3_t_withRaw_complete_BLP,
+  by = 'subclass'
+)
+```
+
+
 # Statistical Analysis 
 
 ## Compute T-Test
 
 ### Using Raw data
+
 ```{r}
-## Scenario 1: Energy Efficiency Retrofits in K-12 Schools 
+## Scenario 1 = Energy Efficiency Retrofits in K-12 Schools 
 TTestS1 <- t.test(m_data_wide_2$Chronic_Absenteeism_raw.x, m_data_wide_2$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS1)
 
-## Scenario 2: Nature Exposure in Schools
+## Scenario 2 = Nature Exposure in Schools
 TTestS2 <- t.test(m_data_wide_4$Chronic_Absenteeism_raw.x, m_data_wide_4$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS2)
 
-## Scenario 3: Energy Efficiency Retrofits in K-12 Schools and Nature Exposure in K-12 Schools
+## Scenario = Energy Efficiency Retrofits in K-12 Schools and Nature Exposure in K-12 Schools
 TTestS3 <- t.test(m_data_wide_6$Chronic_Absenteeism_raw.x,m_data_wide_6$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS3)
 ```
@@ -1339,52 +4461,150 @@ print(TTestS3)
 ### Using Imputed Data
 
 ```{r}
-## Scenario 1: Energy Efficiency in K-12 Schools with Imputed Data
+## Scenario 1 = Energy Efficiency in K-12 Schools with Imputed Data
 TTestS1_complete <- t.test(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS1_complete)
 
-## Scenario 1L: Lighting Retrofits in K-12 Schools with Imputed Data
+
+#Single EE Retrofit
+
+## Scenario 1L = Lighting Retrofits in K-12 Schools with Imputed Data
 TTestS1_complete_L <- t.test(m_data_wide_2_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_L$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS1_complete_L)
 
 
-## Scenario 1H: HVAC Retrofits in K-12 Schools with Imputed Data
+## Scenario 1H = HVAC Retrofits in K-12 Schools with Imputed Data
 TTestS1_complete_H <- t.test(m_data_wide_2_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_H$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS1_complete_H)
 
 
-## Scenario 1B: Building Envelope Retrofits in K-12 Schools with Imputed Data
+## Scenario 1B = Building Envelope Retrofits in K-12 Schools with Imputed Data
 TTestS1_complete_B <- t.test(m_data_wide_2_complete_B$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_B$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS1_complete_B)
 
-## Scenario 1P: Pumps, Motors, and Drives Retrofits in K-12 Schools with Imputed Data
+## Scenario 1P = Pumps, Motors, and Drives Retrofits in K-12 Schools with Imputed Data
 TTestS1_complete_P <- t.test(m_data_wide_2_complete_P$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_P$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS1_complete_P)
 
-## Scenario 2: Nature Exposure in K-12 Schools with Imputed Data
+#Dual EE Retrofit
+
+## Scenario 1LH = Lighting + HVAC in K-12 Schools with Imputed Data
+TTestS1_complete_LH <- t.test(m_data_wide_2_complete_LH$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LH$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_LH)
+
+## Scenario 1LB = Lighting + Building Envelope in K-12 Schools with Imputed Data
+TTestS1_complete_LB <- t.test(m_data_wide_2_complete_LB$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_LB)
+
+
+## Scenario 1LP = Lighting + Pumps, Motors, and Drives in K-12 Schools with Imputed Data
+TTestS1_complete_LP <- t.test(m_data_wide_2_complete_LP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_LP)
+
+## Scenario 1HB = HVAC + Building Envelope in K-12 Schools with Imputed Data
+TTestS1_complete_HB <- t.test(m_data_wide_2_complete_HB$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_HB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_HB)
+
+
+## Scenario 1HP = HVAC + Pumps, Motors, and Drives in K-12 Schools with Imputed Data
+TTestS1_complete_HP <- t.test(m_data_wide_2_complete_HP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_HP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_HP)
+
+## Scenario 1BP = Building Envelope + Pumps, Motors, and Drives in K-12 Schools with Imputed Data
+TTestS1_complete_BP <- t.test(m_data_wide_2_complete_BP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_BP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_BP)
+
+# Triple EE Retrofit
+
+## Scenario 1LHB = Lighting + HVAC + Building Envelope in K-12 Schools with Imputed Data
+TTestS1_complete_LHB <- t.test(m_data_wide_2_complete_LHB$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LHB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_LHB)
+
+## Scenario 1LHP = Lighting + HVAC + Pumps, Motors, and Drives in K-12 Schools with Imputed Data
+TTestS1_complete_LHP <- t.test(m_data_wide_2_complete_LHP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LHP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_LHP)
+
+## Scenario 1HBP = HVAC + Building Envelope + Pumps, Motors, and Drives in K-12 Schools with Imputed Data
+TTestS1_complete_HBP <- t.test(m_data_wide_2_complete_HBP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_HBP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_HBP)
+
+## Scenario 1BLP = Building Envelope + Lighting + Pumps, Motors, and Drives in K-12 Schools with Imputed Data
+TTestS1_complete_BLP <- t.test(m_data_wide_2_complete_BLP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_BLP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS1_complete_BLP)
+
+## Scenario 2 = Nature Exposure in K-12 Schools with Imputed Data
 TTestS2_complete <- t.test(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_4_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS2_complete)
 
-## Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools with Imputed Data
+## Scenario 3 = Energy Efficiency + Nature Exposure in K-12 Schools with Imputed Data
 TTestS3_complete <- t.test(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS3_complete)
 
-## Scenario 3L: Lighting Retrofits and Nature Exposure in K-12 Schools with Imputed Data
+# Single EE Retrofit
+
+## Scenario 3L = Lighting Retrofits + Nature Exposure in K-12 Schools with Imputed Data
 TTestS3_complete_L <- t.test(m_data_wide_6_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_L$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS3_complete_L)
 
-## Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools with Imputed Data
+## Scenario 3H = HVAC Retrofits and Nature Exposure in K-12 Schools with Imputed Data
 TTestS3_complete_H <- t.test(m_data_wide_6_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_H$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS3_complete_H)
 
-## Scenario 3B: Building Envelope Retrofits and Nature Exposure in K-12 Schools with Imputed Data
+## Scenario 3B = Building Envelope Retrofits + Nature Exposure in K-12 Schools with Imputed Data
 TTestS3_complete_B <- t.test(m_data_wide_6_complete_B$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_B$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS3_complete_B)
 
-## Scenario 3P: Pumps, Motors, & Drives Retrofits and Nature Exposure in K-12 Schools with Imputed Data
+## Scenario 3P = Pumps, Motors, & Drives Retrofits and Nature Exposure in K-12 Schools with Imputed Data
 TTestS3_complete_P <- t.test(m_data_wide_6_complete_P$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_P$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
 print(TTestS3_complete_P)
+
+# Dual EE Retrofit
+
+## Scenario 3LH = Lighting + HVAC + Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_LH <- t.test(m_data_wide_6_complete_LH$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LH$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_LH)
+
+## Scenario 3LB = Lighting + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_LB <- t.test(m_data_wide_6_complete_LB$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_LB)
+
+
+## Scenario 3LP = Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_LP <- t.test(m_data_wide_6_complete_LP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_LP)
+
+## Scenario 3HB = HVAC + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_HB <- t.test(m_data_wide_6_complete_HB$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_HB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_HB)
+
+
+## Scenario 3HP = HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_HP <- t.test(m_data_wide_6_complete_HP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_HP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_HP)
+
+## Scenario 3BP = Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_BP <- t.test(m_data_wide_6_complete_BP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_BP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_BP)
+
+#Triple EE Retrofit
+
+## Scenario 3LHB = Lighting + HVAC + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_LHB <- t.test(m_data_wide_6_complete_LHB$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LHB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_LHB)
+
+## Scenario 3LHP = Lighting + HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_LHP <- t.test(m_data_wide_6_complete_LHP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LHP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_LHP)
+
+## Scenario 3HBP = HVAC + Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_HBP <- t.test(m_data_wide_6_complete_HBP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_HBP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_HBP)
+
+## Scenario 3BLP = Building Envelope + Lighting + Pumps, Motors, & Drives Nature Exposure in K-12 Schools with Imputed Data
+TTestS3_complete_BLP <- t.test(m_data_wide_6_complete_BLP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_BLP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(TTestS3_complete_BLP)
 ```
+
 
 ## Cohen's D
 
@@ -1411,97 +4631,19 @@ library(effsize)
 ## Scenario 1: Energy Efficiency Retrofits in K-12 Schools 
 print('Scenario 1')
 d1_raw <- cohen.d(m_data_wide_2$Chronic_Absenteeism_raw.x, m_data_wide_2$Chronic_Absenteeism_raw.y)
-
+print(d1_raw)
 
 ## Scenario 2: Nature Exposure in K-12 Schools 
 print('Scenario 2')
 d2_raw <- cohen.d(m_data_wide_4$Chronic_Absenteeism_raw.x, m_data_wide_4$Chronic_Absenteeism_raw.y)
-
+print(d2_raw)
 
 ## Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
 print('Scenario 3')
 d3_raw <- cohen.d(m_data_wide_6$Chronic_Absenteeism_raw.x, m_data_wide_6$Chronic_Absenteeism.y)
 d3_raw
 es3_raw <- d3_raw$estimate
-
-```
-
-### Using Imputed Data
-```{r}
-## Scenario 1: Energy Efficiency Retrofits  in K-12 Schools 
-d1_imp <- cohen.d(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y)
-d1_imp
-es1_imp <- d1_imp$estimate
-
-## Scenario 1: Lighting Retrofits in K-12 Schools 
-d1L_imp <- cohen.d(m_data_wide_2_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_L$Chronic_Absenteeism_raw.y)
-d1L_imp
-es1L_imp <- d1L_imp$estimate
-
-## Scenario 2: Nature Exposure in K-12 Schools 
-d2_imp <- cohen.d(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_4_complete$Chronic_Absenteeism_raw.y)
-d2_imp
-es2_imp <- d2_imp$estimate
-
-
-## Scenario 3L: Lighting Retrofits and Nature Exposure in K-12 Schools 
-d3L_imp <- cohen.d(m_data_wide_6_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_L$Chronic_Absenteeism_raw.y)
-d3L_imp
-es3L_imp <- d3L_imp$estimate
-
-## Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools 
-d3H_imp <- cohen.d(m_data_wide_6_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_H$Chronic_Absenteeism_raw.y)
-d3H_imp
-es3H_imp <- d3H_imp$estimate
-```
-
-### Using Imputed Dataset
-```{r}
-library(effsize)
-## Scenario 1: Energy Efficiency in K-12 Schools with Imputed Data
-EffSizeS1_complete <- cohen.d(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS1_complete)
-
-## Scenario 1L: Lighting in K-12 Schools with Imputed Data
-EffSizeS1_complete_L <- cohen.d(m_data_wide_2_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_L$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS1_complete_L)
-
-## Scenario 1H: HVAC in K-12 Schools with Imputed Data
-EffSizeS1_complete_H <- cohen.d(m_data_wide_2_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_H$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS1_complete_H)
-
-## Scenario 1B: Building Envelope in K-12 Schools with Imputed Data
-EffSizeS1_complete_B <- cohen.d(m_data_wide_2_complete_B$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_B$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS1_complete_B)
-
-## Scenario 1P: Pumps, Motors and Drives in K-12 Schools with Imputed Data
-EffSizeS1_complete_P <- cohen.d(m_data_wide_2_complete_P$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_P$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS1_complete_P)
-
-## Scenario 2: Nature Exposure in K-12 Schools with Imputed Data
-EffSizeS2_complete <- cohen.d(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_4_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS2_complete)
-
-## Scenario 3: Energy Efficiency and Nature Exposure in K-12 Schools with Imputed Data
-EffSizeS3_complete <- cohen.d(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS3_complete)
-
-## Scenario 3L: Lighting Retrofits and Nature Exposure in K-12 Schools with Imputed Data
-EffSizeS3_complete_L <- cohen.d(m_data_wide_6_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_L$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS3_complete_L)
-
-## Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools with Imputed Data
-EffSizeS3_complete_H <- cohen.d(m_data_wide_6_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_H$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS3_complete_H)
-
-## Scenario 3B: Building Envelope Retrofits and Nature Exposure in K-12 Schools with Imputed Data
-EffSizeS3_complete_B <- cohen.d(m_data_wide_6_complete_B$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_B$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS3_complete_B)
-
-## Scenario 3P: Pumps, Motors, & Drives Retrofits and Nature Exposure in K-12 Schools with Imputed Data
-EffSizeS3_complete_P <- cohen.d(m_data_wide_6_complete_P$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_P$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
-print(EffSizeS3_complete_P)
-```
+print(d3_raw)
 
 ```{r}
 ## Scenario 1: Energy Efficiency Retrofits in K-12 Schools with Imputed Dataset
@@ -1517,7 +4659,6 @@ d2_imp <- cohen.d(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_
 cat('\n Scenario 3 ------ \n')
 d3_imp <- cohen.d(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete$Chronic_Absenteeism_raw.y)
 ```
-
 
 ### Plot Cohen's d
 ```{r}
@@ -1554,10 +4695,243 @@ d_data %>%
 ggsave(filename = './figures/effect_size_by_scenarios.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
 
+### Using Imputed Dataset
+```{r}
+library(effsize)
+
+## Scenario 1: Energy Efficiency in K-12 Schools with Imputed Data
+EffSizeS1_complete <- cohen.d(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete)
+
+
+# Single EE Retrofit
+
+## Scenario 1L: Lighting in K-12 Schools with Imputed Data
+EffSizeS1_complete_L <- cohen.d(m_data_wide_2_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_L$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_L)
+
+
+## Scenario 1H: HVAC in K-12 Schools with Imputed Data
+EffSizeS1_complete_H <- cohen.d(m_data_wide_2_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_H$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_H)
+
+
+## Scenario 1B: Building Envelope in K-12 Schools with Imputed Data
+EffSizeS1_complete_B <- cohen.d(m_data_wide_2_complete_B$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_B$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_B)
+
+
+## Scenario 1P: Pumps, Motors and Drives in K-12 Schools with Imputed Data
+EffSizeS1_complete_P <- cohen.d(m_data_wide_2_complete_P$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_P$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_P)
+
+
+# Dual EE Retrofit
+
+## Scenario 1LH: Lighting + HVAC in K-12 Schools with Imputed Data
+EffSizeS1_complete_LH <- cohen.d(m_data_wide_2_complete_LH$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LH$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_LH)
+
+
+## Scenario 1LB: Lighting + Building Envelope in K-12 Schools with Imputed Data
+EffSizeS1_complete_LB <- cohen.d(m_data_wide_2_complete_LB$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_LB)
+
+
+## Scenario 1LP: Lighting + Pumps, Motors and Drives in K-12 Schools with Imputed Data
+EffSizeS1_complete_LP <- cohen.d(m_data_wide_2_complete_LP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_LP)
+
+
+## Scenario 1HB: HVAC + Building Envelope in K-12 Schools with Imputed Data
+EffSizeS1_complete_HB <- cohen.d(m_data_wide_2_complete_HB$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_HB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_HB)
+
+## Scenario 1HP: HVAC + Pumps, Motors and Drives in K-12 Schools with Imputed Data
+EffSizeS1_complete_HP <- cohen.d(m_data_wide_2_complete_HP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_HP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_HP)
+
+## Scenario 1BP: Building Envelope + Pumps, Motors and Drives in K-12 Schools with Imputed Data
+EffSizeS1_complete_BP <- cohen.d(m_data_wide_2_complete_BP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_BP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_BP)
+
+
+# Triple EE Retrofit
+
+## Scenario 1LHB: Lighting + HVAC + Building Envelope in K-12 Schools with Imputed Data
+EffSizeS1_complete_LHB <- cohen.d(m_data_wide_2_complete_LHB$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LHB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_LHB)
+
+
+## Scenario 1LHP: Lighting + HVAC + Pumps, Motors and Drives in K-12 Schools with Imputed Data
+EffSizeS1_complete_LHP <- cohen.d(m_data_wide_2_complete_LHP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_LHP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_LHP)
+
+## Scenario 1HBP: HVAC + Building Envelope + Pumps, Motors and Drives in K-12 Schools with Imputed Data
+EffSizeS1_complete_HBP <- cohen.d(m_data_wide_2_complete_HBP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_HBP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_HBP)
+
+## Scenario 1BLP: Building Envelope + Lighting + Pumps, Motors and Drives in K-12 Schools with Imputed Data
+EffSizeS1_complete_BLP <- cohen.d(m_data_wide_2_complete_BLP$Chronic_Absenteeism_raw.x, m_data_wide_2_complete_BLP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS1_complete_BLP)
+
+
+## Scenario 2: Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS2_complete <- cohen.d(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_4_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS2_complete)
+
+## Scenario 3: Energy Efficiency Retrofits + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete <- cohen.d(m_data_wide_6_complete$Chronic_Absenteeism_raw.x, m_data_wide_6_complete$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete)
+
+
+# Single EE Retrofit
+
+## Scenario 3L: Lighting  + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_L <- cohen.d(m_data_wide_6_complete_L$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_L$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_L)
+
+## Scenario 3H: HVAC  + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_H <- cohen.d(m_data_wide_6_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_H$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_H)
+
+
+## Scenario 3B: Building Envelope  + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_B <- cohen.d(m_data_wide_6_complete_B$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_B$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_B)
+
+## Scenario 3P: Pumps, Motors, & Drives Retrofits + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_P <- cohen.d(m_data_wide_6_complete_P$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_P$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_P)
+
+
+#Dual EE Retrofit
+
+## Scenario 3LH: Lighting + HVAC + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_LH <- cohen.d(m_data_wide_6_complete_LH$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LH$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_LH)
+
+## Scenario 3LB: Lighting +  Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_LB <- cohen.d(m_data_wide_6_complete_LB$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_LB)
+
+## Scenario 3LP: Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_LP <- cohen.d(m_data_wide_6_complete_LP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_LP)
+
+## Scenario 3HB: HVAC + Building Envelope + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_HB <- cohen.d(m_data_wide_6_complete_HB$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_HB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_HB)
+
+## Scenario 3HP: HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_HP <- cohen.d(m_data_wide_6_complete_HP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_HP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_HP)
+
+## Scenario 3BP: Building Envelope + Pumps, Motors, & Drives Retrofits + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_BP <- cohen.d(m_data_wide_6_complete_BP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_BP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_BP)
+
+
+#Triple EE Retrofit
+
+## Scenario 3LHB: Lighting + HVAC + Building Exposure + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_LHB <- cohen.d(m_data_wide_6_complete_LHB$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LHB$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_LHB)
+
+## Scenario 3LHP: Lighting + HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_LHP <- cohen.d(m_data_wide_6_complete_LHP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LHP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_LHP)
+
+## Scenario 3HBP: HVAC + Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_HBP <- cohen.d(m_data_wide_6_complete_HBP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_HBP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_HBP)
+
+
+## Scenario 3BLP: Building Envelope + Lighting + Pumps, Motors, & Drives Retrofits + Nature Exposure in K-12 Schools with Imputed Data
+EffSizeS3_complete_BLP <- cohen.d(m_data_wide_6_complete_BLP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_BLP$Chronic_Absenteeism_raw.y, paired = TRUE, conf.level = 0.95)
+print(EffSizeS3_complete_BLP)
+
+```
+
+## Graph Effect Size of Significant Interventions
+```{r}
+#------- Imputed Dataset
+
+#All 4 Types of EE Retrofits 
+
+## Scenario 1: Energy Efficiency Retrofits in K-12 Schools 
+d1_imp <- cohen.d(m_data_wide_2_complete$Chronic_Absenteeism_raw.x, m_data_wide_2_complete$Chronic_Absenteeism_raw.y)
+d1_imp
+es1_imp <- d1_imp$estimate
+
+#No EE Retrofit 
+## Scenario 2: Nature Exposure in K-12 Schools 
+d2_imp <- cohen.d(m_data_wide_4_complete$Chronic_Absenteeism_raw.x, m_data_wide_4_complete$Chronic_Absenteeism_raw.y)
+d2_imp
+es2_imp <- d2_imp$estimate
+
+
+## Scenario 3H: HVAC + Nature Exposure in K-12 Schools 
+d3H_imp <- cohen.d(m_data_wide_6_complete_H$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_H$Chronic_Absenteeism_raw.y)
+d3H_imp
+es3H_imp <- d3H_imp$estimate
+
+
+#Dual EE Retrofit
+
+## Scenario 3LH: Lighting + HVAC + Nature Exposure in K-12 Schools 
+d3LH_imp <- cohen.d(m_data_wide_6_complete_LH$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LH$Chronic_Absenteeism_raw.y)
+d3LH_imp
+es3LH_imp <- d3LH_imp$estimate
+
+## Scenario 3LB: Lighting + Building Envelope + Nature Exposure in K-12 Schools 
+d3LB_imp <- cohen.d(m_data_wide_6_complete_LB$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LB$Chronic_Absenteeism_raw.y)
+d3LB_imp
+es3LB_imp <- d3LB_imp$estimate
+
+## Scenario 3LP: Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools 
+d3LP_imp <- cohen.d(m_data_wide_6_complete_LP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LP$Chronic_Absenteeism_raw.y)
+d3LP_imp
+es3LP_imp <- d3LP_imp$estimate
+
+## Scenario 3HB: HVAC + Building Envelope + Nature Exposure in K-12 Schools 
+d3HB_imp <- cohen.d(m_data_wide_6_complete_HB$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_HB$Chronic_Absenteeism_raw.y)
+d3HB_imp
+es3HB_imp <- d3HB_imp$estimate
+
+## Scenario 3HP: HVAC + Pumps, Motors & Drives + Nature Exposure in K-12 Schools 
+d3HP_imp <- cohen.d(m_data_wide_6_complete_HP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_HP$Chronic_Absenteeism_raw.y)
+d3HP_imp
+es3HP_imp <- d3HP_imp$estimate
+
+
+
+#Triple EE Retrofit
+
+## Scenario 3LHB: Lighting + HVAC + Building Envelope + Nature Exposure in K-12 Schools 
+d3LHB_imp <- cohen.d(m_data_wide_6_complete_LHB$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LHB$Chronic_Absenteeism_raw.y)
+d3LHB_imp
+es3LHB_imp <- d3LHB_imp$estimate
+
+## Scenario 3LHP: Lighting + HVAC + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools 
+d3LHP_imp <- cohen.d(m_data_wide_6_complete_LHP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_LHP$Chronic_Absenteeism_raw.y)
+d3LHP_imp
+es3LHP_imp <- d3LHP_imp$estimate
+
+## Scenario 3HBP: HVAC + Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools 
+d3HBP_imp <- cohen.d(m_data_wide_6_complete_HBP$Chronic_Absenteeism_raw.x, m_data_wide_6_complete_HBP$Chronic_Absenteeism_raw.y)
+d3HBP_imp
+es3HBP_imp <- d3HBP_imp$estimate
+
+```
+
+
 
 ## Graph Effect Size
 ```{r}
+
 library(ggplot2)
+
 #' Standardized Mean Difference (Cohen's d)
 #' Here we use the effect size in scenario 3, a combined effect of 
 #'  Energy Efficiency Retrofits and Nature Exposure
@@ -1602,8 +4976,8 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean2, linetype="dotted") +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
-    "Scenario 3: Impact of Energy Efficiency Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, '(Large Effect)')) +
+    "Scenario 3: Combined Impact of Energy Efficiency Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Large Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1615,13 +4989,16 @@ ggplot(df1, aes(x,y, color="control")) +
   theme(legend.position = c(0.90, 0.85), 
         text = element_text(size = 11),
         plot.title = element_text(size=9))
-
-ggsave(filename = './figures/effect_size.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+ggsave(filename = './figures/', 'effect_size.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
 
-### Scenario 1: Energy Efficiency Retrofits 
+
+## Graph Effect Size
+### Scenario 1 = Energy Efficiency Retrofits 
 ```{r}
+
 library(ggplot2)
+
 #' Standardized Mean Difference (Cohen's d)
 #' Here we use the effect size in scenario 1,Impact of
 #'  Energy Efficiency Retrofits 
@@ -1667,7 +5044,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 1: Impact of Energy Efficiency Retrofits on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, '(Neglible Effect)')) +
+    "\nCohen's d = ",  ES, ' (Neglible Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1679,81 +5056,15 @@ ggplot(df1, aes(x,y, color="control")) +
   theme(legend.position = c(0.90, 0.85), 
         text = element_text(size = 11),
         plot.title = element_text(size=9))
-
-ggsave(filename = './figures/effect_size_scenario1.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+ggsave(filename = './figures/', 'effect_size_scenario1.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
 
 ## Graph Effect Size
-### Scenario 1L: Lighting Retrofits 
+### Scenario 2 = Nature Exposure
 ```{r}
 
 library(ggplot2)
 
-#' Standardized Mean Difference (Cohen's d)
-#' Here we use the effect size in scenario 1,Impact of
-#'  Energy Efficiency Retrofits 
-ES <- round(es1L_imp, digits = 2) 
-
-
-#' get mean2 depending on value of ES from 
-#'  d = (u1 - u2)/sd
-#'  es = (mean1 - mean2)/sd
-mean_c <- mean(m_data_wide_2_complete_L$Chronic_Absenteeism.x, na.rm = T)
-mean2 = mean_c 
-
-
-sd <- 1
-mean1 <- ES*sd + mean2
-
-# create x sequence
-x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
-
-# generate normal dist #1
-y1 <- dnorm(x, mean2, sd)
-# put in data frame
-df1 <- data.frame("x" = x, "y" = y1)
-
-# generate normal dist #2
-y2 <- dnorm(x, mean1, sd)
-# put in data frame
-df2 <- data.frame("x" = x, "y" = y2)
-
-# get y values under overlap
-y.poly <- pmin(y1,y2)
-# put in data frame
-poly <- data.frame("x" = x, "y" = y.poly)
-
-#plot with ggplot2
-ggplot(df1, aes(x,y, color="control")) + 
-  geom_line(linewidth=1) +
-  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
-  geom_vline(xintercept = mean1, linetype="dotted") + 
-  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
-               show.legend = F) +
-  geom_vline(xintercept = mean2, linetype="dotted") +
-  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
-  ggtitle(paste0(
-    "Scenario 1: Impact of Lighting Retrofits on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, '(Neglible Effect)')) +
-  # # change colors and legend annotation
-  scale_color_manual("Group",
-            values= c("treatment" = "red","control" = "black")) + 
-  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
-  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
-  # # remove axis labels
-  ylab("Mean") + xlab("Standard Deviation (σ)") +
-  theme_bw()+
-  theme(legend.position = c(0.90, 0.85), 
-        text = element_text(size = 11),
-        plot.title = element_text(size=9))
-
-ggsave(filename = 'effect_size_scenario1L.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
-```
-
-
-### Scenario 2: Nature Exposure
-```{r}
-library(ggplot2)
 #' Standardized Mean Difference (Cohen's d)
 #' Here we use the effect size in scenario 2,Impact of
 #'  Nature Exposure
@@ -1799,7 +5110,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 2: Impact of Nature Exposure on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, '(Small Effect)')) +
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1811,14 +5122,15 @@ ggplot(df1, aes(x,y, color="control")) +
   theme(legend.position = c(0.90, 0.85), 
         text = element_text(size = 11),
         plot.title = element_text(size=9))
-
-ggsave(filename = './figures/effect_size_scenario2.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+ggsave(filename = './figures/', 'effect_size_scenario2.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
 
-
-### Scenario 3L: Lighting Retrofits and Nature Exposure
+## Graph Effect Size
+### Scenario 3L = Lighting Retrofits and Nature Exposure
 ```{r}
+
 library(ggplot2)
+
 #' Standardized Mean Difference (Cohen's d)
 #' Here we use the effect size in scenario 3, Combined Impact of
 #'  Lighting Retrofits and Nature Exposure
@@ -1864,7 +5176,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 3: Combined Impact of Lighting Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, '(Small Effect)')) +
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1876,22 +5188,28 @@ ggplot(df1, aes(x,y, color="control")) +
   theme(legend.position = c(0.90, 0.85), 
         text = element_text(size = 11),
         plot.title = element_text(size=9))
-
-ggsave(filename = './figures/effect_size_scenario3L.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+ggsave(filename = './figures/', 'effect_size_scenario3L.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
 ```
-### Scenario 3H: HVAC Retrofits and Nature Exposure
+
+
+## Graph Effect Size
+### Scenario 3H = HVAC Retrofits and Nature Exposure
 ```{r}
+
 library(ggplot2)
+
 #' Standardized Mean Difference (Cohen's d)
 #' Here we use the effect size in scenario 3, Combined Impact of
 #'  HVAC Retrofits and Nature Exposure
 ES <- round(es3H_imp, digits = 2) 
+
 
 #' get mean2 depending on value of ES from 
 #'  d = (u1 - u2)/sd
 #'  es = (mean1 - mean2)/sd
 mean_c <- mean(m_data_wide_6_complete_H$Chronic_Absenteeism.x, na.rm = T)
 mean2 = mean_c 
+
 
 sd <- 1
 mean1 <- ES*sd + mean2
@@ -1925,7 +5243,7 @@ ggplot(df1, aes(x,y, color="control")) +
   geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
   ggtitle(paste0(
     "Scenario 3: Combined Impact of HVAC Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools",
-    "\nCohen's d = ",  ES, '(Small Effect)')) +
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
   # # change colors and legend annotation
   scale_color_manual("Group",
             values= c("treatment" = "red","control" = "black")) + 
@@ -1937,8 +5255,545 @@ ggplot(df1, aes(x,y, color="control")) +
   theme(legend.position = c(0.90, 0.85), 
         text = element_text(size = 11),
         plot.title = element_text(size=9))
+ggsave(filename = './figures/', 'effect_size_scenario3H.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+```
 
-ggsave(filename = './figures/effect_size_scenario3H.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
+
+## Graph Effect Size
+### Scenario 3LH = Lighting + HVAC + Nature Exposure
+```{r}
+
+library(ggplot2)
+
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  Lighting Retrofits and Nature Exposure
+ES <- round(es3LH_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_LH$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of Lighting Retrofits, HVAC Retrofits, and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+ggsave(filename = './figures/', 'effect_size_scenario3LH.png', plot = last_plot(), width = 10, height = 7, units = "in", dpi = 300)
+```
+
+
+## Graph Effect Size
+### Scenario 3LB = Lighting + Building Envelope + Nature Exposure
+```{r}
+
+library(ggplot2)
+
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  HVAC Retrofits and Nature Exposure
+ES <- round(es3LB_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_LB$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of Lighting Retrofits, Building Envelope Retrofits, and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Medium Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+ggsave(filename = './figures/', 'effect_size_scenario3LB.png', plot = last_plot(), width = 10, height = 7, units = "in", dpi = 300)
+```
+
+
+## Graph Effect Size
+### Scenario 3LP =  Lighting + Pumps,Motors, & Drives +  Nature Exposure
+```{r}
+
+library(ggplot2)
+
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  Lighting Retrofits and Nature Exposure
+ES <- round(es3LP_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_LP$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of Lighting Retrofits, Pumps/Motors/Drives Retrofits, and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Medium Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+ggsave(filename = './figures/', 'effect_size_scenario3LP.png', plot = last_plot(), width = 10, height = 7, units = "in", dpi = 300)
+```
+
+
+## Graph Effect Size
+### Scenario 3HB = HVAC + Building Envelope Retrofits + Nature Exposure
+```{r}
+
+library(ggplot2)
+
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  Lighting Retrofits and Nature Exposure
+ES <- round(es3HB_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_HB$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of HVAC Retrofits, Building Envelope Retrofits, and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+ggsave(filename = './figures/', 'effect_size_scenario3HB.png', plot = last_plot(), width = 10, height = 7, units = "in", dpi = 300)
+```
+
+
+## Graph Effect Size
+### Scenario 3HP = HVAC + Pumps, Motors,& Drives + Nature Exposure
+```{r}
+
+library(ggplot2)
+
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  HVAC Retrofits and Nature Exposure
+ES <- round(es3HP_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_HP$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of HVAC Retrofits, Pumps/Motors/Drives Retrofits, and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+ggsave(filename = './figures/', 'effect_size_scenario3HP.png', plot = last_plot(), width = 10, height = 7, units = "in", dpi = 300)
+```
+
+
+## Graph Effect Size
+### Scenario 3LHB = Lighting + HVAC + Building Envelope + Nature Exposure
+```{r}
+
+library(ggplot2)
+
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  Lighting Retrofits and Nature Exposure
+ES <- round(es3LHB_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_LHB$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of Lighting Retrofits, HVAC Retrofits, Building Envelope Retrofits, and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+ggsave(filename = './figures/', 'effect_size_scenario3LHB.png', plot = last_plot(), width = 12, height = 9, units = "in", dpi = 300)
+```
+
+
+## Graph Effect Size
+### Scenario 3LHP = Lighting + HVAC + Pumps, Motors, & Drives + Nature Exposure
+```{r}
+
+library(ggplot2)
+
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  HVAC Retrofits and Nature Exposure
+ES <- round(es3LHP_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_LHP$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of Lighting Retrofits, HVAC Retrofits, Pumps/Motors/Drives Retrofits, and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Small Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+ggsave(filename = './figures/', 'effect_size_scenario3LHP.png', plot = last_plot(), width = 12, height = 9, units = "in", dpi = 300)
+```
+
+
+
+
+## Graph Effect Size
+### Scenario 3HBP = HVAC + Building Envelope + Pumps,Motors, & Drives +  Nature Exposure
+```{r}
+
+library(ggplot2)
+
+#' Standardized Mean Difference (Cohen's d)
+#' Here we use the effect size in scenario 3, Combined Impact of
+#'  Lighting Retrofits and Nature Exposure
+ES <- round(es3HBP_imp, digits = 2) 
+
+
+#' get mean2 depending on value of ES from 
+#'  d = (u1 - u2)/sd
+#'  es = (mean1 - mean2)/sd
+mean_c <- mean(m_data_wide_6_complete_HBP$Chronic_Absenteeism.x, na.rm = T)
+mean2 = mean_c 
+
+
+sd <- 1
+mean1 <- ES*sd + mean2
+
+# create x sequence
+x <- seq(mean2 - 3*sd, mean1 + 3*sd, .01)
+
+# generate normal dist #1
+y1 <- dnorm(x, mean2, sd)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+
+# generate normal dist #2
+y2 <- dnorm(x, mean1, sd)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# get y values under overlap
+y.poly <- pmin(y1,y2)
+# put in data frame
+poly <- data.frame("x" = x, "y" = y.poly)
+
+#plot with ggplot2
+ggplot(df1, aes(x,y, color="control")) + 
+  geom_line(linewidth=1) +
+  geom_line(data=df2, aes(color="treatment"),linewidth=1) +
+  geom_vline(xintercept = mean1, linetype="dotted") + 
+  geom_polygon(aes(color=NULL), data=poly, fill="red", alpha=I(4/10),
+               show.legend = F) +
+  geom_vline(xintercept = mean2, linetype="dotted") +
+  geom_vline(xintercept = mean1, linetype="dotted", color = 'red') +  
+  ggtitle(paste0(
+    "Scenario 3: Combined Impact of HVAC Retrofits, Building Envelope Retrofits, Pumps/Motors/Drives Retrofits, and Nature Exposure on Chronic Absenteeism in K-12 Schools",
+    "\nCohen's d = ",  ES, ' (Medium Effect)')) +
+  # # change colors and legend annotation
+  scale_color_manual("Group",
+            values= c("treatment" = "red","control" = "black")) + 
+  annotate(geom = "text", x = round(mean2, 2), y = 0.35, label = round(mean2, 2), hjust = "left") +
+  annotate(geom = "text", x = round(mean1, 2), y = 0.35, label = round(mean1, 2), hjust = "left", color = 'red') +
+  # # remove axis labels
+  ylab("Mean") + xlab("Standard Deviation (σ)") +
+  theme_bw()+
+  theme(legend.position = c(0.90, 0.85), 
+        text = element_text(size = 11),
+        plot.title = element_text(size=9))
+ggsave(filename = './figures/', 'effect_size_scenario3HBP.png', plot = last_plot(), width = 12, height = 9, units = "in", dpi = 300)
 ```
 
 # Calculate and plot a Pearson Correlation Coefficient Matrix 
@@ -1994,51 +5849,123 @@ ggsave(filename = './figures/', 'Correlation_Plot_2.png', plot = last_plot(), wi
 
 ## Using Raw Data
 
-### Scenario 1: Energy Efficiency Retrofits in K-12 Schools
+### Scenario 1
 length(unique(m_data_wide_2$subclass))
-
-### Scenario 2: Nature Exposure in K-12 Schools
+### Scenario 2
 length(unique(m_data_wide_4$subclass))
-
-### Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools
+### Scenario 3
 length(unique(m_data_wide_6$subclass))
-## -----------------------------------------------------------------
-
 
 ## Using Imputed Data
 
-### Scenario 1: Energy Efficiency Retrofits in K-12 Schools
+## Scenario 1 
 length(unique(m_data_wide_2_complete$subclass))
 
-### Scenario 1L: Lighting Retrofits in K-12 Schools
+## Scenario 1L
 length(unique(m_data_wide_2_complete_L$subclass))
 
-### Scenario 1H: HVAC Retrofits in K-12 Schools
+## Scenario 1H
 length(unique(m_data_wide_2_complete_H$subclass))
 
-### Scenario 1B: Building Envelope Retrofits in K-12 Schools
+## Scenario 1B
 length(unique(m_data_wide_2_complete_B$subclass))
 
-### Scenario 1P: Pumps, Motors, & Drives in K-12 Schools
+## Scenario 1P
 length(unique(m_data_wide_2_complete_P$subclass))
 
-### Scenario 2: Nature Exposure in K-12 Schools
+
+## Scenario 1LH
+length(unique(m_data_wide_2_complete_LH$subclass))
+
+## Scenario 1LB
+length(unique(m_data_wide_2_complete_LB$subclass))
+
+## Scenario 1LP
+length(unique(m_data_wide_2_complete_LP$subclass))
+
+## Scenario 1HB
+length(unique(m_data_wide_2_complete_HB$subclass))
+
+## Scenario 1HP
+length(unique(m_data_wide_2_complete_HP$subclass))
+
+## Scenario 1BP
+length(unique(m_data_wide_2_complete_BP$subclass))
+
+
+
+## Scenario 1LHB
+length(unique(m_data_wide_2_complete_LHB$subclass))
+
+## Scenario 1LHP
+length(unique(m_data_wide_2_complete_LHP$subclass))
+
+## Scenario 1HBP
+length(unique(m_data_wide_2_complete_HBP$subclass))
+
+## Scenario 1BLP
+length(unique(m_data_wide_2_complete_BLP$subclass))
+
+
+
+## Scenario 2
 length(unique(m_data_wide_4_complete$subclass))
 
-### Scenario 3: Energy Efficiency Retrofits and Nature Exposure in K-12 Schools
+
+
+## Scenario 3
 length(unique(m_data_wide_6_complete$subclass))
 
-### Scenario 3L: Lighting Retrofits and Nature Exposure in K-12 Schools
+
+## Scenario 3L
 length(unique(m_data_wide_6_complete_L$subclass))
 
-### Scenario 3H: HVAC Retrofits and Nature Exposure in K-12 Schools
+## Scenario 3H
 length(unique(m_data_wide_6_complete_H$subclass))
 
-### Scenario 3B: Building Envelope Retrofits and Nature Exposure in K-12 Schools
+## Scenario 3B
 length(unique(m_data_wide_6_complete_B$subclass))
 
-### Scenario 3P: Pumps/Motors/&Drives Retrofits and Nature Exposure in K-12 Schools
+## Scenario 3P
 length(unique(m_data_wide_6_complete_P$subclass))
+
+
+## Scenario 3LH
+length(unique(m_data_wide_6_complete_LH$subclass))
+
+## Scenario 3LB
+length(unique(m_data_wide_6_complete_LB$subclass))
+
+
+## Scenario 3LP
+length(unique(m_data_wide_6_complete_LP$subclass))
+
+
+## Scenario 3HB
+length(unique(m_data_wide_6_complete_HB$subclass))
+
+## Scenario 3HP
+length(unique(m_data_wide_6_complete_HP$subclass))
+
+
+## Scenario 3BP
+length(unique(m_data_wide_6_complete_BP$subclass))
+
+
+## Scenario 3LHB
+length(unique(m_data_wide_6_complete_LHB$subclass))
+
+
+## Scenario 3LHP
+length(unique(m_data_wide_6_complete_LHP$subclass))
+
+
+## Scenario 3HBP
+length(unique(m_data_wide_6_complete_HBP$subclass))
+
+
+## Scenario 3BLP
+length(unique(m_data_wide_6_complete_BLP$subclass))
 ```
 
 # Statistical Power Analysis 
@@ -2051,8 +5978,9 @@ library(ggplot2)
 w = 6.5
 h = 4
 
-## Scenario 1: Energy Efficiency Retrofits on Chronic absenteeism
-power.analysis <- pwr.t.test(n = NULL, d = -0.11, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+
+## Scenario 1: Energy Efficiency Retrofits 
+power.analysis <- pwr.t.test(n = NULL, d = -0.10, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  
   theme_bw() + 
   labs(title = "Statistical Power - Scenario 1:", 
@@ -2062,23 +5990,11 @@ plot(power.analysis) +
   theme(
     plot.title = element_text(size=8, face = 'bold'), 
     plot.subtitle =  element_text(size=8))  # Center ggplot title
-ggsave(filename = paste0('./figures/', 'PowerAnalysis_EERetrofits.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+ggsave(filename = paste0('PowerAnalysis_EERetrofits.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 
-## Scenario 1L: Lighting Retrofits on Chronic absenteeism
-power.analysis <- pwr.t.test(n = NULL, d = -0.28, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
-plot(power.analysis) +  
-  theme_bw() + 
-  labs(title = "Statistical Power - Scenario 1:", 
-       subtitle = "The Impact of Lighting Retrofits on Chronic Absenteeism in K-12 Schools",
-       x = "Sample Size", y = "P-value", 
-       color = "Effect Size") + 
-  theme(
-    plot.title = element_text(size=8, face = 'bold'), 
-    plot.subtitle =  element_text(size=8))  # Center ggplot title
-ggsave(filename = paste0('./figures/', 'PowerAnalysis_LightingRetrofits.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 
-## Scenario 2: Nature Exposure on Chronic absenteeism
-power.analysis <- pwr.t.test(n = NULL, d = 0.42, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+## S2: Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.43, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  theme_bw() + 
 labs(title = "Statistical Power - Scenario 2: ",
      subtitle = "The Impact of Nature Exposure on Chronic Absenteeism in K-12 Schools", 
@@ -2086,9 +6002,9 @@ labs(title = "Statistical Power - Scenario 2: ",
   theme(
     plot.title = element_text(size=8, face = 'bold'), 
     plot.subtitle =  element_text(size=8))  # Center ggplot title
-ggsave(filename = paste0('./figures/', 'PowerAnalysis_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+ggsave(filename = paste0('PowerAnalysis_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 
-## Scenario 3L: Lighting  Retrofits and Nature Exposure on Chronic absenteeism
+## Scenario 3L: Lighting  Retrofits and Nature Exposure
 power.analysis <- pwr.t.test(n = NULL, d = 0.45, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  
   theme_bw() + 
@@ -2098,11 +6014,11 @@ plot(power.analysis) +
   theme(
     plot.title = element_text(size=8, face = 'bold'), 
     plot.subtitle =  element_text(size=8))  # Center ggplot title
-ggsave(filename = paste0('./figures/', 'PowerAnalysis_LightingRetrofitsandNatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+ggsave(filename = paste0('PowerAnalysis_LightingRetrofitsandNatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 
 
-## Scenario 3H: HVAC  Retrofits and Nature Exposure on Chronic absenteeism
-power.analysis <- pwr.t.test(n = NULL, d = 0.37, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+## Scenario 3H: HVAC  Retrofits and Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.39, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
 plot(power.analysis) +  theme_bw() + 
 labs(title = "Statistical Power - Scenario 3: ",
      subtitle = "The Combined Impact of HVAC Retrofits and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
@@ -2110,7 +6026,117 @@ labs(title = "Statistical Power - Scenario 3: ",
   theme(
     plot.title = element_text(size=8, face = 'bold'), 
     plot.subtitle =  element_text(size=8))  # Center ggplot title
-ggsave(filename = paste0('./figures/', 'PowerAnalysis_HVACRetrofitsandNatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+ggsave(filename = paste0('PowerAnalysis_HVACRetrofitsandNatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+
+
+w = 9.5
+h = 7
+
+## Scenario 3LH: Lighting  + HVAC + Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.41, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+plot(power.analysis) +  
+  theme_bw() + 
+  labs(title = "Statistical Power - Scenario 3:",
+       subtitle = " The Combined Impact of Lighting, HVAC, and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+       x = "Sample Size", y = "P-value", color = "Effect Size") + 
+  theme(
+    plot.title = element_text(size=8, face = 'bold'), 
+    plot.subtitle =  element_text(size=8))  # Center ggplot title
+ggsave(filename = paste0('PowerAnalysis_Lighting_HVAC_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+
+
+## Scenario 3LB: Lighting  + Building Envelope + Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.50, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+plot(power.analysis) +  
+  theme_bw() + 
+  labs(title = "Statistical Power - Scenario 3:",
+       subtitle = " The Combined Impact of Lighting, Building Envelope, and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+       x = "Sample Size", y = "P-value", color = "Effect Size") + 
+  theme(
+    plot.title = element_text(size=8, face = 'bold'), 
+    plot.subtitle =  element_text(size=8))  # Center ggplot title
+ggsave(filename = paste0('PowerAnalysis_Lighting_BuildingEnvelope_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+
+
+## Scenario 3LP: Lighting + Pumps, Motors, & Drives + Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.56, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+plot(power.analysis) +  
+  theme_bw() + 
+  labs(title = "Statistical Power - Scenario 3:",
+       subtitle = " The Combined Impact of Lighting, Pumps/Motors/Drives, and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+       x = "Sample Size", y = "P-value", color = "Effect Size") + 
+  theme(
+    plot.title = element_text(size=8, face = 'bold'), 
+    plot.subtitle =  element_text(size=8))  # Center ggplot title
+ggsave(filename = paste0('PowerAnalysis_Lighting_PumpsMotorsDrives_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+
+
+## Scenario 3HB: HVAC  + Building Envelope + Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.42, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+plot(power.analysis) +  theme_bw() + 
+labs(title = "Statistical Power - Scenario 3: ",
+     subtitle = "The Combined Impact of HVAC, Building Envelope, and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+     x = "Sample Size", y = "P-value", color = "Effect Size") + 
+  theme(
+    plot.title = element_text(size=8, face = 'bold'), 
+    plot.subtitle =  element_text(size=8))  # Center ggplot title
+ggsave(filename = paste0('PowerAnalysis_HVAC_BuildingEnvelope_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+
+
+## Scenario 3HP: HVAC  + Pumps, Motors, & Drives + Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.47, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+plot(power.analysis) +  theme_bw() + 
+labs(title = "Statistical Power - Scenario 3: ",
+     subtitle = "The Combined Impact of HVAC, Pumps/Motors/Drives, and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+     x = "Sample Size", y = "P-value", color = "Effect Size") + 
+  theme(
+    plot.title = element_text(size=8, face = 'bold'), 
+    plot.subtitle =  element_text(size=8))  # Center ggplot title
+ggsave(filename = paste0('PowerAnalysis_HVAC_PumpsMotorsDrives_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+
+
+w = 11.5
+h = 9
+
+## Scenario 3LHB: Lighting  + HVAC + Building Envelope + Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.41, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+plot(power.analysis) +  
+  theme_bw() + 
+  labs(title = "Statistical Power - Scenario 3:",
+       subtitle = " The Combined Impact of Lighting, HVAC, Building Envelope, and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+       x = "Sample Size", y = "P-value", color = "Effect Size") + 
+  theme(
+    plot.title = element_text(size=8, face = 'bold'), 
+    plot.subtitle =  element_text(size=8))  # Center ggplot title
+ggsave(filename = paste0('PowerAnalysis_Lighting_HVAC_BE_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+
+
+
+## Scenario 3LHP: Lighting  + HVAC + Pumps,Motors, & Drives + Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.45, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+plot(power.analysis) +  
+  theme_bw() + 
+  labs(title = "Statistical Power - Scenario 3:",
+       subtitle = " The Combined Impact of Lighting, HVAC, Pumps/Motors/Drives and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+       x = "Sample Size", y = "P-value", color = "Effect Size") + 
+  theme(
+    plot.title = element_text(size=8, face = 'bold'), 
+    plot.subtitle =  element_text(size=8))  # Center ggplot title
+ggsave(filename = paste0('PowerAnalysis_Lighting_HVAC_PMD_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
+
+
+
+## Scenario 3HBP: HVAC + Building Envelope + Pumps,Motors, & Drives + Nature Exposure
+power.analysis <- pwr.t.test(n = NULL, d = 0.52, sig.level = 0.05, power = 0.8, alternative = "two.sided") 
+plot(power.analysis) +  
+  theme_bw() + 
+  labs(title = "Statistical Power - Scenario 3:",
+       subtitle = " The Combined Impact of HVAC, Building Envelope, Pumps/Motors/Drives, and Nature Exposure on Chronic Absenteeism in K-12 Schools", 
+       x = "Sample Size", y = "P-value", color = "Effect Size") + 
+  theme(
+    plot.title = element_text(size=8, face = 'bold'), 
+    plot.subtitle =  element_text(size=8))  # Center ggplot title
+ggsave(filename = paste0('PowerAnalysis_HVAC_BE_PMD_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 ```
 
 
