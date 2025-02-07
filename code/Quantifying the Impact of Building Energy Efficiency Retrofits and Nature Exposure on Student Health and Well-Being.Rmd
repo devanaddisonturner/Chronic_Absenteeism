@@ -1,5 +1,5 @@
 ---
-title: "Quantifying the Impact of Building Energy Efficiency Retrofits and Nature Exposure on Human Health and Well-Being"
+title: "Quantifying the Impact of Building Energy Efficiency Retrofits and Nature Exposure on Student Health and Well-Being"
 author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Gretchen Cara Daily, and Rishee Kumar Jain"
 date: "2024-06-27"
 output: html_document
