@@ -528,7 +528,7 @@ Scenario 3: All Energy Efficiency Retrofits and Nature Exposure in K-12 Schools
 Treatment_Count_All_S3 <- Treatment_Count_Data_All_coord %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-Scenario 3: Energy Efficiency Sub-System Retrofits and Nature Exposure in K-12 Schools 
+Scenario 3: Energy Efficiency (EE) Sub-System Retrofits and Nature Exposure in K-12 Schools 
 
 Treatment_Count_S3_Sub <- Treatment_Count_Data_All_coord %>% group_by(retrofit_and_ndvi, EE_Retrofit_Type) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
