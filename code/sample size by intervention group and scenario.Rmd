@@ -566,3 +566,5 @@ Treatment_Count_S3_SubHBP <-Treatment_Count_subHBP %>% group_by(retrofit_and_ndv
 Treatment_Count_S3_SubBLP <-Treatment_Count_subBLP %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 ```
+
+
