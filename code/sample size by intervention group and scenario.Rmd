@@ -442,3 +442,131 @@ comb4 %>%
 f <- paste0('./figures/', 'treatment_count_comb4.png')
 ggsave(filename = f, plot = last_plot(), width = 8, height = 4, units = "in", dpi = 300)
 ```
+# Treatment Count of Policy Inteventions in K-12 Schools
+```{r}
+library(readr)
+library(readxl)
+library(dplyr)
+
+Treatment_Count_Data_All_coord <- read_xlsx("Treatment_Count_Data_All_coord.xlsx")
+
+#Dual EE Retrofit Sub-System
+Treatment_Count_subLH <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "HVAC")
+Treatment_Count_subLB <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "Building_Envelope")
+Treatment_Count_subLP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+Treatment_Count_subHB <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Building_Envelope")
+Treatment_Count_subHP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+Treatment_Count_subBP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+
+#Triple EE Retrofit Sub-System
+Treatment_Count_subLHB <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Building_Envelope")
+Treatment_Count_subLHP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+Treatment_Count_subHBP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Pumps_Motors_Drives")
+Treatment_Count_subBLP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Lighting | EE_Retrofit_Type == Pumps_Motors_Drives")
+
+#Scenario 1: All Energy Efficiency Retrofits in K-12 Schools 
+Treatment_Count_AllS1 <- Treatment_Count_Data_All_coord %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 1: All Energy Efficincy Sub-System Retrofits in K-12 Schools 
+Treatment_Count_AllS1_Sub <- Treatment_Count_Data_All_coord %>% group_by(retrofit, EE_Retrofit_Type) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+## Dual EE Retrofits
+
+#Scenario 1: Lighting + HVAC in K-12 Schools 
+Treatment_Count_S1_SubLH <-Treatment_Count_subLH %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 1: Lighting + Building Envelope in K-12 Schools 
+Treatment_Count_S1_SubLB <-Treatment_Count_subLB %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 1: Lighting + Pumps in K-12 Schools 
+Treatment_Count_S1_SubLP <-Treatment_Count_subLP %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 1: HVAC + Building Envelope in K-12 Schools 
+Treatment_Count_S1_SubHB <-Treatment_Count_subHB %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 1: HVAC + Pumps, Motor, & Drives in K-12 Schools 
+Treatment_Count_S1_SubHP <-Treatment_Count_subHP %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 1: Building Envelope + Pumps, Motors, & Drives in K-12 Schools 
+Treatment_Count_S1_SubBP <-Treatment_Count_subBP %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+
+## Triple EE Retrofits
+#Scenario 1: Lighting + HVAC + Building Envelope in K-12 Schools 
+Treatment_Count_S1_SubLHB <-Treatment_Count_subLHB %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 1: Lighting + HVAC + Pumps, Motors, & Drives in K-12 Schools 
+Treatment_Count_S1_SubLHP <-Treatment_Count_subLHP %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 1: HVAC + Building Envelope + Pumps, Motor, & Drives in K-12 Schools 
+Treatment_Count_S1_SubHBP <-Treatment_Count_subHBP %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 1: Building Envelope + Lighting + Pumps, Motors, & Drives in K-12 Schools 
+Treatment_Count_S1_SubBLP <-Treatment_Count_subBLP %>% group_by(retrofit) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+Scenario 2: Nature Exposure in K-12 Schools 
+Treatment_Count_All_S2<- Treatment_Count_Data_All_coord %>% group_by(ndvi_median_binary) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+Scenario 3: All Energy Efficiency Retrofits and Nature Exposure in K-12 Schools 
+Treatment_Count_All_S3 <- Treatment_Count_Data_All_coord %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 3: Lighting + HVAC in K-12 Schools
+Treatment_Count_S3_SubLH <-Treatment_Count_subLH %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 3: Lighting + Building Envelope in K-12 Schools
+Treatment_Count_S3_SubLB <-Treatment_Count_subLB %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 3: Lighting + Pumps, Motors, & Drives in K-12 Schools
+Treatment_Count_S3_SubLP <-Treatment_Count_subLP %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 3: HVAC + Building Envelope in K-12 Schools
+Treatment_Count_S3_SubHB <-Treatment_Count_subHB %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 3: HVAC + Pumps, Motor, & Drives in K-12 Schools
+Treatment_Count_S3_SubHP <-Treatment_Count_subHP %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 3: Building Envelope + Pumps, Motors, & Drives in K-12 Schools
+Treatment_Count_S3_SubBP <-Treatment_Count_subBP %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Triple EE Retrofit Sub-System
+Treatment_Count_subLHB 
+Treatment_Count_subLHP
+Treatment_Count_subHBP
+Treatment_Count_subBLP 
+
+#Scenario 3: Lighting + HVAC + Building Envelope in K-12 Schools
+Treatment_Count_S3_SubLHB <-Treatment_Count_subLHB %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 3: Lighting + HVAC + Pumps, Motors, and Drives in K-12 Schools
+Treatment_Count_S3_SubLHP <-Treatment_Count_subLHP %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 3: HVAC + Building Envelope + Pumps, Motor, & Drives in K-12 Schools
+Treatment_Count_S3_SubHBP <-Treatment_Count_subHBP %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+
+#Scenario 3: Building Envelope + Lighting + Pumps, Motors, & Drives in K-12 Schools
+Treatment_Count_S3_SubBLP <-Treatment_Count_subBLP %>% group_by(retrofit_and_ndvi) %>% 
+  summarize(count_distinct = n_distinct(CDSCode))
+```
