@@ -450,7 +450,7 @@ library(dplyr)
 
 Treatment_Count_Data_All_coord <- read_xlsx("Treatment_Count_Data_All_coord.xlsx")
 
-#Dual EE Retrofit Sub-System
+#Dual EE Sub-System Retrofits
 Treatment_Count_subLH <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "HVAC")
 Treatment_Count_subLB <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "Building_Envelope")
 Treatment_Count_subLP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "Pumps_Motors_Drives")
@@ -458,7 +458,7 @@ Treatment_Count_subHB <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type
 Treatment_Count_subHP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Pumps_Motors_Drives")
 Treatment_Count_subBP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Pumps_Motors_Drives")
 
-#Triple EE Retrofit Sub-System
+#Triple EE Sub-System Retrofits
 Treatment_Count_subLHB <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Building_Envelope")
 Treatment_Count_subLHP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Lighting" | EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Pumps_Motors_Drives")
 Treatment_Count_subHBP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Pumps_Motors_Drives")
@@ -528,11 +528,12 @@ Scenario 3: Energy Efficiency Sub-System Retrofits and Nature Exposure in K-12 S
 
 Treatment_Count_S3_Sub <- Treatment_Count_Data_All_coord %>% group_by(retrofit_and_ndvi, EE_Retrofit_Type) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
+
 #Scenario 3: Lighting + HVAC in K-12 Schools
 Treatment_Count_S3_SubLH <-Treatment_Count_subLH %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Dual EE Retrofits and Nature Exposure
+#Dual EE Sub-System Retrofits and Nature Exposure
 #Scenario 3: Lighting + Building Envelope in K-12 Schools
 Treatment_Count_S3_SubLB <-Treatment_Count_subLB %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
