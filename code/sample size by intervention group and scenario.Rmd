@@ -442,7 +442,11 @@ comb4 %>%
 f <- paste0('./figures/', 'treatment_count_comb4.png')
 ggsave(filename = f, plot = last_plot(), width = 8, height = 4, units = "in", dpi = 300)
 ```
-# Treatment Count of Policy Inteventions in K-12 Schools
+
+
+
+
+
 ```{r}
 library(readr)
 library(readxl)
@@ -464,11 +468,11 @@ Treatment_Count_subLHP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Typ
 Treatment_Count_subHBP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "HVAC" | EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Pumps_Motors_Drives")
 Treatment_Count_subBLP <- subset(Treatment_Count_Data_All_coord, EE_Retrofit_Type == "Building_Envelope" | EE_Retrofit_Type == "Lighting | EE_Retrofit_Type == Pumps_Motors_Drives")
 
-#Scenario 1: All Energy Efficiency Retrofits in K-12 Schools 
+#Scenario 1: All Energy Efficiency (EE) Retrofits in K-12 Schools 
 Treatment_Count_AllS1 <- Treatment_Count_Data_All_coord %>% group_by(retrofit) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Scenario 1: All Energy Efficincy Sub-System Retrofits in K-12 Schools 
+#Scenario 1: EE Sub-System Retrofits in K-12 Schools 
 Treatment_Count_AllS1_Sub <- Treatment_Count_Data_All_coord %>% group_by(retrofit, EE_Retrofit_Type) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
