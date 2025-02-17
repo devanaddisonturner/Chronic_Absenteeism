@@ -472,7 +472,7 @@ Treatment_Count_AllS1 <- Treatment_Count_Data_All_coord %>% group_by(retrofit) %
 Treatment_Count_AllS1_Sub <- Treatment_Count_Data_All_coord %>% group_by(retrofit, EE_Retrofit_Type) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-## Dual EE Retrofits
+## Dual EE Sub-System Retrofits
 
 #Scenario 1: Lighting + HVAC in K-12 Schools 
 Treatment_Count_S1_SubLH <-Treatment_Count_subLH %>% group_by(retrofit) %>% 
@@ -499,7 +499,7 @@ Treatment_Count_S1_SubBP <-Treatment_Count_subBP %>% group_by(retrofit) %>%
   summarize(count_distinct = n_distinct(CDSCode))
 
 
-## Triple EE Retrofits
+## Triple EE Sub-System Retrofits
 #Scenario 1: Lighting + HVAC + Building Envelope in K-12 Schools 
 Treatment_Count_S1_SubLHB <-Treatment_Count_subLHB %>% group_by(retrofit) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
@@ -549,10 +549,6 @@ Treatment_Count_S3_SubBP <-Treatment_Count_subBP %>% group_by(retrofit_and_ndvi)
   summarize(count_distinct = n_distinct(CDSCode))
 
 #Triple EE Retrofit Sub-System
-Treatment_Count_subLHB 
-Treatment_Count_subLHP
-Treatment_Count_subHBP
-Treatment_Count_subBLP 
 
 #Scenario 3: Lighting + HVAC + Building Envelope in K-12 Schools
 Treatment_Count_S3_SubLHB <-Treatment_Count_subLHB %>% group_by(retrofit_and_ndvi) %>% 
