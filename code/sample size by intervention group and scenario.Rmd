@@ -529,51 +529,50 @@ Treatment_Count_All_S3 <- Treatment_Count_Data_All_coord %>% group_by(retrofit_a
   summarize(count_distinct = n_distinct(CDSCode))
 
 Scenario 3: Energy Efficiency (EE) Sub-System Retrofits and Nature Exposure in K-12 Schools 
-
 Treatment_Count_S3_Sub <- Treatment_Count_Data_All_coord %>% group_by(retrofit_and_ndvi, EE_Retrofit_Type) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
 #Dual EE Sub-System Retrofits and Nature Exposure
 
-#Scenario 3LH: Lighting + HVAC in K-12 Schools
+#Scenario 3LH: Lighting + HVAC + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubLH <-Treatment_Count_subLH %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Scenario 3LB: Lighting + Building Envelope in K-12 Schools
+#Scenario 3LB: Lighting + Building Envelope + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubLB <-Treatment_Count_subLB %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Scenario 3LP: Lighting + Pumps, Motors, & Drives in K-12 Schools
+#Scenario 3LP: Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubLP <-Treatment_Count_subLP %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Scenario 3HB: HVAC + Building Envelope in K-12 Schools
+#Scenario 3HB: HVAC + Building Envelope + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubHB <-Treatment_Count_subHB %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Scenario 3HP: HVAC + Pumps, Motor, & Drives in K-12 Schools
+#Scenario 3HP: HVAC + Pumps, Motor, & Drives + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubHP <-Treatment_Count_subHP %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Scenario 3BP: Building Envelope + Pumps, Motors, & Drives in K-12 Schools
+#Scenario 3BP: Building Envelope + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubBP <-Treatment_Count_subBP %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
 #Triple EE Sub-System Retrofits and Nature Exposure
 
-#Scenario 3LHB: Lighting + HVAC + Building Envelope in K-12 Schools
+#Scenario 3LHB: Lighting + HVAC + Building Envelope + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubLHB <-Treatment_Count_subLHB %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Scenario 3LHP: Lighting + HVAC + Pumps, Motors, and Drives in K-12 Schools
+#Scenario 3LHP: Lighting + HVAC + Pumps, Motors, and Drives + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubLHP <-Treatment_Count_subLHP %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Scenario 3HBP: HVAC + Building Envelope + Pumps, Motor, & Drives in K-12 Schools
+#Scenario 3HBP: HVAC + Building Envelope + Pumps, Motor, & Drives + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubHBP <-Treatment_Count_subHBP %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 
-#Scenario 3BLP: Building Envelope + Lighting + Pumps, Motors, & Drives in K-12 Schools
+#Scenario 3BLP: Building Envelope + Lighting + Pumps, Motors, & Drives + Nature Exposure in K-12 Schools
 Treatment_Count_S3_SubBLP <-Treatment_Count_subBLP %>% group_by(retrofit_and_ndvi) %>% 
   summarize(count_distinct = n_distinct(CDSCode))
 ```
