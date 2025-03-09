@@ -1,0 +1,4 @@
+Intervention,Student_Enrollment_Average,Cost_Student_Per_Day,Average_Number_Days_Missed,Total_Annual_Cost_Chronic_Student_Absenteeism,Chronic_Absenteeism_Rate_Avg,Potential_Financial_Cost_Savings,Total_Annual_Cost_Saved
+Scenario 1,500,65.34,4.5,147015,2,2940.30,149955.30
+Scenario 2,500,65.34,4.5,147015,-7,-10291.05,136723.95
+Scenario 3,500,65.34,4.5,147015,-8,-11761.20,135253.80
