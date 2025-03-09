@@ -5969,7 +5969,26 @@ length(unique(m_data_wide_6_complete_BLP$subclass))
 ```
 
 
+# Financial Cost Analysis 
+```{r}
+library(readr)
+library(readxl)
+library(ggplot2)
+ChronicAbsenteeism_FinancialCost<- read_csv("ChronicAbsenteeism_FinancialCost.csv")
+# Create the bar chart
+p <- ggplot(ChronicAbsenteeism_FinancialCost, aes(x = Intervention, y = Potential_Financial_Cost_Savings, color = Intervention, fill = Intervention)) +
+  geom_bar(stat = "identity", position = "identity") +
+  geom_text(aes(label = Potential_Financial_Cost_Savings), vjust = -0.3) + 
+  labs(title = "Potential Financal Cost Savings of Interventions in K-12 Schools",
+       x = "Intervention",
+       y = "Potential Cost ($)") +
+  theme_bw()
 
+# Renaming legend labels
+
+print(p)
+ggsave(filename = 'ChronicAbsenteeism_InterventionCost.png', plot = last_plot(), width =6.5, height = 4, units = "in", dpi = 300)
+```
 
 
 # Statistical Power Analysis 
