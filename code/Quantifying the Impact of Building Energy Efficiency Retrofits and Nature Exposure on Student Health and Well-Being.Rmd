@@ -5969,25 +5969,47 @@ length(unique(m_data_wide_6_complete_BLP$subclass))
 ```
 
 
+
 # Financial Cost Analysis 
+
 ```{r}
 library(readr)
-library(readxl)
+library(dplyr)
 library(ggplot2)
-ChronicAbsenteeism_FinancialCost<- read_csv("ChronicAbsenteeism_FinancialCost.csv")
+
+ChronicAbsenteeism_FinancialCost<- read_csv("./data/ChronicAbsenteeism_FinancialCost.csv", show_col_types = F) %>%
+  mutate(Intervention = case_when(
+    Intervention == 'Scenario 1' ~ 'Scenario 1: Energy Efficiency Retrofit',
+    Intervention == 'Scenario 2' ~ 'Scenario 2: Nature Exposure',
+    Intervention == 'Scenario 3' ~ 'Scenario 3: Energy Efficiency Retrofits + Nature Exposure',
+    T ~ Intervention
+  ))
+
 # Create the bar chart
-p <- ggplot(ChronicAbsenteeism_FinancialCost, aes(x = Intervention, y = Potential_Financial_Cost_Savings, color = Intervention, fill = Intervention)) +
-  geom_bar(stat = "identity", position = "identity") +
-  geom_text(aes(label = Potential_Financial_Cost_Savings), vjust = -0.3) + 
+
+library(stringr)
+
+ChronicAbsenteeism_FinancialCost %>%
+  mutate(Intervention = str_wrap(Intervention, width = 20)) %>%
+  ggplot(., 
+            aes(x = Intervention, 
+                y = Potential_Financial_Cost_Savings, 
+                # color = Intervention, 
+                fill = Potential_Financial_Cost_Savings < 0
+                )) +
+  geom_bar(stat = "identity", position = "identity", show.legend = F) +
+  geom_text(aes(label = round(Potential_Financial_Cost_Savings, digits = 0)), vjust = -0.3) + 
+  geom_hline(yintercept = 0, color = 'red', alpha = 0.5, linewidth = 1) +
   labs(title = "Potential Financal Cost Savings of Interventions in K-12 Schools",
        x = "Intervention",
        y = "Potential Cost ($)") +
-  theme_bw()
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Renaming legend labels
 
-print(p)
-ggsave(filename = 'ChronicAbsenteeism_InterventionCost.png', plot = last_plot(), width =6.5, height = 4, units = "in", dpi = 300)
+ggsave(filename = './figures/ChronicAbsenteeism_InterventionCost.png', plot = last_plot(), 
+       width =6.5, height = 7, units = "in", dpi = 300)
 ```
 
 
