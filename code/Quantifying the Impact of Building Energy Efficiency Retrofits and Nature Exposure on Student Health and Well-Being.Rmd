@@ -29,12 +29,46 @@ library(ggplot2)
 #install.packages("viridis")
 # install.packages("tidyverse", dependencies = TRUE)
 # install.packages("dplyr", dependencies = TRUE)
+# install.packages('mapdata')
+# install.packages('terra', repos='https://rspatial.r-universe.dev')
+#update.packages(oldPkgs='terra')
+library(terra)
+#install.packages('mapview')
+#install.packages("Rcpp")
+library(Rcpp)
+#install.packages("sf")
+#install.packages('rgdal_xxx.tar.gz', repos = NULL, type = 'source')
+library(rgdal)
+#options("install.lock"=FALSE)
+library(sf)
+#install.packages("sf", dependencies=TRUE)
+#install.packages('maps')
+#install.packages('terrain')
+#install.packages('ggspatial')
+#install.packages('ggmap')
+#install.packages('maptiles')
+#installl.packages('tidyterra')
+#install.packages('OpenStreetMap')
 
 library(readr)
 library(readxl)
 library(dplyr)
 library(tidyverse)
 library(viridis)
+library(ggplot2)
+library(mapdata)
+library(maps)
+library(terra)
+library(mapview)
+library(sf)
+library(leaflet)
+library(webshot)
+library(ggspatial)
+library(ggmap)
+library(maptiles)
+library(tidyterra)
+library(tidyverse)
+library(OpenStreetMap)
 
 ### --- to impute data ----
 # install.packages("devtools")
@@ -6207,7 +6241,58 @@ ggplot() +
 ggsave(filename = paste0('./figures/', 'Prop39_Schools_Global_Map.png'), plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
 ```
 
-# Interactive Map [YJL: not sure how to do this - may not needed for your publication]
+```{r}
+#Map of Proposition 39 K-12 Schools in California,USA with OSM 
+library(readr)
+library(readxl)
+library(dplyr)
+library(tidyverse)
+library(viridis)
+library(ggplot2)
+library(mapdata)
+library(maps)
+library(terra)
+library(mapview)
+library(sf)
+library(leaflet)
+library(webshot)
+library(ggspatial)
+library(ggmap)
+library(maptiles)
+library(tidyterra)
+library(tidyverse)
+library(OpenStreetMap)
+
+# define the spatial extent to OpenStreetMap
+lat1 <- 30; lat2 <- 43; lon1 <- -127; lon2 <- -112
+
+# other 'type' options are "osm", "maptoolkit-topo", "bing", "stamen-toner",
+# "stamen-watercolor", "esri", "esri-topo", "nps", "apple-iphoto", "skobbler";
+# play around with 'zoom' to see what happens; 10 seems just right to me
+ca_map <- openmap(c(lat2, lon1), c(lat1, lon2), zoom = NULL,                     
+                  type = "esri-topo", mergeTiles = TRUE)
+
+plot(ca_map)
+
+# reproject onto WGS84
+ca_map2 <- openproj(ca_map)
+
+# use instead of 'ggplot()'
+ca_map2_plt <- OpenStreetMap::autoplot.OpenStreetMap(ca_map2) + 
+  annotate("text", label = "Pacific Ocean", 
+           x = -123, y = 34, size = 5.0, angle = -60, colour = "navy") + 
+ geom_point(data = Treatment_Count_Data_All_coord, aes(x = LONGITUDE, y = LATITUDE, fill = Chronic_Absenteeism), size = 2, shape = 21) +
+  scale_fill_gradient(low = "white", high = "red") +
+  labs(x = "Longitude", y = "Latitude", title = "Average Rate of Chronic Absenteeism in Proposition 39 K-12 Schools Across California, USA", fill = "(%)") + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
+ca_map2_plt
+
+ca_map2_plt + annotation_scale(location = "bl") +
+annotation_north_arrow(location = "br", which_north = "true", style = north_arrow_nautical())
+ggsave(filename = paste0('Prop39_Schools_ChronicAbsenteeism_Map.png'), plot = last_plot(), width = 10, height = 6, units = "in", dpi = 300)
+```
+
+
+# Interactive Map []
 ```{r}
 # install.packages("webshot")
 # webshot::install_phantomjs()
@@ -6223,9 +6308,9 @@ ggsave(filename = paste0('./figures/', 'Prop39_Schools_Global_Map.png'), plot = 
 #                                crs = 4326,
 #                                grid = FALSE)
 # Prop_39_schools_map
-# # save with OpenTopoMap baackground layer
+# # save with OpenTopoMap background layer
 # library(webshot)
-# mapshot(Prop_39_schools_map, delay = 10, 
+# mapshot(Prop_39_schools_map, 
 #         file = "Prop_39_schools_map.png")
 ```
 
