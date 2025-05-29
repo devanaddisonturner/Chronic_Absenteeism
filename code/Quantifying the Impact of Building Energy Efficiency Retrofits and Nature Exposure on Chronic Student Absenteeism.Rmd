@@ -6004,14 +6004,14 @@ length(unique(m_data_wide_6_complete_BLP$subclass))
 
 
 
-# Financial Cost Analysis 
+# Financial Savings Analysis 
 
 ```{r}
 library(readr)
 library(dplyr)
 library(ggplot2)
 
-ChronicAbsenteeism_FinancialCost<- read_csv("./data/ChronicAbsenteeism_FinancialCost.csv", show_col_types = F) %>%
+ChronicAbsenteeism_FinancialCost <- read_csv("./data/ChronicAbsenteeism_FinancialCost.csv", show_col_types = F) %>%
   mutate(Intervention = case_when(
     Intervention == 'Scenario 1' ~ 'Scenario 1: Energy Efficiency Retrofit',
     Intervention == 'Scenario 2' ~ 'Scenario 2: Nature Exposure',
@@ -6027,14 +6027,14 @@ ChronicAbsenteeism_FinancialCost %>%
   mutate(Intervention = str_wrap(Intervention, width = 20)) %>%
   ggplot(., 
             aes(x = Intervention, 
-                y = Potential_Financial_Cost_Savings, 
+                y = Potential_Financial_Savings, 
                 # color = Intervention, 
-                fill = Potential_Financial_Cost_Savings < 0
+                fill = Potential_Financial_Savings < 0
                 )) +
   geom_bar(stat = "identity", position = "identity", show.legend = F) +
-  geom_text(aes(label = round(Potential_Financial_Cost_Savings, digits = 0)), vjust = -0.3) + 
+  geom_text(aes(label = round(Potential_Financial_Savings, digits = 0)), vjust = -0.3) + 
   geom_hline(yintercept = 0, color = 'red', alpha = 0.5, linewidth = 1) +
-  labs(title = "Potential Financal Cost Savings of Interventions in K-12 Schools",
+  labs(title = "Potential Financal Savings of Interventions in K-12 Schools",
        x = "Intervention",
        y = "Potential Cost ($)") +
   theme_bw() +
@@ -6042,8 +6042,8 @@ ChronicAbsenteeism_FinancialCost %>%
 
 # Renaming legend labels
 
-ggsave(filename = './figures/ChronicAbsenteeism_InterventionCost.png', plot = last_plot(), 
-       width =6.5, height = 7, units = "in", dpi = 300)
+ggsave(filename = './figures/ChronicAbsenteeism_InterventionFinancialSavings.png', plot = last_plot(), 
+       width = 8.5, height = 9, units = "in", dpi = 300)
 ```
 
 
