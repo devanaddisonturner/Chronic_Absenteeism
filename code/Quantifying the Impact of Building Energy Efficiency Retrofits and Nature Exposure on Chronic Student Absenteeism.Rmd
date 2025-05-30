@@ -6043,7 +6043,7 @@ ChronicAbsenteeism_FinancialCost %>%
 # Renaming legend labels
 
 ggsave(filename = './figures/ChronicAbsenteeism_InterventionFinancialSavings.png', plot = last_plot(), 
-       width = 8.5, height = 9, units = "in", dpi = 300)
+       width = 8.5, height = 6, units = "in", dpi = 300)
 ```
 
 
