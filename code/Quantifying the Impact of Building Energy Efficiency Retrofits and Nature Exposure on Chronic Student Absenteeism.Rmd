@@ -4720,10 +4720,10 @@ d_data %>%
   theme_bw() +  # Use a minimal theme
   labs(x = "",
        y = "Cohen's d",
-       title = "Comparison of 3 Scenarios' Effect Sizes on Chronic Absenteeism \nin K-12 Schools Across California, USA during the COVID-19 Pandemic") + 
+       title = "Effect Sizes of Three Policy Intervention Scenarios and Two Data-Driven Models \non Chronic Absenteeism in K-12 Schools Across California, USA") + 
   theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title) +
   theme(plot.title = element_text(size = 10)) +
-  theme(legend.position = c(0.90, 0.15),
+  theme(legend.position = c(0.93, 0.15),
         legend.title=element_blank()) 
 
 ggsave(filename = './figures/effect_size_by_scenarios.png', plot = last_plot(), width = 7, height = 4, units = "in", dpi = 300)
@@ -6034,7 +6034,7 @@ ChronicAbsenteeism_FinancialCost %>%
   geom_bar(stat = "identity", position = "identity", show.legend = F) +
   geom_text(aes(label = round(Potential_Financial_Savings, digits = 0)), vjust = -0.3) + 
   geom_hline(yintercept = 0, color = 'red', alpha = 0.5, linewidth = 1) +
-  labs(title = "Potential Financal Savings of Interventions in K-12 Schools",
+  labs(title = "Potential Financial Savings of Interventions in K-12 Schools",
        x = "Intervention",
        y = "Potential Cost ($)") +
   theme_bw() +
@@ -6333,7 +6333,7 @@ ggplot(Schools_Year_Built, aes(x = Year_built, y = ..density..)) +
        x = "Year Built",
        y = "Density") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
-ggsave(filename = paste0('./figures/', 'Year_Built_Schools.png'), plot = last_plot(), width = 6, height = 4, units = "in", dpi = 300)
+ggsave(filename = paste0('./figures/', 'Year_Built_Schools.png'), plot = last_plot(), width = 6.5, height = 4, units = "in", dpi = 300)
 ```
 
 ## Environment
@@ -6350,13 +6350,13 @@ library(ggplot2)
 library(viridis)
 p <- ggplot(Schools_Environment_Data, aes(x = NDVI_Under_Over_Avg, y = NDVI_median, color = Land_Surface_Temp)) +
   geom_quasirandom() + 
-  labs(title = "Relationship of NDVI and LST near K-12 Schools in California, USA",
+  labs(title = "NDVI and LST near K-12 Schools in California, USA",
        x = "Environmental Health",
        y = "Median Normalized Difference Vegetation Index") + 
       labs(color = "(°C)") +
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))  # Center ggplot title
 p + scale_color_gradient(low = "blue", high = "yellow")
-ggsave(filename = './figures/NDVI_LST_Schools.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
+ggsave(filename = './figures/NDVI_LST_Schools.png', plot = last_plot(), width = 6.5, height = 4, units = "in", dpi = 300)
 ```
 
 ```{r}
@@ -6373,7 +6373,7 @@ ggplot() +
     labs(color = "Type of LULC") +
    ggtitle("Relationship of LULC, NDVI, and LST near K-12 Schools in Calfornia, USA") + 
   theme_bw() + theme(plot.title = element_text(hjust = 0.5))
-ggsave(filename = './figures/LULC_NDVI_LST.png', plot = last_plot(), width = 9, height = 7, units = "in", dpi = 300)
+ggsave(filename = './figures/LULC_NDVI_LST.png', plot = last_plot(), width = 6.5, height = 4, units = "in", dpi = 300)
 ```
 
 # View Session Information
