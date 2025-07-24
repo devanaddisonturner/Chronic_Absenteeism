@@ -1,6 +1,6 @@
 ---
-title: "Quantifying the Impacts of Building Energy Efficiency Retrofits and Nature Exposure on Student Health and Well-Being"
-author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Gretchen Cara Daily, and Rishee Kumar Jain"
+title: "Quantifying the Impacts of Building Energy Efficiency Retrofits and Nature Exposure on Chronic Student Absenteeism"
+author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Rishee Kumar Jain, and Gretchen Cara Daily"
 date: "2024-06-27"
 output: html_document
 editor_options: 
