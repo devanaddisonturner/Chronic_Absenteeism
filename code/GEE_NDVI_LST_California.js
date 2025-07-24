@@ -1,4 +1,4 @@
-title: "Quantifying the Impact of Retrofits and Nature on Equity and Sustainability"
+title: "Quantifying the Impacts of Energy Efficiency Retrofits and Nature Exposure on Chronic Student Absenteeism"
 author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Gretchen Cara Daily, and Rishee Kumar Jain"
 
 // Code to calculate the Normalized Difference Vegetation Index (NDVI) and Land Surface Temperature (LST) near K-12 Schools 
