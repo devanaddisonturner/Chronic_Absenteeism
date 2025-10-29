@@ -6376,6 +6376,87 @@ ggplot() +
 ggsave(filename = './figures/LULC_NDVI_LST.png', plot = last_plot(), width = 6.5, height = 4, units = "in", dpi = 300)
 ```
 
+
+#Causal Inference Diagram 
+
+```{r}
+
+diagram_code <- "
+digraph causal_pathway {
+
+  # Graph and Node settings
+  graph [layout = dot, rankdir = LR];
+  node [shape = box, style = rounded, fontname = Helvetica];
+  edge [color = gray, arrowhead = normal];
+
+  # Node definitions
+  EE_Retrofits [label = 'Energy Efficiency Retrofits\n(Lighting, HVAC, Pumps, Envelope)'];
+  Reduced_Costs [label = 'Reduced Energy Costs'];
+  Poorer_Ventilation [label = 'Poorer Natural Ventilation\n(from building envelope upgrades)'];
+  Concentrated_Pollutants [label = 'Concentrated Indoor Pollutants\n(e.g., Mold, Particulates)'];
+  Adverse_Health_Effects [label = 'Adverse Health Effects\n(e.g., Respiratory Issues)'];
+  SES_Status [label = 'Socioeconomic Status (SES)\n(of student population)'];
+  Chronic_Absenteeism [label = 'Chronic Student Absenteeism'];
+
+  # Arrows representing causal links
+  EE_Retrofits -> Poorer_Ventilation;
+  EE_Retrofits -> Reduced_Costs;
+  Poorer_Ventilation -> Concentrated_Pollutants;
+  Concentrated_Pollutants -> Adverse_Health_Effects;
+  Adverse_Health_Effects -> Chronic_Absenteeism;
+
+  # Path related to SES status
+  SES_Status -> EE_Retrofits [style = dashed, label = 'Often occurs in low-SES schools'];
+  SES_Status -> Adverse_Health_Effects [style = dashed, label = 'Limited access to healthcare'];
+  SES_Status -> Chronic_Absenteeism [style = dashed, label = 'Other barriers'];
+
+  # Styling nodes for clarity
+  EE_Retrofits [fillcolor = '#D1E8E2', style = 'rounded, filled'];
+  Chronic_Absenteeism [fillcolor = '#EA9F9B', style = 'rounded, filled'];
+  SES_Status [shape = diamond, style = 'filled', fillcolor = '#F9E5C5'];
+
+  # Add a dashed border around the main causal path
+  subgraph cluster_main_path {
+    style = dashed;
+    label = 'Primary Causal Path';
+    Poorer_Ventilation;
+    Concentrated_Pollutants;
+    Adverse_Health_Effects;
+    Chronic_Absenteeism;
+  }
+}
+"
+
+# Create the graph object
+graph <- grViz(diagram_code)
+
+# Save the diagram as a PNG file with specified DPI
+# First, need to render the graph to a temporary SVG, then convert to PNG
+# The 'rsvg' package is necessary for this conversion
+
+install.packages("rsvg")
+install.packages("DiagrammeR")
+install.packages("DiagrammeRsvg")
+
+library(rsvg)
+library(DiagrammeR)
+library(DiagrammeRsvg)
+
+# Save as temporary SVG
+tmp_svg <- tempfile(fileext = ".svg")
+export_svg <- function(graph, file) {
+  grViz(diagram_code) %>%
+    DiagrammeRsvg::export_svg() %>%
+    write(file)
+}
+
+# Use DiagrammeR s internal function to export SVG
+DiagrammeRsvg::export_svg(graph) %>% 
+  charToRaw() %>% 
+  # This will produce a 3000-pixel wide image.
+  rsvg_png("causal_diagram_retrofit_absenteeism.png", height = 1200, width = 3000)
+```
+
 # View Session Information
 ```{r}
 #To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
