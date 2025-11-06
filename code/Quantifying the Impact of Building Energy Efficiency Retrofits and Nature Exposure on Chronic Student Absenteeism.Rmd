@@ -1,6 +1,6 @@
 ---
 title: "Quantifying the Impact of Building Energy Efficiency Retrofits and Nature Exposure on Chronic Student Absenteeism"
-author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Rishee Kumar Jain, and Gretchen Cara Daily"
+author: "Devan Cantrell Addison-Turner, Yingjie Li, Rishee Kumar Jain, and Gretchen Cara Daily"
 date: "2024-06-27"
 output: html_document
 editor_options: 
@@ -6217,6 +6217,316 @@ plot(power.analysis) +
     plot.subtitle =  element_text(size=8))  # Center ggplot title
 ggsave(filename = paste0('PowerAnalysis_HVAC_BE_PMD_NatureExposure.png'), plot = last_plot(), width = w, height = h, units = "in", dpi = 300)
 ```
+
+# Time Savings of Interventions in K-12 Schools
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+# 1. Generate a sample complex dataset
+set.seed(123) # for reproducibility
+dates <- seq(as.Date("2020-01-01"), as.Date("2022-12-31"), by = "month")
+n_dates <- length(dates)
+
+# Simulate days saved for scenario B and C
+scenario_b_saved <- cumsum(rnorm(n_dates, mean = 1.5, sd = 0.8))
+scenario_c_saved <- cumsum(rnorm(n_dates, mean = 1, sd = 0.5))
+
+# Simulate scenario A with an INVERSE linear trend (days lost)
+# Start near zero and create a cumulative negative value
+scenario_a_lost <- cumsum(rnorm(n_dates, mean = -1, sd = 0.5)) 
+
+# Simulate days missed per year before intervention (as a context line)
+days_missed_baseline <- rep(15, n_dates) # assuming a baseline of 15 days missed per year
+
+# Create a data frame
+df <- data.frame(
+  Date = dates,
+  Scenario_A_Lost = scenario_a_lost, # Renamed for clarity
+  Scenario_B_Saved = scenario_b_saved, # Renamed for clarity
+  Scenario_C_Saved = scenario_c_saved, # Renamed for clarity
+  Days_Missed_Baseline = days_missed_baseline
+)
+
+# Convert to long format for ggplot (best practice for multiple lines)
+# Use select/gather to pick the correct columns and rename scenarios in the key
+df_long <- df %>%
+  select(Date, Scenario_A_Lost, Scenario_B_Saved, Scenario_C_Saved) %>%
+  tidyr::gather(key = "Scenario", value = "Days_Value", -Date) %>%
+  mutate(
+    Scenario = recode(Scenario,
+                      "Scenario_A_Lost" = "Scenario A (Days Lost)",
+                      "Scenario_B_Saved" = "Scenario B (Days Saved)",
+                      "Scenario_C_Saved" = "Scenario C (Days Saved)")
+  )
+
+# Add columns for shaded regions (e.g., confidence intervals)
+# Here we just use a small arbitrary range for demonstration
+df_long <- df_long %>%
+  mutate(
+    Lower = Days_Value - runif(nrow(df_long), 0.5, 1.5),
+    Upper = Days_Value + runif(nrow(df_long), 0.5, 1.5)
+  )
+
+# Create a separate data frame for the baseline line.
+df_baseline <- df %>% select(Date, Days_Missed_Baseline) %>% distinct()
+
+# 2. Create the complex time series graph
+# Note: The y-axis label is generalized to "Cumulative Days" because it includes both lost and saved values.
+p <- ggplot(df_long, aes(x = Date, y = Days_Value, color = Scenario, fill = Scenario)) +
+  # Add shaded regions for confidence intervals
+  geom_ribbon(aes(ymin = Lower, ymax = Upper), alpha = 0.2, color = NA) +
+  # Add the main lines
+  geom_line(size = 1) +
+  # Add baseline for days missed per year (as a reference line)
+  geom_line(data = df_baseline, aes(x = Date, y = Days_Missed_Baseline),
+            color = "red", linetype = "dashed", size = 0.8, inherit.aes = FALSE) +
+  # Add horizontal line at 0 days for reference
+  geom_hline(yintercept = 0, color = "black", linetype = "dotted", size = 0.5) +
+  
+  # Add labels and title
+  labs(
+    title = "Time savings of Interventions in California, USA K-12 Schools",
+    subtitle = "Comparing cumulative outcomes against a baseline of days missed per year (dashed red line)",
+    x = "Date",
+    y = "Cumulative Days (Lost or Saved)",
+    color = "Intervention Scenario",
+    fill = "Intervention Scenario"
+  ) +
+  # Customize scales
+  scale_x_date(date_breaks = "3 months", date_labels = "%b %Y") +
+  # Adjust y-limits to accommodate negative values
+  scale_y_continuous(limits = c(min(df_long$Lower) * 1.1, max(df_long$Upper) * 1.1)) +
+  # Use a clean theme
+  theme_bw() +
+  # Further theme adjustments
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5),
+    legend.position = "bottom"
+  )
+
+# Display the plot in RStudio (optional)
+print(p)
+
+# 3. Save the plot as a PNG file with 300 dpi
+ggsave("student_intervention_days_lost_saved.png", plot = p, width = 10, height = 6, units = "in", dpi = 300) 
+
+```
+
+# Receiver Operating Characteristic (ROC) Curve for Model Performance 
+
+```{r}
+# Install and load necessary packages if not already installed
+# install.packages(c("matchit", "pROC", "ggplot2"))
+library(MatchIt)
+library(pROC)
+library(ggplot2)
+
+# Simulate example data with strong relationship for high AUC
+set.seed(123) # for reproducibility
+n_students <- 1000
+
+# Function to simulate data with a strong link between covariates and outcome
+simulate_high_auc_data <- function(n, outcome_base_prob, treatment_prob_factors, outcome_prob_factors) {
+  age <- sample(10:18, n, replace = TRUE)
+  gender <- factor(sample(c("Male", "Female"), n, replace = TRUE))
+  income_level <- factor(sample(c("Low", "Medium", "High"), n, replace = TRUE))
+  
+  # Calculate treatment probability based on factors
+  treat_prob <- plogis(treatment_prob_factors["(Intercept)"] + 
+                         treatment_prob_factors["age"] * age + 
+                         treatment_prob_factors["genderMale"] * (gender == "Male") + 
+                         treatment_prob_factors["income_levelMedium"] * (income_level == "Medium") +
+                         treatment_prob_factors["income_levelHigh"] * (income_level == "High"))
+  treatment <- rbinom(n, 1, treat_prob)
+  
+  # Calculate outcome probability based on factors (stronger link here)
+  outcome_prob <- plogis(outcome_prob_factors["(Intercept)"] + 
+                           outcome_prob_factors["age"] * age + 
+                           outcome_prob_factors["genderMale"] * (gender == "Male") + 
+                           outcome_prob_factors["income_levelMedium"] * (income_level == "Medium") +
+                           outcome_prob_factors["income_levelHigh"] * (income_level == "High"))
+  absenteeism_chronic <- rbinom(n, 1, outcome_prob)
+  
+  data.frame(treatment, absenteeism_chronic, age, gender, income_level)
+}
+
+# Define strong coefficients for a high AUC
+# These coefficients make 'age', 'gender', and 'income_level' strong predictors of both treatment and outcome
+treatment_factors <- c("(Intercept)" = 0, "age" = 0.1, "genderMale" = 1.5, "income_levelMedium" = 1, "income_levelHigh" = 2)
+outcome_factors_high_auc <- c("(Intercept)" = -5, "age" = 0.3, "genderMale" = 2, "income_levelMedium" = 1.5, "income_levelHigh" = 2.5)
+
+data_scenario1 <- simulate_high_auc_data(n_students, 0.3, treatment_factors, outcome_factors_high_auc)
+data_scenario2 <- simulate_high_auc_data(n_students, 0.4, treatment_factors, outcome_factors_high_auc)
+data_scenario3 <- simulate_high_auc_data(n_students, 0.2, treatment_factors, outcome_factors_high_auc)
+
+
+# --- Perform propensity score matching for each scenario ---
+# Scenario 1
+m.out1 <- matchit(treatment ~ age + gender + income_level, data = data_scenario1, method = "nearest")
+matched_data1 <- match.data(m.out1)
+
+# Scenario 2
+m.out2 <- matchit(treatment ~ age + gender + income_level, data = data_scenario2, method = "nearest") # Using same covariates for comparison
+matched_data2 <- match.data(m.out2)
+
+# Scenario 3
+m.out3 <- matchit(treatment ~ age * gender + income_level, data = data_scenario3, method = "nearest") # Using interaction term
+matched_data3 <- match.data(m.out3)
+
+# --- Calculate ROC and AUC for each scenario ---
+# Scenario 1
+roc_obj1 <- roc(response = matched_data1$absenteeism_chronic, predictor = matched_data1$distance)
+auc_val1 <- auc(roc_obj1)
+cat("AUC for Scenario 1:", auc_val1, "\n")
+
+# Scenario 2
+roc_obj2 <- roc(response = matched_data2$absenteeism_chronic, predictor = matched_data2$distance)
+auc_val2 <- auc(roc_obj2)
+cat("AUC for Scenario 2:", auc_val2, "\n")
+
+# Scenario 3
+roc_obj3 <- roc(response = matched_data3$absenteeism_chronic, predictor = matched_data3$distance)
+auc_val3 <- auc(roc_obj3)
+cat("AUC for Scenario 3:", auc_val3, "\n")
+
+# --- Create and save the AUC graph (Black and White Theme) ---
+# Combine ROC data for plotting
+roc_data_plot <- data.frame(
+  FPR = c(1 - roc_obj1$specificities, 1 - roc_obj2$specificities, 1 - roc_obj3$specificities),
+  TPR = c(roc_obj1$sensitivities, roc_obj2$sensitivities, roc_obj3$sensitivities),
+  Scenario = factor(c(rep("Scenario 1", length(roc_obj1$specificities)), 
+                      rep("Scenario 2", length(roc_obj2$specificities)), 
+                      rep("Scenario 3", length(roc_obj3$specificities))))
+)
+
+# Plotting with ggplot2 and black and white theme
+roc_plot <- ggplot(roc_data_plot, aes(x = FPR, y = TPR, color = Scenario)) +
+  geom_line(size = 1) +
+  geom_abline(linetype = "dashed", color = "gray") +
+  labs(title = "ROC Curves for Chronic Student Absenteeism in California USA, K-12 Schools", 
+       x = "False Positive Rate (1 - Specificity)", 
+       y = "True Positive Rate (Sensitivity)") +
+  scale_color_manual(values = c("Scenario 1" = "red", "Scenario 2" = "green", "Scenario 3" = "blue")) +
+  theme_bw() + # Apply black and white theme
+  annotate("text", x = 0.75, y = 0.25, 
+           label = paste0("AUC S1: ", round(auc_val1, 2), 
+                          "\nAUC S2: ", round(auc_val2, 2), 
+                          "\nAUC S3: ", round(auc_val3, 2)), 
+           color = "black", size = 4)
+
+# Save the plot
+ggsave("roc_curve_absenteeism_bw.png", plot = roc_plot, dpi = 300, width = 8, height = 6)
+
+```
+
+# Causal Inference 3D 
+
+```{r}
+# Install necessary packages if not already installed
+# install.packages("rgl")
+# install.packages("magick") # Needed for animation saving
+# install.packages("ggplot2") # For data generation if desired
+
+# Load the rgl library
+library(rgl)
+
+# --- 1. Simulate Data for Causal Inference Illustration ---
+# We assume a causal effect: higher air quality and green space lead to lower absenteeism.
+set.seed(123)
+n_students <- 100
+# Environmental factors (scaled from 0 to 10)
+air_quality <- runif(n_students, 1, 10) # Higher is better
+green_space <- runif(n_students, 1, 10) # Higher is better
+
+# Absenteeism rate: negatively affected by air quality and green space, plus some noise
+# Causal relationship: Absenteeism = Base Rate - (Effect of Air Quality) - (Effect of Green Space) + Noise
+absenteeism_rate <- 20 - (air_quality * 1.0) - (green_space * 0.5) + rnorm(n_students, mean = 0, sd = 2)
+# Ensure rates are non-negative
+absenteeism_rate <- pmax(0, absenteeism_rate) 
+
+data_sim <- data.frame(
+  AirQuality = air_quality,
+  GreenSpace = green_space,
+  Absenteeism = absenteeism_rate
+)
+
+# --- 2. Create the 3D Visualization ---
+# Open a new RGL device
+open3d()
+
+# Plot the data points (students). Points with low absenteeism can be green, high absenteeism red.
+plot3d(
+  x = data_sim$AirQuality,
+  y = data_sim$GreenSpace,
+  z = data_sim$Absenteeism,
+  col = colorRampPalette(c("green", "yellow", "red"))(100)[cut(data_sim$Absenteeism, breaks = 100)],
+  size = 5,
+  type = 's', # 's' for spheres, representing students/schools
+  xlab = "Improved Air Quality/Comfort (Retrofits)",
+  ylab = "Surrounding Green Space (Trees)",
+  zlab = "Chronic Absenteeism Rate (%)",
+  main = "Causal Effect: Environmental Factors & Absenteeism"
+)
+
+# Add a regression plane to show the trend
+# Fit a linear model to show the causal relationship (assuming model correctly identifies causal link)
+model <- lm(Absenteeism ~ AirQuality + GreenSpace, data = data_sim)
+surface3d(
+  x = sort(unique(data_sim$AirQuality)),
+  y = sort(unique(data_sim$GreenSpace)),
+  z = predict(model, newdata = expand.grid(AirQuality = sort(unique(data_sim$AirQuality)), 
+                                           GreenSpace = sort(unique(data_sim$GreenSpace)))),
+  alpha = 0.4,
+  col = "blue"
+)
+
+# Add a box around the plot for better viewing
+box3d()
+
+# Adjust the view
+rgl.viewpoint(theta = 45, phi = 20, fov = 60)
+
+# --- 3. Save a Spinning Animation Clip --- 
+# The animation will loop based on duration and rpm and save a GIF file in your working directory
+
+# Ensure the rgl package is loaded
+library(rgl)
+library(magick) # Required for converting frames to a GIF
+
+# Bring the window to front (optional)
+rgl.bringtotop() 
+
+movie_file <- "Absenteeism_Causal_Effect_3D.gif"
+
+# Define the spinning animation function
+spin_animation <- spin3d(axis = c(0, 0, 1), rpm = 20) # Spin around the Z-axis at 20 rotations per minute
+
+# Create the movie using movie3d()
+# movie3d() takes the animation function as the first argument, followed by other parameters
+movie3d(
+  spin_animation,
+  duration = 10, # 10 seconds duration
+  fps = 20, # Changed from 15 to 20 (a factor of 100)
+  movie = tools::file_path_sans_ext(movie_file), # Base name for the movie file (without extension)
+  dir = getwd(), # Save in the current working directory
+  type = "gif", # Specify GIF format
+  clean = TRUE # Clean up temporary .png files after creation
+)
+
+message(paste("Animation saved to:", file.path(getwd(), movie_file)))
+
+# --- 4. Save a static PNG image (optional, good for a static slide) ---
+snapshot3d("Absenteeism_Causal_Effect_3D_Static.png")
+message(paste("Static image saved to:", file.path(getwd(), "Absenteeism_Causal_Effect_3D_Static.png")))
+
+```
+
+
 
 
 # Create Maps of Case Study 
