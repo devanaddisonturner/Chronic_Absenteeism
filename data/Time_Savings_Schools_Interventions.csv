@@ -1,0 +1,4 @@
+Policy_Intervention,Average_Student_Enrollment_20_22,Chronic_Absenteeism_Rate_Impact,Number_Chronically_Absent_Students,Average_Number_Days_Historically_Missed ,Total_Number_Days_Historically_Missed ,Average_Number_Days_Missed_180Day_School_Year,New_Average_Number_Days_Missed,Average_Number_Days_Saved_After_Implementing_Intervention
+Scenario 1: Energy Efficiency Retrofits,"2,998",2,60,18,"1,080",4.5,270,-810
+Scenario 2: Nature Exposure,"2,998",-7,210,18,"3,780",4.5,945,"2,835"
+Scenario 3: Energy Efficiency Retrofits + Nature Exposure,"2,998",-8,240,18,"4,320",4.5,"1,080","3,240"
