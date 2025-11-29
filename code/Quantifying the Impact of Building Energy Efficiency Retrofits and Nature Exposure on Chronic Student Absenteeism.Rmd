@@ -6767,6 +6767,109 @@ DiagrammeRsvg::export_svg(graph) %>%
   rsvg_png("causal_diagram_retrofit_absenteeism.png", height = 1200, width = 3000)
 ```
 
+# Multi-Physics Simulation Graph
+
+```{r}
+# Install necessary packages if not already installed
+# install.packages("rgl")
+
+# Load the rgl library
+library(rgl)
+
+# --- 1. Simulate Data for Causal Inference Illustration ---
+# We assume a causal effect: higher air quality and green space lead to lower absenteeism.
+set.seed(123)
+n_students <- 100
+
+# Environmental factors (scaled from 0 to 10)
+air_quality <- runif(n_students, 1, 10) # Higher is better
+green_space <- runif(n_students, 1, 10) # Higher is better
+
+# Absenteeism rate: negatively affected by air quality and green space, plus some noise
+# Causal relationship: Absenteeism = Base Rate - (Effect of Air Quality) - (Effect of Green Space) + Noise
+absenteeism_rate <- 20 - (air_quality * 1.0) - (green_space * 0.5) + rnorm(n_students, mean = 0, sd = 2)
+
+# Ensure rates are non-negative
+absenteeism_rate <- pmax(0, absenteeism_rate) 
+
+data_sim <- data.frame(
+  AirQuality = air_quality,
+  GreenSpace = green_space,
+  Absenteeism = absenteeism_rate
+)
+
+# --- 2. Create the 3D Visualization ---
+# Open a new RGL device
+open3d()
+
+# Plot the data points (students). Points with low absenteeism can be green, high absenteeism red.
+plot3d(
+  x = data_sim$AirQuality,
+  y = data_sim$GreenSpace,
+  z = data_sim$Absenteeism,
+  col = colorRampPalette(c("green", "yellow", "red"))(100)[cut(data_sim$Absenteeism, breaks = 100)],
+  size = 5,
+  type = 's', # 's' for spheres, representing students/schools
+  xlab = "Improved Air Quality/Comfort (Retrofits)",
+  ylab = "Surrounding Green Space (Trees)",
+  zlab = "Chronic Absenteeism Rate (%)",
+  main = "Causal Effect: Environmental Factors & Absenteeism"
+)
+
+# Add a regression plane to show the trend
+# Fit a linear model to show the causal relationship (assuming model correctly identifies causal link)
+model <- lm(Absenteeism ~ AirQuality + GreenSpace, data = data_sim)
+
+surface3d(
+  x = sort(unique(data_sim$AirQuality)),
+  y = sort(unique(data_sim$GreenSpace)),
+  z = predict(model, newdata = expand.grid(AirQuality = sort(unique(data_sim$AirQuality)), 
+                                           GreenSpace = sort(unique(data_sim$GreenSpace)))),
+  alpha = 0.4,
+  col = "blue"
+)
+
+# Add a box around the plot for better viewing
+box3d()
+
+# --- 3. Set Optimal Viewing Angle for Static Image ---
+# Adjust theta (horizontal rotation) and phi (vertical tilt) for best perspective
+# theta = 45: Shows both X and Y axes well
+# phi = 25: Slight elevation to see the regression plane slope clearly
+# fov = 30: Narrower field of view reduces distortion for publication-quality images
+
+rgl.viewpoint(theta = 45, phi = 25, fov = 30, zoom = 0.85)
+
+# Alternative angles to try (uncomment to test):
+# rgl.viewpoint(theta = 60, phi = 30, fov = 30, zoom = 0.85)  # More emphasis on Y-axis
+# rgl.viewpoint(theta = 30, phi = 20, fov = 30, zoom = 0.85)  # More emphasis on X-axis
+# rgl.viewpoint(theta = 45, phi = 35, fov = 30, zoom = 0.80)  # Higher elevation view
+
+# --- 4. Save as High-Resolution PNG (300 DPI) ---
+# For publication quality at 300 DPI:
+# - 6 inches wide = 1800 pixels
+# - 5 inches tall = 1500 pixels
+
+output_file <- "Absenteeism_Causal_Effect_3D.png"
+
+# rgl.snapshot() captures the current view as a PNG
+# For higher resolution, use snapshot3d() with explicit dimensions
+snapshot3d(
+  filename = output_file,
+  width = 1800,    # 6 inches at 300 DPI
+  height = 1500,   # 5 inches at 300 DPI
+  webshot = FALSE  # Use rgl's native rendering
+)
+
+# Print confirmation
+cat("Static image saved as:", file.path(getwd(), output_file), "\n")
+cat("Resolution: 1800 x 1500 pixels (6\" x 5\" at 300 DPI)\n")
+
+# Close the RGL device
+rgl.close()
+
+```
+
 # View Session Information
 ```{r}
 #To print the version information about R, the Operating System, and attached or loaded packages, use the sessionInfo() function. 
