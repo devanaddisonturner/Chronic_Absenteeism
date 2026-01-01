@@ -1,5 +1,5 @@
 title: "Quantifying the Impacts of Building Energy Efficiency Retrofits and Nature Exposure on Chronic Student Absenteeism"
-author: "Devan Cantrell Addison-Turner, Yingjie Li, Anthony Dylan Kinslow II, Gretchen Cara Daily, and Rishee Kumar Jain"
+author: "Devan Cantrell Addison-Turner, Yingjie Li, Forest Olaf Peterson, Jonathan Lee Montoya, Michael David Lepech, Martin Arthur Fischer, and Gretchen Cara Daily"
 
 // Code to calculate the Normalized Difference Vegetation Index (NDVI) and Land Surface Temperature (LST) near K-12 Schools 
 // across California, USA from satellite imagery using Google Earth Engine (GEE) during the COVID-19 Pandemic.
@@ -410,3 +410,4 @@ Export.table.toDrive({
            fileFormat: 'CSV', 
            folder: dir_output, // result folder
            selectors: ['GEOID', 'mean_byRegions', 'median_byRegions']})
+
