@@ -1,6 +1,6 @@
 ---
 title: "Quantifying the Impact of Building Energy Efficiency Retrofits and Nature Exposure on Chronic Student Absenteeism"
-author: "Devan Cantrell Addison-Turner, Yingjie Li, Rishee Kumar Jain, and Gretchen Cara Daily"
+author: "Devan Cantrell Addison-Turner, Yingjie Li, Forest Olaf Peterson, Jonathan Lee Montoya, Michael David Lepech, Martin Arthur Fischer, and Gretchen Cara Daily"
 date: "2024-06-27"
 output: html_document
 editor_options: 
